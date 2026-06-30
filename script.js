@@ -24,3 +24,28 @@ d.onclick=()=>d.remove();
 document.body.appendChild(d);
 };
 });
+document.querySelector("form").addEventListener("submit", function(e){
+e.preventDefault();
+
+const name = this.querySelector('input[type="text"]').value;
+const phone = this.querySelector('input[type="tel"]').value;
+const msg = this.querySelector('textarea').value;
+
+const text = `
+📩 Нова заявка
+👤 Ім'я: ${name}
+📞 Телефон: ${phone}
+💬 Повідомлення: ${msg}
+`;
+
+fetch("https://api.telegram.org/botYOUR_TOKEN/sendMessage", {
+method: "POST",
+headers: {"Content-Type":"application/json"},
+body: JSON.stringify({
+chat_id: "YOUR_CHAT_ID",
+text: text
+})
+});
+
+alert("Заявку відправлено!");
+});
