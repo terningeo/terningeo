@@ -34,6 +34,12 @@ nav ul {
     padding: 0;
 }
 
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.45);
+}
+
 .btn{background:#0077ff;color:#fff;padding:12px 22px;border-radius:30px;text-decoration:none}
 
 .hero{
@@ -48,12 +54,9 @@ nav ul {
 }
 
 .hero-content{
-    position:relative;
-    z-index:2;
-    width:100%;
     max-width:800px;
     margin:0 auto;
-    text-align:center;
+    padding:0 20px;
 }
 
 .hero h1{
@@ -68,7 +71,9 @@ nav ul {
 }
 
 .hero .btn{
-    display:inline-block;
+    margin-top:20px;
+    padding:16px 36px;
+    font-size:18px;
 }
 
 .logo {
