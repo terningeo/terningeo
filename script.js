@@ -1,8 +1,28 @@
-document.querySelectorAll('nav a').forEach(a=>{
-a.onclick=(e)=>{
-e.preventDefault();
-document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
-};
+const menuToggle = document.querySelector(".menu-toggle");
+const menu = document.getElementById("main-menu");
+
+if (menuToggle && menu) {
+    menuToggle.addEventListener("click", () => {
+        menu.classList.toggle("active");
+    });
+}
+
+document.querySelectorAll('nav a').forEach(a => {
+    a.onclick = (e) => {
+        e.preventDefault();
+
+        const target = document.querySelector(a.getAttribute('href'));
+
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        if (menu) {
+            menu.classList.remove("active");
+        }
+    };
 });
 
 const btn=document.getElementById('topBtn');
