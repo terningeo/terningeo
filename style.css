@@ -38,7 +38,7 @@ nav ul {
 
 .hero{
     min-height:100vh;
-    background:url("images/hero.jpg") center center/cover no-repeat;
+    background: url("images/hero.jpg") center center / cover no-repeat;
     position:relative;
     display:flex;
     justify-content:center;
