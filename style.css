@@ -31,6 +31,11 @@ background:rgba(0,0,0,.6);
 
 .hero h1{font-size:50px}
 
+.logo {
+    display: flex;
+    align-items: center;
+}
+
 .logo a {
     display: flex;
     align-items: center;
@@ -38,19 +43,19 @@ background:rgba(0,0,0,.6);
 }
 
 .logo img {
+    width: 70px;
     height: 70px;
-    width: auto;
-    margin-right: 12px;
+    object-fit: contain;
+    margin-right: 15px;
 }
 
 .logo-text {
     display: flex;
     flex-direction: column;
-    line-height: 1.1;
 }
 
 .logo-title {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 700;
     color: #10233f;
 }
@@ -58,8 +63,6 @@ background:rgba(0,0,0,.6);
 .logo-subtitle {
     font-size: 14px;
     color: #0a8b6c;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 .section{padding:80px 0;text-align:center}
