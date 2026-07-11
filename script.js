@@ -74,6 +74,8 @@ alert("Заявку відправлено!");
 
 const modal = document.getElementById("orderModal");
 
+const orderForm = document.getElementById("orderForm");
+
 document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(button => {
 
     button.addEventListener("click", function(e){
