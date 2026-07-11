@@ -79,9 +79,10 @@ nav ul {
 }
 
 .hero .btn{
-    padding:16px 38px;
+    margin-top:15px;
+    min-width:190px;
+    min-height:56px;
     font-size:18px;
-    font-weight:600;
 }
 
 .logo img{
@@ -140,36 +141,42 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
 
 #topBtn{
     position:fixed;
+
     right:30px;
     bottom:30px;
 
-    width:60px;
-    height:60px;
+    width:64px;
+    height:64px;
 
     display:none;
     align-items:center;
     justify-content:center;
 
-    background:#0077ff;
+    background:#0b6efd;
     color:#fff;
 
     border:none;
     border-radius:50%;
 
-    font-size:28px;
-    font-weight:700;
+    font-size:30px;
+    font-weight:bold;
 
     cursor:pointer;
 
-    box-shadow:0 8px 25px rgba(0,0,0,.25);
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
 
     transition:.25s;
+
     z-index:9999;
 }
 
 #topBtn:hover{
-    background:#005fd1;
-    transform:translateY(-3px);
+    background:#0958c9;
+    transform:translateY(-4px) scale(1.05);
+}
+
+#topBtn:active{
+    transform:scale(.95);
 }
 
 header{
@@ -228,12 +235,41 @@ nav a:hover {
 }
 
 .btn{
-    background:#0077ff;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#0b6efd;
     color:#fff;
-    padding:12px 22px;
-    border-radius:30px;
+
+    padding:14px 30px;
+
+    border:none;
+    border-radius:40px;
+
+    font-size:16px;
+    font-weight:600;
     text-decoration:none;
     white-space:nowrap;
+
+    cursor:pointer;
+
+    transition:
+        background .25s ease,
+        transform .2s ease,
+        box-shadow .25s ease;
+
+    box-shadow:0 8px 20px rgba(11,110,253,.25);
+}
+
+.btn:hover{
+    background:#0958c9;
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(11,110,253,.35);
+}
+
+.btn:active{
+    transform:translateY(0);
 }
 
 /* ===== Mobile menu ===== */
@@ -298,11 +334,21 @@ nav a:hover {
         margin:10px 0;
     }
 
-    .mobile-btn{
-        display:inline-flex;
-        justify-content:center;
-        margin-top:10px;
-    }
+   .mobile-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    margin-top:10px;
+}
+
+#topBtn{
+    width:56px;
+    height:56px;
+    right:18px;
+    bottom:18px;
+    font-size:26px;
+}
 
     .hero h1{
         font-size:34px;
