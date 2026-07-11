@@ -139,16 +139,37 @@ input,textarea{padding:10px;border:1px solid #ccc;border-radius:10px}
 footer{padding:20px;text-align:center;background:#111;color:#fff}
 
 #topBtn{
-position:fixed;
-bottom:20px;
-right:20px;
-display:none;
-background:#0077ff;
-color:#fff;
-border:none;
-padding:10px 15px;
-border-radius:50%;
-cursor:pointer;
+    position:fixed;
+    right:30px;
+    bottom:30px;
+
+    width:60px;
+    height:60px;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    background:#0077ff;
+    color:#fff;
+
+    border:none;
+    border-radius:50%;
+
+    font-size:28px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+
+    transition:.25s;
+    z-index:9999;
+}
+
+#topBtn:hover{
+    background:#005fd1;
+    transform:translateY(-3px);
 }
 
 header{
