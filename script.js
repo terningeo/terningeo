@@ -74,19 +74,19 @@ alert("Заявку відправлено!");
 
 const orderModal = document.getElementById("orderModal");
 
-const openOrderModal = document.getElementById("openOrderModal");
+document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(btn => {
 
-const closeModal = document.querySelector(".close-modal");
+    btn.addEventListener("click", function(e){
 
-openOrderModal.addEventListener("click", function(e){
+        e.preventDefault();
 
-    e.preventDefault();
+        orderModal.classList.add("show");
 
-    orderModal.classList.add("show");
+    });
 
 });
 
-closeModal.addEventListener("click", function(){
+document.querySelector(".close-modal").addEventListener("click", function(){
 
     orderModal.classList.remove("show");
 
@@ -94,7 +94,7 @@ closeModal.addEventListener("click", function(){
 
 orderModal.addEventListener("click", function(e){
 
-    if(e.target===orderModal){
+    if(e.target === orderModal){
 
         orderModal.classList.remove("show");
 
