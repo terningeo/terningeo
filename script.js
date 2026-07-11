@@ -69,3 +69,35 @@ text: text
 
 alert("Заявку відправлено!");
 });
+
+/* ===== Modal ===== */
+
+const orderModal = document.getElementById("orderModal");
+
+const openOrderModal = document.getElementById("openOrderModal");
+
+const closeModal = document.querySelector(".close-modal");
+
+openOrderModal.addEventListener("click", function(e){
+
+    e.preventDefault();
+
+    orderModal.classList.add("show");
+
+});
+
+closeModal.addEventListener("click", function(){
+
+    orderModal.classList.remove("show");
+
+});
+
+orderModal.addEventListener("click", function(e){
+
+    if(e.target===orderModal){
+
+        orderModal.classList.remove("show");
+
+    }
+
+});
