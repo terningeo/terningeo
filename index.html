@@ -64,7 +64,7 @@
 <div class="hero-content">
 <h1>Геодезія Тернопілля</h1>
 <p>Виконуємо геодезичні роботи та пов'язані з ними послуги на території Тернопільської та сусідніх областей. Маємо великий досвід роботи з об'єктами різної складності - від звичайних будинків до великих заводів.</p>
-<a href="#contact" class="btn">Замовити</a>
+<a href="#" id="openOrderModal" class="btn">Замовити</a>
 </div>
 </section>
 
@@ -133,6 +133,32 @@
 </footer>
 
 <button id="topBtn">↑</button>
+
+<div id="orderModal" class="modal">
+
+    <div class="modal-content">
+
+        <button class="close-modal">&times;</button>
+
+        <h2>Замовити геодезичні роботи</h2>
+
+        <form id="orderForm">
+
+            <input type="text" placeholder="Ваше ім'я" required>
+
+            <input type="tel" placeholder="Телефон" required>
+
+            <textarea placeholder="Опишіть, що потрібно виконати"></textarea>
+
+            <button type="submit" class="btn">
+                Надіслати заявку
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 <script src="script.js"></script>
 </body>
