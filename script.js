@@ -1,3 +1,5 @@
+// ===== Mobile menu =====
+
 const menuToggle = document.querySelector(".menu-toggle");
 const menu = document.getElementById("main-menu");
 
@@ -7,99 +9,170 @@ if (menuToggle && menu) {
     });
 }
 
-document.querySelectorAll('nav a').forEach(a => {
-    a.onclick = (e) => {
-        e.preventDefault();
+// ===== Smooth scroll =====
 
-        const target = document.querySelector(a.getAttribute('href'));
+document.querySelectorAll('nav a').forEach(link => {
 
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
+    link.addEventListener("click", e => {
 
-        if (menu) {
-            menu.classList.remove("active");
-        }
-    };
-});
+        const target = document.querySelector(link.getAttribute("href"));
 
-const btn=document.getElementById('topBtn');
-
-window.onscroll=()=>{
-btn.style.display=window.scrollY>300?'block':'none';
-};
-
-btn.onclick=()=>{
-window.scrollTo({top:0,behavior:'smooth'});
-};
-
-document.querySelectorAll('.gallery img').forEach(img=>{
-img.onclick=()=>{
-const d=document.createElement('div');
-d.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center";
-d.innerHTML=`<img src="${img.src}" style="max-width:90%;max-height:90%;border-radius:10px">`;
-d.onclick=()=>d.remove();
-document.body.appendChild(d);
-};
-});
-document.querySelector("form").addEventListener("submit", function(e){
-e.preventDefault();
-
-const name = this.querySelector('input[type="text"]').value;
-const phone = this.querySelector('input[type="tel"]').value;
-const msg = this.querySelector('textarea').value;
-
-const text = `
-📩 Нова заявка
-👤 Ім'я: ${name}
-📞 Телефон: ${phone}
-💬 Повідомлення: ${msg}
-`;
-
-fetch("https://api.telegram.org/botYOUR_TOKEN/sendMessage", {
-method: "POST",
-headers: {"Content-Type":"application/json"},
-body: JSON.stringify({
-chat_id: "YOUR_CHAT_ID",
-text: text
-})
-});
-
-alert("Заявку відправлено!");
-});
-
-/* ===== Modal ===== */
-
-const modal = document.getElementById("orderModal");
-
-const orderForm = document.getElementById("orderForm");
-
-document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(button => {
-
-    button.addEventListener("click", function(e){
+        if (!target) return;
 
         e.preventDefault();
 
-        modal.classList.add("show");
+        target.scrollIntoView({
+            behavior: "smooth"
+        });
+
+        menu?.classList.remove("active");
 
     });
 
 });
 
-document.querySelector(".close-modal").onclick = () => {
+// ===== Button "Up" =====
 
-    modal.classList.remove("show");
+const topBtn = document.getElementById("topBtn");
 
-};
+if (topBtn) {
 
-modal.onclick = (e) => {
+    window.addEventListener("scroll", () => {
 
-    if(e.target === modal){
+        topBtn.style.display = window.scrollY > 300 ? "flex" : "none";
+
+    });
+
+    topBtn.addEventListener("click", () => {
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    });
+
+}
+
+// ===== Gallery =====
+
+document.querySelectorAll(".gallery img").forEach(img => {
+
+    img.addEventListener("click", () => {
+
+        const overlay = document.createElement("div");
+
+        overlay.style.cssText = `
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.85);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:99999;
+            cursor:pointer;
+        `;
+
+        overlay.innerHTML = `
+            <img src="${img.src}"
+                 style="max-width:90%;max-height:90%;border-radius:12px;">
+        `;
+
+        overlay.addEventListener("click", () => overlay.remove());
+
+        document.body.appendChild(overlay);
+
+    });
+
+});
+
+// ===== Modal =====
+
+const modal = document.getElementById("orderModal");
+
+document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(button => {
+
+    button.addEventListener("click", e => {
+
+        e.preventDefault();
+
+        modal?.classList.add("show");
+
+    });
+
+});
+
+document.querySelector(".close-modal")?.addEventListener("click", () => {
+
+    modal?.classList.remove("show");
+
+});
+
+modal?.addEventListener("click", e => {
+
+    if (e.target === modal) {
 
         modal.classList.remove("show");
 
     }
 
-};
+});
+
+// ===== Telegram form =====
+
+const orderForm = document.getElementById("orderForm");
+
+if (orderForm) {
+
+    orderForm.addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        const name = this.querySelector('input[type="text"]').value.trim();
+        const phone = this.querySelector('input[type="tel"]').value.trim();
+        const msg = this.querySelector("textarea").value.trim();
+
+        const text =
+`📩 Нова заявка
+
+👤 Ім'я: ${name}
+📞 Телефон: ${phone}
+
+💬 Повідомлення:
+${msg}`;
+
+        fetch("https://api.telegram.org/botYOUR_TOKEN/sendMessage", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                chat_id: "YOUR_CHAT_ID",
+
+                text: text
+
+            })
+
+        })
+        .then(() => {
+
+            alert("Заявку успішно відправлено!");
+
+            orderForm.reset();
+
+            modal?.classList.remove("show");
+
+        })
+        .catch(() => {
+
+            alert("Помилка відправлення. Спробуйте ще раз.");
+
+        });
+
+    });
+
+}
