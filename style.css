@@ -26,14 +26,6 @@ nav{
     margin-left:auto;
 }
 
-nav ul {
-    display: flex;
-    gap: 42px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
 .overlay{
     position:absolute;
     inset:0;
@@ -141,12 +133,11 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
 
 #topBtn{
     position:fixed;
+    right:25px;
+    bottom:25px;
 
-    right:30px;
-    bottom:30px;
-
-    width:64px;
-    height:64px;
+    width:60px;
+    height:60px;
 
     display:none;
     align-items:center;
@@ -158,13 +149,13 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     border:none;
     border-radius:50%;
 
-    font-size:30px;
-    font-weight:bold;
+    font-size:28px;
+    font-weight:700;
+    line-height:1;
 
     cursor:pointer;
 
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
-
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
     transition:.25s;
 
     z-index:9999;
@@ -172,7 +163,7 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
 
 #topBtn:hover{
     background:#0958c9;
-    transform:translateY(-4px) scale(1.05);
+    transform:translateY(-3px);
 }
 
 #topBtn:active{
@@ -270,6 +261,12 @@ nav a:hover {
 
 .btn:active{
     transform:translateY(0);
+}
+
+.desktop-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
 }
 
 /* ===== Mobile menu ===== */
