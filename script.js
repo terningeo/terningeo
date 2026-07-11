@@ -72,32 +72,32 @@ alert("Заявку відправлено!");
 
 /* ===== Modal ===== */
 
-const orderModal = document.getElementById("orderModal");
+const modal = document.getElementById("orderModal");
 
-document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(btn => {
+document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(button => {
 
-    btn.addEventListener("click", function(e){
+    button.addEventListener("click", function(e){
 
         e.preventDefault();
 
-        orderModal.classList.add("show");
+        modal.classList.add("show");
 
     });
 
 });
 
-document.querySelector(".close-modal").addEventListener("click", function(){
+document.querySelector(".close-modal").onclick = () => {
 
-    orderModal.classList.remove("show");
+    modal.classList.remove("show");
 
-});
+};
 
-orderModal.addEventListener("click", function(e){
+modal.onclick = (e) => {
 
-    if(e.target === orderModal){
+    if(e.target === modal){
 
-        orderModal.classList.remove("show");
+        modal.classList.remove("show");
 
     }
 
-});
+};
