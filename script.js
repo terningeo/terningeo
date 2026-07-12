@@ -1,17 +1,11 @@
 // ===== Mobile menu =====
 
-const menuToggle=document.querySelector(".menu-toggle");
-const menu=document.getElementById("main-menu");
+const menuToggle = document.querySelector(".menu-toggle");
+const menu = document.getElementById("main-menu");
 
-if(menuToggle && menu){
-
-    menuToggle.addEventListener("click",()=>{
-
-        menu.classList.toggle("active");
-
-    });
-
-}
+menuToggle?.addEventListener("click", () => {
+    menu?.classList.toggle("active");
+});
 
 // ===== Smooth scroll =====
 
@@ -48,8 +42,8 @@ function resetButtonsTimer() {
 
         topBtn?.classList.remove("float-visible");
         callBtn?.classList.remove("float-visible");
-
         return;
+
     }
 
     topBtn?.classList.add("float-visible");
@@ -72,31 +66,64 @@ function resetButtonsTimer() {
 }
 
 window.addEventListener("scroll", resetButtonsTimer, { passive: true });
-
 window.addEventListener("resize", resetButtonsTimer);
 
-["touchstart", "touchmove", "mousemove"].forEach(event => {
-    window.addEventListener(event, resetButtonsTimer, { passive: true });
+["touchstart","touchmove","mousemove"].forEach(event=>{
+    window.addEventListener(event, resetButtonsTimer, {passive:true});
 });
 
 topBtn?.addEventListener("click", () => {
 
     window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+        top:0,
+        behavior:"smooth"
     });
 
 });
 
 resetButtonsTimer();
 
+// ===== Gallery =====
+
+document.querySelectorAll(".gallery img").forEach(img => {
+
+    img.addEventListener("click", () => {
+
+        const overlay = document.createElement("div");
+
+        overlay.style.cssText = `
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.85);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:99999;
+            cursor:pointer;
+        `;
+
+        overlay.innerHTML = `
+            <img src="${img.src}"
+            style="max-width:90%;max-height:90%;border-radius:12px;">
+        `;
+
+        overlay.onclick = () => overlay.remove();
+
+        document.body.appendChild(overlay);
+
+    });
+
+});
+
 // ===== Modal =====
 
 const modal = document.getElementById("orderModal");
 
-document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(button => {
+document
+.querySelectorAll("#openOrderModal,#openOrderModalBottom")
+.forEach(btn=>{
 
-    button.addEventListener("click", e => {
+    btn.addEventListener("click",e=>{
 
         e.preventDefault();
 
@@ -106,15 +133,15 @@ document.querySelectorAll("#openOrderModal, #openOrderModalBottom").forEach(butt
 
 });
 
-document.querySelector(".close-modal")?.addEventListener("click", () => {
+document.querySelector(".close-modal")?.addEventListener("click",()=>{
 
     modal?.classList.remove("show");
 
 });
 
-modal?.addEventListener("click", e => {
+modal?.addEventListener("click",e=>{
 
-    if (e.target === modal) {
+    if(e.target===modal){
 
         modal.classList.remove("show");
 
@@ -126,17 +153,15 @@ modal?.addEventListener("click", e => {
 
 const orderForm = document.getElementById("orderForm");
 
-if (orderForm) {
+orderForm?.addEventListener("submit",function(e){
 
-    orderForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-        e.preventDefault();
+    const name=this.querySelector('input[type="text"]').value.trim();
+    const phone=this.querySelector('input[type="tel"]').value.trim();
+    const msg=this.querySelector("textarea").value.trim();
 
-        const name = this.querySelector('input[type="text"]').value.trim();
-        const phone = this.querySelector('input[type="tel"]').value.trim();
-        const msg = this.querySelector("textarea").value.trim();
-
-        const text =
+    const text=
 `📩 Нова заявка
 
 👤 Ім'я: ${name}
@@ -145,38 +170,38 @@ if (orderForm) {
 💬 Повідомлення:
 ${msg}`;
 
-        fetch("https://api.telegram.org/botYOUR_TOKEN/sendMessage", {
+    fetch("https://api.telegram.org/botYOUR_TOKEN/sendMessage",{
 
-            method: "POST",
+        method:"POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+        headers:{
+            "Content-Type":"application/json"
+        },
 
-            body: JSON.stringify({
+        body:JSON.stringify({
 
-                chat_id: "YOUR_CHAT_ID",
+            chat_id:"YOUR_CHAT_ID",
 
-                text: text
-
-            })
+            text:text
 
         })
-        .then(() => {
 
-            alert("Заявку успішно відправлено!");
+    })
 
-            orderForm.reset();
+    .then(()=>{
 
-            modal?.classList.remove("show");
+        alert("Заявку успішно відправлено!");
 
-        })
-        .catch(() => {
+        orderForm.reset();
 
-            alert("Помилка відправлення. Спробуйте ще раз.");
+        modal?.classList.remove("show");
 
-        });
+    })
+
+    .catch(()=>{
+
+        alert("Помилка відправлення.");
 
     });
 
-}
+});
