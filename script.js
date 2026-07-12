@@ -40,42 +40,24 @@ document.querySelectorAll('nav a').forEach(link => {
 const topBtn = document.getElementById("topBtn");
 const callBtn = document.getElementById("callBtn");
 
-window.addEventListener("scroll", () => {
-window.addEventListener("scroll", () => {
+let hideTimer;
 
-    if(window.scrollY <= 300){
+function resetButtonsTimer() {
+
+    if (window.scrollY <= 300) {
 
         topBtn?.classList.remove("float-visible");
         callBtn?.classList.remove("float-visible");
+
         return;
-
     }
-
-    resetButtonsTimer();
-
-});
-
-topBtn?.addEventListener("click", () => {
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-});
-
-// ===== Auto hide floating buttons =====
-
-let hideTimer;
-
-function resetButtonsTimer(){
-
-    if(window.scrollY <= 300) return;
 
     topBtn?.classList.add("float-visible");
 
-    if(window.innerWidth <= 768){
+    if (window.innerWidth <= 768) {
         callBtn?.classList.add("float-visible");
+    } else {
+        callBtn?.classList.remove("float-visible");
     }
 
     clearTimeout(hideTimer);
@@ -89,43 +71,24 @@ function resetButtonsTimer(){
 
 }
 
-["scroll","touchstart","touchmove","mousemove"].forEach(event => {
+window.addEventListener("scroll", resetButtonsTimer, { passive: true });
 
-    window.addEventListener(event, resetButtonsTimer, {passive:true});
+window.addEventListener("resize", resetButtonsTimer);
 
+["touchstart", "touchmove", "mousemove"].forEach(event => {
+    window.addEventListener(event, resetButtonsTimer, { passive: true });
 });
 
-// ===== Gallery =====
+topBtn?.addEventListener("click", () => {
 
-document.querySelectorAll(".gallery img").forEach(img => {
-
-    img.addEventListener("click", () => {
-
-        const overlay = document.createElement("div");
-
-        overlay.style.cssText = `
-            position:fixed;
-            inset:0;
-            background:rgba(0,0,0,.85);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            z-index:99999;
-            cursor:pointer;
-        `;
-
-        overlay.innerHTML = `
-            <img src="${img.src}"
-                 style="max-width:90%;max-height:90%;border-radius:12px;">
-        `;
-
-        overlay.addEventListener("click", () => overlay.remove());
-
-        document.body.appendChild(overlay);
-
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
     });
 
 });
+
+resetButtonsTimer();
 
 // ===== Modal =====
 
