@@ -217,11 +217,11 @@ header .container{
 
     display:flex;
     align-items:center;
-    gap:30px;
 }
 
-.logo {
-    flex-shrink: 0;
+.logo{
+    flex-shrink:0;
+    margin-right:40px;
 }
 
 .logo a {
@@ -298,7 +298,7 @@ nav a:hover {
     justify-content:center;
 
     flex-shrink:0;
-    margin-left:50px;
+    margin-left:auto;
 }
 
 /* ===== Mobile menu ===== */
@@ -525,4 +525,40 @@ nav a:hover {
     min-height:130px;
 
     resize:vertical;
+}
+
+/* Прибрати синє підсвічування на iPhone */
+
+a,
+button,
+.btn,
+#topBtn,
+#callBtn,
+.menu-toggle{
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+    outline:none;
+}
+
+a:focus,
+button:focus,
+.btn:focus,
+#topBtn:focus,
+#callBtn:focus,
+.menu-toggle:focus{
+    outline:none;
+}
+
+a:focus-visible,
+button:focus-visible{
+    outline:none;
+}
+
+/* Після натискання не залишати "активний" стан */
+
+.btn:active,
+#topBtn:active,
+#callBtn:active{
+    transform:none;
+    box-shadow:0 12px 30px rgba(79,157,255,.25);
 }
