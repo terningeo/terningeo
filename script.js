@@ -1,12 +1,16 @@
 // ===== Mobile menu =====
 
-const menuToggle = document.querySelector(".menu-toggle");
-const menu = document.getElementById("main-menu");
+const menuToggle=document.querySelector(".menu-toggle");
+const menu=document.getElementById("main-menu");
 
-if (menuToggle && menu) {
-    menuToggle.addEventListener("click", () => {
+if(menuToggle && menu){
+
+    menuToggle.addEventListener("click",()=>{
+
         menu.classList.toggle("active");
+
     });
+
 }
 
 // ===== Smooth scroll =====
@@ -33,36 +37,32 @@ document.querySelectorAll('nav a').forEach(link => {
 
 // ===== Button "Up" =====
 
-const topBtn = document.getElementById("topBtn");
+const topBtn=document.getElementById("topBtn");
+const callBtn=document.getElementById("callBtn");
 
-const callBtn = document.getElementById("callBtn");
+window.addEventListener("scroll",()=>{
 
-if (topBtn) {
-
-window.addEventListener("scroll", () => {
-
-    const visible = window.scrollY > 300;
+    const show=window.scrollY>300;
 
     if(topBtn){
-        topBtn.style.display = visible ? "flex" : "none";
+        topBtn.style.display=show?"flex":"none";
     }
 
-    if(callBtn && window.innerWidth <= 768){
-        callBtn.style.display = visible ? "flex" : "none";
+    if(callBtn){
+
+        if(window.innerWidth<=768){
+
+            callBtn.style.display=show?"flex":"none";
+
+        }else{
+
+            callBtn.style.display="none";
+
+        }
+
     }
 
 });
-
-    topBtn.addEventListener("click", () => {
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    });
-
-}
 
 // ===== Gallery =====
 
