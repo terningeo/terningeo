@@ -41,22 +41,17 @@ const topBtn = document.getElementById("topBtn");
 const callBtn = document.getElementById("callBtn");
 
 window.addEventListener("scroll", () => {
+window.addEventListener("scroll", () => {
 
-    const show = window.scrollY > 300;
+    if(window.scrollY <= 300){
 
-    if (topBtn) {
-        topBtn.classList.toggle("float-visible", show);
-    }
-
-    if (callBtn) {
-
-        if (window.innerWidth <= 768) {
-            callBtn.classList.toggle("float-visible", show);
-        } else {
-            callBtn.classList.remove("float-visible");
-        }
+        topBtn?.classList.remove("float-visible");
+        callBtn?.classList.remove("float-visible");
+        return;
 
     }
+
+    resetButtonsTimer();
 
 });
 
@@ -66,6 +61,37 @@ topBtn?.addEventListener("click", () => {
         top: 0,
         behavior: "smooth"
     });
+
+});
+
+// ===== Auto hide floating buttons =====
+
+let hideTimer;
+
+function resetButtonsTimer(){
+
+    if(window.scrollY <= 300) return;
+
+    topBtn?.classList.add("float-visible");
+
+    if(window.innerWidth <= 768){
+        callBtn?.classList.add("float-visible");
+    }
+
+    clearTimeout(hideTimer);
+
+    hideTimer = setTimeout(() => {
+
+        topBtn?.classList.remove("float-visible");
+        callBtn?.classList.remove("float-visible");
+
+    }, 2500);
+
+}
+
+["scroll","touchstart","touchmove","mousemove"].forEach(event => {
+
+    window.addEventListener(event, resetButtonsTimer, {passive:true});
 
 });
 
