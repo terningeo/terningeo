@@ -45,15 +45,12 @@ window.addEventListener("scroll",()=>{
     const show=window.scrollY>300;
 
     if(topBtn){
-        topBtn.style.display=show?"flex":"none";
-    }
+    topBtn.classList.toggle("float-visible", show);
+}
 
-    if(callBtn){
-
-        if(window.innerWidth<=768){
-
-            callBtn.style.display=show?"flex":"none";
-
+if(callBtn && window.innerWidth <= 768){
+    callBtn.classList.toggle("float-visible", show);
+}
         }else{
 
             callBtn.style.display="none";
