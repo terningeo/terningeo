@@ -140,7 +140,17 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     width:60px;
     height:60px;
 
-    display:none;
+    display:flex;
+
+opacity:0;
+visibility:hidden;
+
+transform:translateY(20px);
+
+transition:
+    opacity .35s ease,
+    transform .35s ease,
+    background .25s ease;
     align-items:center;
     justify-content:center;
 
@@ -167,6 +177,12 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     transform:translateY(-3px);
 }
 
+.float-visible{
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:translateY(0) !important;
+}
+
 #callBtn{
     position:fixed;
 
@@ -176,11 +192,11 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     width:60px;
     height:60px;
 
-    display:none;
+    display:flex;
     align-items:center;
     justify-content:center;
 
-    background:#16a34a;
+    background:#0b6efd;
     color:#fff;
 
     border-radius:50%;
@@ -190,16 +206,22 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
 
     box-shadow:0 8px 20px rgba(0,0,0,.25);
 
-    transition:.25s;
+    transition:
+        opacity .35s ease,
+        transform .35s ease,
+        background .25s ease;
+
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(20px);
 
     z-index:9999;
 }
 
 #callBtn:hover{
-    background:#15803d;
+    background:#0958c9;
     transform:translateY(-3px);
 }
-
 #topBtn:active{
     transform:scale(.95);
 }
