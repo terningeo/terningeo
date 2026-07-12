@@ -166,6 +166,39 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     transform:translateY(-3px);
 }
 
+#callBtn{
+    position:fixed;
+
+    left:25px;
+    bottom:25px;
+
+    width:60px;
+    height:60px;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    background:#16a34a;
+    color:#fff;
+
+    border-radius:50%;
+    text-decoration:none;
+
+    font-size:28px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+
+    transition:.25s;
+
+    z-index:9999;
+}
+
+#callBtn:hover{
+    background:#15803d;
+    transform:translateY(-3px);
+}
+
 #topBtn:active{
     transform:scale(.95);
 }
@@ -302,8 +335,18 @@ nav a:hover {
     }
 
     .desktop-btn{
-        display:none;
-    }
+    display:none !important;
+}
+
+    #callBtn{
+    width:56px;
+    height:56px;
+
+    left:18px;
+    bottom:18px;
+
+    font-size:26px;
+}
 
     .menu-toggle{
         display:block;
