@@ -141,16 +141,6 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     height:60px;
 
     display:flex;
-
-opacity:0;
-visibility:hidden;
-
-transform:translateY(20px);
-
-transition:
-    opacity .35s ease,
-    transform .35s ease,
-    background .25s ease;
     align-items:center;
     justify-content:center;
 
@@ -167,20 +157,38 @@ transition:
     cursor:pointer;
 
     box-shadow:0 8px 20px rgba(0,0,0,.25);
-    transition:.25s;
+
+    opacity:0;
+    visibility:hidden;
+
+    transform:translateY(25px) scale(.85);
+
+    transition:
+        opacity .35s ease,
+        transform .35s ease,
+        visibility .35s,
+        background .25s;
 
     z-index:9999;
 }
 
-#topBtn:hover{
+#topBtn:hover,
+#callBtn:hover{
+
     background:#0958c9;
-    transform:translateY(-3px);
+
+    transform:translateY(-3px) scale(1.05);
+
 }
 
 .float-visible{
+
     opacity:1 !important;
+
     visibility:visible !important;
-    transform:translateY(0) !important;
+
+    transform:translateY(0) scale(1) !important;
+
 }
 
 #callBtn{
@@ -206,22 +214,29 @@ transition:
 
     box-shadow:0 8px 20px rgba(0,0,0,.25);
 
+    opacity:0;
+    visibility:hidden;
+
+    transform:translateY(25px) scale(.85);
+
     transition:
         opacity .35s ease,
         transform .35s ease,
-        background .25s ease;
-
-    opacity:0;
-    visibility:hidden;
-    transform:translateY(20px);
+        visibility .35s,
+        background .25s;
 
     z-index:9999;
 }
 
+#topBtn:hover,
 #callBtn:hover{
+
     background:#0958c9;
-    transform:translateY(-3px);
+
+    transform:translateY(-3px) scale(1.05);
+
 }
+
 #topBtn:active{
     transform:scale(.95);
 }
