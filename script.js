@@ -35,29 +35,37 @@ document.querySelectorAll('nav a').forEach(link => {
 
 });
 
-// ===== Button "Up" =====
+// ===== Floating buttons =====
 
-const topBtn=document.getElementById("topBtn");
-const callBtn=document.getElementById("callBtn");
+const topBtn = document.getElementById("topBtn");
+const callBtn = document.getElementById("callBtn");
 
-window.addEventListener("scroll",()=>{
+window.addEventListener("scroll", () => {
 
-    const show=window.scrollY>300;
+    const show = window.scrollY > 300;
 
-    if(topBtn){
-    topBtn.classList.toggle("float-visible", show);
-}
+    if (topBtn) {
+        topBtn.classList.toggle("float-visible", show);
+    }
 
-if(callBtn && window.innerWidth <= 768){
-    callBtn.classList.toggle("float-visible", show);
-}
-        }else{
+    if (callBtn) {
 
-            callBtn.style.display="none";
-
+        if (window.innerWidth <= 768) {
+            callBtn.classList.toggle("float-visible", show);
+        } else {
+            callBtn.classList.remove("float-visible");
         }
 
     }
+
+});
+
+topBtn?.addEventListener("click", () => {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 });
 
