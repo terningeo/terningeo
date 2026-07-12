@@ -9,14 +9,15 @@ body{background:#f6f7fb;color:#111}
 
 .container{width:90%;max-width:1200px;margin:auto}
 
-header .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 8px 20px;
+header .container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:8px 20px;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:30px;
 }
 
 nav{
@@ -318,7 +319,7 @@ nav a:hover {
 
 @media (max-width:768px){
 
-    .header-container{
+    header .container{
         min-height:70px;
     }
 
@@ -335,34 +336,28 @@ nav a:hover {
     }
 
     .desktop-btn{
-    display:none !important;
-}
-
-    #callBtn{
-    width:56px;
-    height:56px;
-
-    left:18px;
-    bottom:18px;
-
-    font-size:26px;
-}
+        display:none !important;
+    }
 
     .menu-toggle{
         display:block;
+        font-size:34px;
+        margin-left:auto;
     }
 
     nav{
         position:absolute;
-        top:70px;
+        top:72px;
         left:0;
         width:100%;
-        background:#fff;
         display:none;
         flex-direction:column;
-        gap:15px;
-        padding:20px;
+        gap:0;
+        background:#fff;
+        padding:15px 0;
         box-shadow:0 5px 20px rgba(0,0,0,.1);
+        margin:0;
+        z-index:999;
     }
 
     nav.active{
@@ -370,25 +365,27 @@ nav a:hover {
     }
 
     nav a{
+        display:block;
+        padding:14px 20px;
         text-align:center;
-        margin:10px 0;
+        border-bottom:1px solid #eee;
     }
 
-   .mobile-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:100%;
-    margin-top:10px;
-}
+    #callBtn{
+        width:56px;
+        height:56px;
+        left:18px;
+        bottom:18px;
+        font-size:26px;
+    }
 
-#topBtn{
-    width:56px;
-    height:56px;
-    right:18px;
-    bottom:18px;
-    font-size:26px;
-}
+    #topBtn{
+        width:56px;
+        height:56px;
+        right:18px;
+        bottom:18px;
+        font-size:26px;
+    }
 
     .hero h1{
         font-size:34px;
