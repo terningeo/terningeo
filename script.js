@@ -35,13 +35,23 @@ document.querySelectorAll('nav a').forEach(link => {
 
 const topBtn = document.getElementById("topBtn");
 
+const callBtn = document.getElementById("callBtn");
+
 if (topBtn) {
 
-    window.addEventListener("scroll", () => {
+window.addEventListener("scroll", () => {
 
-        topBtn.style.display = window.scrollY > 300 ? "flex" : "none";
+    const visible = window.scrollY > 300;
 
-    });
+    if(topBtn){
+        topBtn.style.display = visible ? "flex" : "none";
+    }
+
+    if(callBtn && window.innerWidth <= 768){
+        callBtn.style.display = visible ? "flex" : "none";
+    }
+
+});
 
     topBtn.addEventListener("click", () => {
 
