@@ -186,10 +186,11 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     transform:translateY(35px) scale(.75);
 
 transition:
-    opacity .8s cubic-bezier(.22,1,.36,1),
-    transform .8s cubic-bezier(.22,1,.36,1),
-    visibility .8s,
-    background .25s;
+    opacity .9s ease,
+    transform .9s cubic-bezier(.22,1,.36,1),
+    visibility .9s,
+    background .25s,
+    box-shadow .25s;
 
     will-change:transform,opacity;
 }
@@ -204,15 +205,15 @@ header{
     box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
-.header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 12px 20px;
+header .container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:8px 20px;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:30px;
 }
 
 .logo {
