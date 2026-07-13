@@ -163,8 +163,6 @@ nav{
 #about h2{
     font-size:40px;
     color:#1d2b4f;
-    text-align:center;
-    margin-bottom:45px;
 }
 
 .about-text h3{
@@ -268,12 +266,18 @@ footer{padding:20px;text-align:center;background:#1d2b4f;border-top:4px solid #0
 #topBtn:hover,
 #callBtn:hover{
 
-    background:#11b286;
-
     transform:translateY(-2px) scale(1.05);
 
     box-shadow:0 16px 35px rgba(79,157,255,.35);
 
+}
+
+#topBtn:hover{
+    background:#78b8ff;
+}
+
+#callBtn:hover{
+    background:#11b286;
 }
 
 .float-visible{
@@ -310,7 +314,6 @@ footer{padding:20px;text-align:center;background:#1d2b4f;border-top:4px solid #0
     align-items:center;
     justify-content:center;
 
-    background:#0d9b74;
     color:#fff;
 
     border:none;
@@ -333,6 +336,14 @@ background .25s,
 box-shadow .25s;
 
     will-change:transform,opacity;
+}
+
+#callBtn{
+    background:#0d9b74;
+}
+
+#topBtn{
+    background:#4f9dff;
 }
 
 header{
@@ -395,6 +406,7 @@ nav a:hover {
     justify-content:center;
 
     background:#0d9b74;
+    box-shadow:0 8px 20px rgba(13,155,116,.25);
     color:#fff;
 
     padding:14px 30px;
@@ -420,7 +432,7 @@ nav a:hover {
 .btn:hover{
     background:#087b5d;
     transform:translateY(-2px);
-    box-shadow:0 12px 30px rgba(11,110,253,.35);
+    box-shadow:0 12px 30px rgba(13,155,116,.35);
 }
 
 .btn:active{
