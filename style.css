@@ -83,6 +83,36 @@ nav{
 
 .section{padding:80px 0;text-align:center}
 
+.section h2{
+
+    position:relative;
+
+    display:inline-block;
+
+    padding-bottom:18px;
+}
+
+.section h2::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    bottom:0;
+
+    width:70px;
+
+    height:4px;
+
+    border-radius:10px;
+
+    background:#0d9b74;
+}
+
 .about{
     display:grid;
     grid-template-columns:1fr 1.25fr 1fr;
@@ -175,7 +205,7 @@ nav{
 
 .about-features div{
 
-    background:#f6f8fc;
+    background:#f2faf6;
 
     padding:16px;
 
@@ -185,7 +215,7 @@ nav{
 
     color:#1d2b4f;
 
-    border-left:4px solid #4f9dff;
+    border-left:4px solid #0d9b74;
 
 }
 
@@ -210,13 +240,23 @@ nav{
     gap:10px;
 }
 
-.gallery img{width:100%;border-radius:10px;cursor:pointer}
+.gallery img{width:100%;border-radius:10px;cursor:pointer
+
+    transition:.35s;
+}
+
+.gallery img:hover{
+
+    transform:scale(1.02);
+
+    box-shadow:0 18px 40px rgba(13,155,116,.18);
+}
 
 form{display:flex;flex-direction:column;gap:10px;max-width:400px;margin:auto}
 
 input,textarea{padding:10px;border:1px solid #ccc;border-radius:10px}
 
-footer{padding:20px;text-align:center;background:#111;color:#fff}
+footer{padding:20px;text-align:center;background:#1d2b4f;border-top:4px solid #0d9b74;color:#fff}
 
 #topBtn{
     position:fixed;
@@ -228,7 +268,7 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
 #topBtn:hover,
 #callBtn:hover{
 
-    background:#78b8ff;
+    background:#11b286;
 
     transform:translateY(-2px) scale(1.05);
 
@@ -270,7 +310,7 @@ footer{padding:20px;text-align:center;background:#111;color:#fff}
     align-items:center;
     justify-content:center;
 
-    background:#4f9dff;
+    background:#0d9b74;
     color:#fff;
 
     border:none;
@@ -354,7 +394,7 @@ nav a:hover {
     align-items:center;
     justify-content:center;
 
-    background:#63a8ff;
+    background:#0d9b74;
     color:#fff;
 
     padding:14px 30px;
@@ -378,7 +418,7 @@ nav a:hover {
 }
 
 .btn:hover{
-    background:#0958c9;
+    background:#087b5d;
     transform:translateY(-2px);
     box-shadow:0 12px 30px rgba(11,110,253,.35);
 }
@@ -530,7 +570,7 @@ nav a:hover {
 
     border-radius:20px;
 
-    background:#4f9dff;
+    background:#0d9b74;
 }
     
 .about-text{
@@ -708,7 +748,7 @@ nav a:hover {
 
     transform:translateY(-6px);
 
-    box-shadow:0 22px 45px rgba(79,157,255,.18);
+    box-shadow:0 22px 45px rgba(13,155,116,.18);
 }
 
 .contact-icon{
@@ -718,7 +758,7 @@ nav a:hover {
 
     border-radius:50%;
 
-    background:#eaf3ff;
+    background:#eaf8f3;
 
     display:flex;
     align-items:center;
@@ -857,7 +897,7 @@ nav a:hover {
 .close-modal:hover,
 .close-map:hover{
 
-    background:#4f9dff;
+    background:#0d9b74;
     color:#fff;
 }
 
@@ -886,6 +926,17 @@ nav a:hover {
     border-radius:12px;
 
     font-size:16px;
+}
+
+.modal input:focus,
+.modal textarea:focus{
+
+    border-color:#0d9b74;
+
+    outline:none;
+
+    box-shadow:0 0 0 4px rgba(13,155,116,.12);
+
 }
 
 .modal textarea{
@@ -936,7 +987,7 @@ nav a:hover {
     width:100%;
     text-align:center;
 
-    color:#1d2b4f;
+    color:#0d9b74;
     font-size:30px;
     margin-bottom:10px;
 }
