@@ -170,7 +170,7 @@ orderForm?.addEventListener("submit",function(e){
 💬 Повідомлення:
 ${msg}`;
 
-    fetch("https://api.telegram.org/8287789817:AAEvNzMhOIfuNpICWIlzl7Gt3TcAruQKsZY/sendMessage",{
+    fetch("https://api.telegram.org/bot8287789817:AAEvNzMhOIfuNpICWIlzl7Gt3TcAruQKsZY/sendMessage",{
 
         method:"POST",
 
@@ -188,20 +188,21 @@ ${msg}`;
 
     })
 
-    .then(()=>{
+    .then(res => res.json())
+        
+.then(data => {
+    console.log(data);
 
+    if (data.ok) {
         alert("Заявку успішно відправлено!");
-
         orderForm.reset();
-
         modal?.classList.remove("show");
-
+    } else {
+        alert(data.description);
+    }
     })
-
-    .catch(()=>{
-
-        alert("Помилка відправлення.");
-
+    .catch(err => {
+    console.error(err);
     });
 
 });
