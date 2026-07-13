@@ -416,6 +416,17 @@ nav a:hover {
 
 @media (max-width:768px){
 
+.about,
+.about-text,
+.about-slider,
+.about-features,
+.about-features div{
+    min-width:0;
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+}
+
 .about{
     display:block;
     margin-top:35px;
@@ -569,19 +580,30 @@ nav a:hover {
     }
 
 .about-slider{
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+
+    gap:0;
     width:100%;
-    max-width:100%;
-    overflow:hidden;
 }
 
 .about-slider img{
-    display:block;
-    width:100%;
-    height:auto;
-    max-width:100%;
     flex:0 0 100%;
-}
+    width:100%;
+    min-width:100%;
+    max-width:100%;
 
+    display:block;
+
+    aspect-ratio:4/5;
+    object-fit:cover;
+
+    scroll-snap-align:center;
+
+    border-radius:18px;
+}
 .about-text{
     width:100%;
     max-width:100%;
