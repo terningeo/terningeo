@@ -452,19 +452,19 @@ nav a:hover {
 }
 
 .about-slider img{
-
     flex:0 0 100%;
-
     width:100%;
     height:auto;
 
+    aspect-ratio:4/5;
+
     display:block;
+
+    object-fit:cover;
 
     scroll-snap-align:start;
 
     border-radius:22px;
-
-    object-fit:cover;
 
     box-shadow:0 12px 30px rgba(0,0,0,.12);
 }
@@ -498,13 +498,10 @@ nav a:hover {
 
     background:#4f9dff;
 }
+    
 .about-text{
-    width:100%;
-    max-width:100%;
-
     background:transparent;
     box-shadow:none;
-
     padding:22px 0;
 }
 
@@ -616,37 +613,6 @@ nav a:hover {
     .gallery{
         grid-template-columns:1fr;
     }
-
-.about-slider{
-    display:flex;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    -webkit-overflow-scrolling:touch;
-
-    gap:0;
-    width:100%;
-}
-
-.about-slider img{
-    flex:0 0 100%;
-    width:100%;
-    min-width:100%;
-    max-width:100%;
-
-    display:block;
-
-    aspect-ratio:4/5;
-    object-fit:cover;
-
-    scroll-snap-align:center;
-
-    border-radius:18px;
-}
-.about-text{
-    width:100%;
-    max-width:100%;
-    overflow:hidden;
-}
 
 .about-features{
     display:grid;
