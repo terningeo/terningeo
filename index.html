@@ -216,7 +216,7 @@
 
 <div id="orderModal" class="modal">
 
-    <div class="modal-content">
+        <div class="modal-content">
 
         <button class="close-modal">&times;</button>
 
@@ -224,15 +224,26 @@
 
         <form id="orderForm">
 
-            <input type="text" placeholder="Ваше ім'я" required>
+        <input
+        type="text"
+        placeholder="Ваше ім'я"
+        required
+        minlength="2">
 
-            <input type="tel" placeholder="Телефон" required>
+        <input
+        type="tel"
+        placeholder="+380671234567"
+        required
+        pattern="^(\+380|380|0)\d{9}$">
 
-            <textarea placeholder="Опишіть, що потрібно виконати"></textarea>
+        <textarea
+        placeholder="Опишіть, що потрібно виконати"
+        required
+        minlength="5"></textarea>
 
-            <button type="submit" class="btn">
-                Надіслати заявку
-            </button>
+        <button type="submit" class="btn">
+        Надіслати заявку
+        </button>
 
         </form>
 
