@@ -157,12 +157,31 @@ orderForm?.addEventListener("submit",function(e){
 
     e.preventDefault();
 
-    const name=this.querySelector('input[type="text"]').value.trim();
-    const phone=this.querySelector('input[type="tel"]').value.trim();
-    const msg=this.querySelector("textarea").value.trim();
+const name = this.querySelector('input[type="text"]').value.trim();
+const phone = this.querySelector('input[type="tel"]').value.trim();
+const msg = this.querySelector("textarea").value.trim();
 
-    const text=
-`📩 Нова заявка
+// Перевірка імені
+if (name.length < 2) {
+    alert("Введіть коректне ім'я.");
+    return;
+}
+
+// Перевірка номера (+380XXXXXXXXX, 380XXXXXXXXX або 0XXXXXXXXX)
+const phoneRegex = /^(\+380|380|0)\d{9}$/;
+
+if (!phoneRegex.test(phone)) {
+    alert("Введіть номер у форматі +380XXXXXXXXX, 380XXXXXXXXX або 0XXXXXXXXX.");
+    return;
+}
+
+// Перевірка повідомлення
+if (msg.length < 5) {
+    alert("Введіть повідомлення (мінімум 5 символів).");
+    return;
+}
+
+const text = `📩 Нова заявка
 
 👤 Ім'я: ${name}
 📞 Телефон: ${phone}
