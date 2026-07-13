@@ -916,6 +916,63 @@ nav a:hover {
 
 }
 
+/* ===== Карта регіону ===== */
+
+.map-header{
+    background:#fff;
+    padding:25px 35px 15px;
+    text-align:center;
+    border-radius:18px 18px 0 0;
+}
+
+.map-header h2{
+    color:#1d2b4f;
+    margin-bottom:10px;
+    font-size:30px;
+}
+
+.map-header p{
+    color:#666;
+    font-size:16px;
+    line-height:1.6;
+}
+
+.modal-map img{
+    display:block;
+    width:100%;
+}
+
+.map-footer{
+    background:#fff;
+    padding:20px 35px 30px;
+    text-align:center;
+    color:#555;
+    line-height:1.7;
+    font-size:16px;
+    border-radius:0 0 18px 18px;
+}
+
+@media (max-width:768px){
+
+    .map-header{
+        padding:18px 18px 12px;
+    }
+
+    .map-header h2{
+        font-size:24px;
+    }
+
+    .map-header p{
+        font-size:14px;
+    }
+
+    .map-footer{
+        padding:18px;
+        font-size:14px;
+    }
+
+}
+
 /* Прибрати синє підсвічування на iPhone */
 
 a,
