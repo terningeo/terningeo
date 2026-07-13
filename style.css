@@ -438,12 +438,13 @@ nav a:hover {
 
 .about-slider{
     display:flex;
-    gap:20px;
     overflow-x:auto;
+
     scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
     -webkit-overflow-scrolling:touch;
 
-    padding:0 20px 12px;
+    scrollbar-width:none;
 }
 
 .about-slider::-webkit-scrollbar{
@@ -451,25 +452,52 @@ nav a:hover {
 }
 
 .about-slider img{
-    flex:0 0 calc(100% - 40px);
-    width:calc(100% - 40px);
+
+    flex:0 0 100%;
+
+    width:100%;
+    height:auto;
 
     display:block;
 
-    border-radius:20px;
+    scroll-snap-align:start;
+
+    border-radius:22px;
 
     object-fit:cover;
 
-    scroll-snap-align:center;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
-}
-    
-.about-slider::after{
-    content:"";
-    flex:0 0 16px;
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
 }
 
+.slider-dots{
+
+    display:flex;
+    justify-content:center;
+    gap:10px;
+
+    margin-top:18px;
+}
+
+.dot{
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    background:#cfd4df;
+
+    transition:.25s;
+}
+
+.dot.active{
+
+    width:28px;
+
+    border-radius:20px;
+
+    background:#4f9dff;
+}
 .about-text{
     width:100%;
     max-width:100%;
