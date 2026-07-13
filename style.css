@@ -127,16 +127,6 @@ nav{
     box-shadow:0 15px 40px rgba(0,0,0,.08);
 }
 
-.about-text p{
-
-    font-size:18px;
-    line-height:1.9;
-
-    color:#3f4652;
-
-    margin-bottom:22px;
-}
-
 #about h2{
     font-size:40px;
     color:#1d2b4f;
@@ -425,8 +415,6 @@ nav a:hover {
         width:100%;
     }
 
-}
-
     .about{
 
     grid-template-columns:1fr;
@@ -559,6 +547,8 @@ nav a:hover {
     .gallery{
         grid-template-columns:1fr;
     }
+
+}
 
 /* ===== Modal ===== */
 
