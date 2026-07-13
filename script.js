@@ -120,13 +120,14 @@ document.querySelectorAll(".gallery img").forEach(img => {
 const modal = document.getElementById("orderModal");
 
 document
-.querySelectorAll("#openOrderModal, #openOrderModalBottom, .open-modal")
+.querySelectorAll("#openOrderModal, .open-modal")
 .forEach(btn => {
 
     btn.addEventListener("click", e => {
 
         e.preventDefault();
-        modal?.classList.add("show");
+
+        modal.classList.add("show");
 
     });
 
