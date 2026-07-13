@@ -198,10 +198,19 @@ fetch("https://bot.terningeo.workers.dev", {
         message: msg
     })
 })
-.then(r => r.json())
+    
 .then(() => {
+
     alert("Дякуємо! Заявку відправлено.");
+
+    orderForm.reset();
+
+    setTimeout(() => {
+        modal.classList.remove("show");
+    }, 200);
+
 })
+    
 .catch(err => {
     console.error(err);
     alert("Помилка відправлення.");
