@@ -245,3 +245,31 @@ if(slider){
     });
 
 }
+
+// ===== Work area map =====
+
+const mapModal = document.getElementById("mapModal");
+
+document.getElementById("openMap")?.addEventListener("click",(e)=>{
+
+    e.preventDefault();
+
+    mapModal.classList.add("show");
+
+});
+
+document.querySelector(".close-map")?.addEventListener("click",()=>{
+
+    mapModal.classList.remove("show");
+
+});
+
+mapModal?.addEventListener("click",(e)=>{
+
+    if(e.target===mapModal){
+
+        mapModal.classList.remove("show");
+
+    }
+
+});
