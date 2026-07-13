@@ -205,3 +205,23 @@ ${msg}`;
     });
 
 });
+
+const slider = document.getElementById("aboutSlider");
+
+if(slider){
+
+    const dots = document.querySelectorAll(".slider-dots .dot");
+
+    slider.addEventListener("scroll",()=>{
+
+        const index = Math.round(slider.scrollLeft / slider.clientWidth);
+
+        dots.forEach((dot,i)=>{
+
+            dot.classList.toggle("active",i===index);
+
+        });
+
+    });
+
+}
