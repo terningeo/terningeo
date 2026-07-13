@@ -896,3 +896,15 @@ button:focus-visible{
     transform:none;
     box-shadow:0 12px 30px rgba(79,157,255,.25);
 }
+
+@media (max-width:768px){
+
+.contact-grid{
+    grid-template-columns:1fr !important;
+}
+
+.contact-card{
+    min-height:auto;
+}
+
+}
