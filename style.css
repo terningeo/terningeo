@@ -438,12 +438,12 @@ nav a:hover {
 
 .about-slider{
     display:flex;
-    gap:14px;
     overflow-x:auto;
-    scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;
-    margin-bottom:30px;
-    padding-bottom:10px;
+    scroll-snap-type:x mandatory;
+
+    gap:18px;
+    padding:0 18px 10px;
 }
 
 .about-slider::-webkit-scrollbar{
@@ -451,23 +451,30 @@ nav a:hover {
 }
 
 .about-slider img{
-    flex:0 0 100%;
-    width:100%;
-    max-width:100%;
+    flex:0 0 calc(100% - 36px);
+    width:calc(100% - 36px);
+    min-width:calc(100% - 36px);
 
-    scroll-snap-align:center;
+    display:block;
 
     aspect-ratio:4/5;
     object-fit:cover;
 
-    border-radius:18px;
+    scroll-snap-align:center;
 
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
+    border-radius:22px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.12);
 }
 
 .about-text{
+    width:100%;
     max-width:100%;
-    padding:22px;
+
+    background:transparent;
+    box-shadow:none;
+
+    padding:22px 0;
 }
 
 .about-features{
