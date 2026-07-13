@@ -189,23 +189,23 @@ const text = `📩 Нова заявка
 💬 Повідомлення:
 ${msg}`;
 
-    fetch("https://api.telegram.org/bot8287789817:AAEvNzMhOIfuNpICWIlzl7Gt3TcAruQKsZY/sendMessage",{
-
-        method:"POST",
-
-        headers:{
-            "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-
-            chat_id:"8089450397",
-
-            text:text
-
-        })
-
+fetch(
+"https://https://bot.terningeo.workers.dev",
+{
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+        name:name,
+        phone:phone,
+        message:message
     })
+})
+.then(r=>r.json())
+.then(()=>{
+    alert("Дякуємо! Заявку відправлено.");
+});
 
     .then(res => res.json())
         
