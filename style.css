@@ -438,34 +438,33 @@ nav a:hover {
 
 .about-slider{
     display:flex;
+    gap:20px;
     overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
     scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
 
-    gap:16px;
-    padding:0 16px 12px;
-
-    scroll-padding-left:16px;
+    padding:0 20px 12px;
 }
 
 .about-slider::-webkit-scrollbar{
     display:none;
 }
 
-.slide{
-    flex:0 0 92%;
-    scroll-snap-align:start;
-}
+.about-slider img{
+    flex:0 0 calc(100% - 40px);
+    width:calc(100% - 40px);
 
-.slide img{
     display:block;
-    width:100%;
-    height:auto;
 
-    border-radius:22px;
+    border-radius:20px;
+
+    object-fit:cover;
+
+    scroll-snap-align:center;
+
     box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
-
+    
 .about-slider::after{
     content:"";
     flex:0 0 16px;
