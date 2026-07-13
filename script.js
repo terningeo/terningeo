@@ -189,41 +189,24 @@ const text = `📩 Нова заявка
 💬 Повідомлення:
 ${msg}`;
 
-fetch(
-"https://https://bot.terningeo.workers.dev",
-{
-    method:"POST",
-    headers:{
-        "Content-Type":"application/json"
+fetch("https://bot.terningeo.workers.dev", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
     },
-    body:JSON.stringify({
-        name:name,
-        phone:phone,
-        message:message
+    body: JSON.stringify({
+        name: name,
+        phone: phone,
+        message: msg
     })
 })
-.then(r=>r.json())
-.then(()=>{
+.then(r => r.json())
+.then(() => {
     alert("Дякуємо! Заявку відправлено.");
-});
-
-    .then(res => res.json())
-        
-.then(data => {
-    console.log(data);
-
-    if (data.ok) {
-        alert("Заявку успішно відправлено!");
-        orderForm.reset();
-        modal?.classList.remove("show");
-    } else {
-        alert(data.description);
-    }
-    })
-    .catch(err => {
+})
+.catch(err => {
     console.error(err);
-    });
-
+    alert("Помилка відправлення.");
 });
 
 const slider = document.getElementById("aboutSlider");
