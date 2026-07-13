@@ -170,7 +170,7 @@ orderForm?.addEventListener("submit",function(e){
 💬 Повідомлення:
 ${msg}`;
 
-    fetch("https://api.telegram.org/botYOUR_TOKEN/sendMessage",{
+    fetch("https://api.telegram.org/8287789817:AAEvNzMhOIfuNpICWIlzl7Gt3TcAruQKsZY/sendMessage",{
 
         method:"POST",
 
@@ -180,7 +180,7 @@ ${msg}`;
 
         body:JSON.stringify({
 
-            chat_id:"YOUR_CHAT_ID",
+            chat_id:"8089450397",
 
             text:text
 
