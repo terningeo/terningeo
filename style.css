@@ -197,6 +197,13 @@ nav{
 
 .card{background:#fff;padding:20px;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,.1)}
 
+.card img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:12px;
+}
+
 .gallery{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
@@ -560,6 +567,39 @@ nav a:hover {
     .gallery{
         grid-template-columns:1fr;
     }
+
+.about-slider{
+    width:100%;
+    max-width:100%;
+    overflow:hidden;
+}
+
+.about-slider img{
+    display:block;
+    width:100%;
+    height:auto;
+    max-width:100%;
+    flex:0 0 100%;
+}
+
+.about-text{
+    width:100%;
+    max-width:100%;
+    overflow:hidden;
+}
+
+.about-features{
+    display:grid;
+    grid-template-columns:1fr;
+    width:100%;
+}
+
+.about-features div{
+    width:100%;
+    min-width:0;
+    word-break:break-word;
+}
+
 }
 
 /* ===== Modal ===== */
