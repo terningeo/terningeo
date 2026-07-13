@@ -921,17 +921,34 @@ nav a:hover {
 .map-header{
     background:#fff;
     padding:25px 35px 15px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
     text-align:center;
+
     border-radius:18px 18px 0 0;
 }
 
 .map-header h2{
+    width:100%;
+    text-align:center;
+
     color:#1d2b4f;
-    margin-bottom:10px;
     font-size:30px;
+    margin-bottom:10px;
 }
 
 .map-header p{
+    width:100%;
+    max-width:600px;
+
+    margin:0 auto;
+
+    text-align:center;
+
     color:#666;
     font-size:16px;
     line-height:1.6;
@@ -944,12 +961,25 @@ nav a:hover {
 
 .map-footer{
     background:#fff;
-    padding:20px 35px 30px;
+
+    padding:22px 35px 30px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
     text-align:center;
+
     color:#555;
-    line-height:1.7;
     font-size:16px;
+    line-height:1.7;
+
     border-radius:0 0 18px 18px;
+}
+
+.map-footer p{
+    max-width:650px;
+    margin:0 auto;
 }
 
 @media (max-width:768px){
