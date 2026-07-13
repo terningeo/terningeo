@@ -908,3 +908,51 @@ button:focus-visible{
 }
 
 }
+
+/* ===== Map modal ===== */
+
+.map-modal{
+
+    max-width:760px;
+
+    text-align:center;
+}
+
+.map-modal img{
+
+    width:100%;
+
+    margin:25px 0;
+
+    border-radius:18px;
+
+    box-shadow:0 18px 40px rgba(0,0,0,.08);
+}
+
+.map-modal p{
+
+    font-size:17px;
+
+    line-height:1.8;
+
+    color:#555;
+}
+
+@media(max-width:768px){
+
+.map-modal{
+
+    padding:25px;
+}
+
+.map-modal h2{
+
+    font-size:26px;
+}
+
+.map-modal p{
+
+    font-size:15px;
+}
+
+}
