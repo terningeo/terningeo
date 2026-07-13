@@ -452,20 +452,17 @@ nav a:hover {
     display:none;
 }
 
-.about-slider img{
+.slide{
     flex:0 0 92%;
-    width:92%;
-    min-width:92%;
-
-    display:block;
-
-    aspect-ratio:4/5;
-    object-fit:cover;
-
     scroll-snap-align:start;
+}
+
+.slide img{
+    display:block;
+    width:100%;
+    height:auto;
 
     border-radius:22px;
-
     box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
 
