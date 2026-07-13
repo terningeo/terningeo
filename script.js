@@ -209,6 +209,8 @@ fetch("https://bot.terningeo.workers.dev", {
     alert("Помилка відправлення.");
 });
 
+}); 
+
 const slider = document.getElementById("aboutSlider");
 
 if(slider){
