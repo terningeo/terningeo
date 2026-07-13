@@ -133,10 +133,8 @@ document
 
 });
 
-document.querySelector(".close-modal")?.addEventListener("click",()=>{
-
+document.querySelector(".close-modal")?.addEventListener("click", () => {
     modal?.classList.remove("show");
-
 });
 
 modal?.addEventListener("click",e=>{
@@ -243,10 +241,8 @@ document.getElementById("openMap")?.addEventListener("click",(e)=>{
 
 });
 
-document.querySelector(".close-map")?.addEventListener("click",()=>{
-
-    mapModal.classList.remove("show");
-
+document.querySelector(".close-map")?.addEventListener("click", () => {
+    mapModal?.classList.remove("show");
 });
 
 mapModal?.addEventListener("click",(e)=>{
