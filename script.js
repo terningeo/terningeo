@@ -240,7 +240,7 @@ if(slider){
 
 // ===== Gallery slider =====
 
-const gallerySlider = document.querySelector(".gallery-slider");
+const gallerySlider = document.getElementById("gallerySlider");
 
 if (gallerySlider) {
 
