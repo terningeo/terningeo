@@ -120,20 +120,19 @@ nav{
 
 .about{
     display:grid;
-    grid-template-columns:0.9fr 1.2fr 0.9fr;
-    gap:28px;
-    margin-top:45px;
-    align-items:center;
+    grid-template-columns:1fr 1.35fr 1fr;
+    gap:32px;
+    margin-top:60px;
+    align-items:stretch;
 }
 
 .about-image{
-
     overflow:hidden;
     border-radius:22px;
     background:#fff;
     box-shadow:0 15px 40px rgba(0,0,0,.08);
     transition:.35s;
-    height:380px;      /* потрібна висота */
+    height:100%;
 }
 
 .about-image:hover{
@@ -145,12 +144,9 @@ nav{
 }
 
 .about-image img{
-
     width:100%;
-    height:380px;
-
+    height:100%;
     object-fit:cover;
-
     display:block;
 }
 
@@ -168,7 +164,7 @@ nav{
 
     background:#fff;
 
-    padding:32px;
+    padding:34px;
 
     border-radius:22px;
 
@@ -203,9 +199,9 @@ nav{
 
 .about-text p{
 
-    font-size:17px;
+    font-size:16px;
 
-    line-height:1.9;
+    line-height:1.75;
 
     color:#444;
 
