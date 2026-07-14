@@ -8,10 +8,10 @@ body {
 body{background:#f6f7fb;color:#111}
 
 .container{
-
-    width:min(96%,1500px);
+    width:100%;
+    max-width:1500px;
     margin:auto;
-
+    padding:0 30px;
 }
 
 nav{
@@ -121,13 +121,9 @@ nav{
 .about{
 
     display:grid;
-
-    grid-template-columns:1fr 1.2fr 1fr;
-
+    grid-template-columns:34% 32% 34%;
     gap:40px;
-
     margin-top:60px;
-
     align-items:stretch;
 
 }
@@ -267,15 +263,10 @@ nav{
 .services-grid{
 
     display:grid;
-
-    grid-template-columns:repeat(3,minmax(0,1fr));
-
+    grid-template-columns:repeat(3,1fr);
     gap:40px;
-
     width:100%;
-
     margin-top:60px;
-
     align-items:stretch;
 
 }
