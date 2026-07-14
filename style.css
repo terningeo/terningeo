@@ -390,7 +390,7 @@ nav{
     }
 
     .gallery-slider{
-        display:flex;
+        display:none;
         overflow-x:auto;
         scroll-snap-type:x mandatory;
         scroll-behavior:smooth;
@@ -399,7 +399,7 @@ nav{
     }
 
     .gallery-slider::-webkit-scrollbar{
-        display:none;
+        display:flex;
     }
 
     .gallery-slider img{
