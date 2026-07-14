@@ -137,9 +137,9 @@ nav{
 
 .about-image:hover{
 
-    transform:translateY(-8px);
+    transform:translateY(-4px);
 
-    box-shadow:0 25px 50px rgba(0,0,0,.12);
+    box-shadow:0 20px 40px rgba(0,0,0,.14);
 
 }
 
@@ -271,7 +271,8 @@ nav{
 
     height:100%;
 
-    transition:.35s;
+    transition: transform .22s ease-out,
+                box-shadow .22s ease-out;
 
     box-shadow:0 15px 35px rgba(0,0,0,.08);
 
@@ -279,10 +280,9 @@ nav{
 
 .service-card:hover{
 
-    transform:translateY(-12px);
-
-    box-shadow:0 28px 60px rgba(0,0,0,.16);
-
+    transform:translateY(-5px);
+    box-shadow:0 20px 40px rgba(0,0,0,.14);
+    
 }
 
 .service-card img{
