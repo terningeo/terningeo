@@ -152,18 +152,24 @@ nav{
 }
 
 .about-text{
-
     display:flex;
     flex-direction:column;
-    justify-content:center;
+
+    justify-content:flex-start;   /* замість center */
+
     background:#fff;
     padding:34px;
     border-radius:22px;
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
-    transition:
-    transform .28s cubic-bezier(.22,.61,.36,1),
-    box-shadow .28s cubic-bezier(.22,.61,.36,1);
 
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+    transform:translateZ(0);
+
+    transition:
+        transform .35s ease,
+        box-shadow .35s ease;
+
+    will-change:transform;
 }
 
 .about-text:hover{
