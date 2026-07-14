@@ -238,6 +238,30 @@ if(slider){
 
 }
 
+// ===== Gallery slider =====
+
+const gallerySlider = document.querySelector(".gallery-slider");
+
+if (gallerySlider) {
+
+    const galleryDots = document.querySelectorAll(".gallery-dot");
+
+    gallerySlider.addEventListener("scroll", () => {
+
+        const index = Math.round(
+            gallerySlider.scrollLeft / gallerySlider.clientWidth
+        );
+
+        galleryDots.forEach((dot, i) => {
+
+            dot.classList.toggle("active", i === index);
+
+        });
+
+    });
+
+}
+
 // ===== Work area map =====
 
 const mapModal = document.getElementById("mapModal");
