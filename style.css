@@ -9,7 +9,7 @@ body{background:#f6f7fb;color:#111}
 
 .container{
 
-    width:min(94%,1400px);
+    width:min(96%,1500px);
     margin:auto;
 
 }
@@ -119,11 +119,17 @@ nav{
 }
 
 .about{
+
     display:grid;
-    grid-template-columns:repeat(3,minmax(320px,1fr));
-    gap:35px;
-    margin-top:55px;
+
+    grid-template-columns:1fr 1.2fr 1fr;
+
+    gap:40px;
+
+    margin-top:60px;
+
     align-items:stretch;
+
 }
 
 .about-image{
@@ -262,11 +268,13 @@ nav{
 
     display:grid;
 
-    grid-template-columns:repeat(3,minmax(340px,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
 
-    gap:35px;
+    gap:40px;
 
-    margin-top:55px;
+    width:100%;
+
+    margin-top:60px;
 
     align-items:stretch;
 
@@ -274,28 +282,29 @@ nav{
 
 .service-card{
 
+    display:flex;
+    flex-direction:column;
+
     background:#fff;
 
     border-radius:22px;
 
     overflow:hidden;
 
-    display:flex;
-    flex-direction:column;
-
     height:100%;
 
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
-
     transition:.35s;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
 
 }
 
 .service-card:hover{
 
-    transform:translateY(-8px);
+    transform:translateY(-12px);
 
-    box-shadow:0 25px 50px rgba(0,0,0,.12);
+    box-shadow:0 28px 60px rgba(0,0,0,.16);
+
 }
 
 .service-card img{
