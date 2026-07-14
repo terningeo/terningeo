@@ -7,7 +7,12 @@ body {
 *{margin:0;padding:0;box-sizing:border-box;font-family:Montserrat,sans-serif}
 body{background:#f6f7fb;color:#111}
 
-.container{width:90%;max-width:1200px;margin:auto}
+.container{
+
+    width:min(94%,1400px);
+    margin:auto;
+
+}
 
 nav{
     display:flex;
@@ -115,49 +120,77 @@ nav{
 
 .about{
     display:grid;
-    grid-template-columns:1fr 1.25fr 1fr;
+    grid-template-columns:repeat(3,minmax(320px,1fr));
+    gap:35px;
+    margin-top:55px;
     align-items:stretch;
-    gap:40px;
-    margin-top:60px;
 }
 
 .about-image{
+
     display:flex;
+
+    overflow:hidden;
+
+    border-radius:22px;
+
+    background:#fff;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+    transition:.35s;
+
+}
+
+.about-image:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 25px 50px rgba(0,0,0,.12);
+
 }
 
 .about-image img{
+
     width:100%;
     height:100%;
 
-    aspect-ratio:4/5;
-
     object-fit:cover;
 
-    border-radius:20px;
-
-    box-shadow:0 20px 45px rgba(0,0,0,.12);
-
     transition:.35s;
+
 }
 
-.about-image img:hover{
-    transform:scale(1.02);
+.about-image:hover img{
+
+    transform:scale(1.05);
+
 }
 
 .about-text{
+
     display:flex;
     flex-direction:column;
     justify-content:center;
 
-    height:100%;
-
     background:#fff;
 
-    padding:45px;
+    padding:42px;
 
-    border-radius:20px;
+    border-radius:22px;
 
     box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+    transition:.35s;
+
+}
+
+.about-text:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 25px 50px rgba(0,0,0,.12);
+
 }
 
 #about h2{
@@ -226,11 +259,17 @@ nav{
 /* ===== Services ===== */
 
 .services-grid{
+
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+
+    grid-template-columns:repeat(3,minmax(340px,1fr));
+
     gap:35px;
-    margin-top:50px;
+
+    margin-top:55px;
+
     align-items:stretch;
+
 }
 
 .service-card{
@@ -241,14 +280,15 @@ nav{
 
     overflow:hidden;
 
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
-
-    transition:.3s;
-    height:100%;
     display:flex;
     flex-direction:column;
-    width:100%;
+
     height:100%;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+    transition:.35s;
+
 }
 
 .service-card:hover{
@@ -267,10 +307,13 @@ nav{
 }
 
 .service-content{
+
     display:flex;
     flex-direction:column;
     flex:1;
+
     padding:30px;
+
 }
 
 .service-content h3{
@@ -297,9 +340,10 @@ nav{
 
 .service-content ul{
 
-    list-style:none;
     margin-top:auto;
+    list-style:none;
     padding:0;
+
 }
 
 .service-content li{
