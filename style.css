@@ -390,18 +390,17 @@ nav{
     }
 
     .gallery-slider{
-        display:none;
-        overflow-x:auto;
-        scroll-snap-type:x mandatory;
-        scroll-behavior:smooth;
-        -webkit-overflow-scrolling:touch;
-        scrollbar-width:none;
-    }
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+}
 
     .gallery-slider::-webkit-scrollbar{
-        display:flex;
-    }
-
+    display:none;
+}
     .gallery-slider img{
         flex:0 0 100%;
         width:100%;
@@ -1359,12 +1358,12 @@ button:focus-visible{
     display:grid;
 }
 
+/* Мобільний */
+
 .gallery-slider,
 .gallery-dots{
     display:none;
 }
-
-/* Мобільний */
 
 @media (max-width:768px){
 
