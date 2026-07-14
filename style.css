@@ -433,6 +433,11 @@ nav{
 
 }
 
+.gallery-slider,
+.gallery-dots{
+    display:none;
+}
+
 .card{background:#fff;padding:20px;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,.1)}
 
 .card img{
@@ -1346,4 +1351,54 @@ button:focus-visible{
 #callBtn:active{
     transform:none;
     box-shadow:0 12px 30px rgba(79,157,255,.25);
+}
+
+/* ПК */
+
+.gallery{
+    display:grid;
+}
+
+.gallery-slider,
+.gallery-dots{
+    display:none;
+}
+
+/* Мобільний */
+
+@media (max-width:768px){
+
+    .gallery{
+        display:none !important;
+    }
+
+    .gallery-slider{
+        display:flex !important;
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+        scroll-behavior:smooth;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+    }
+
+    .gallery-slider::-webkit-scrollbar{
+        display:none;
+    }
+
+    .gallery-slider img{
+        flex:0 0 100%;
+        width:100%;
+        aspect-ratio:4/3;
+        object-fit:cover;
+        border-radius:18px;
+        scroll-snap-align:start;
+    }
+
+    .gallery-dots{
+        display:flex !important;
+        justify-content:center;
+        gap:10px;
+        margin-top:18px;
+    }
+
 }
