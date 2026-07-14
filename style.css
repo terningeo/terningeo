@@ -227,9 +227,10 @@ nav{
 
 .services-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:35px;
     margin-top:50px;
+    align-items:stretch;
 }
 
 .service-card{
@@ -243,7 +244,7 @@ nav{
     box-shadow:0 15px 40px rgba(0,0,0,.08);
 
     transition:.3s;
-
+    height:100%;
     display:flex;
     flex-direction:column;
 }
