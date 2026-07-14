@@ -8,8 +8,7 @@ body {
 body{background:#f6f7fb;color:#111}
 
 .container{
-    width:100%;
-    max-width:1500px;
+    width:min(100%,1500px);
     margin:auto;
     padding:0 30px;
 }
@@ -44,7 +43,7 @@ nav{
     position:relative;
     z-index:2;
     width:90%;
-    max-width:1200px;
+    max-width:1100px;
     margin:0 auto;
 
     display:flex;
@@ -55,14 +54,14 @@ nav{
 }
 
 .hero h1{
-    font-size:48px;
+    font-size:clamp(34px,5vw,48px);
     font-weight:700;
     margin-bottom:20px;
 }
 
 .hero p{
     max-width:650px;
-    font-size:24px;
+    font-size:clamp(16px,2vw,24px);
     line-height:1.6;
     margin-bottom:35px;
 }
@@ -352,26 +351,9 @@ nav{
 
 @media(max-width:768px){
 
-.services-grid{
-
-    grid-template-columns:1fr;
-
-    gap:25px;
-}
-
-.service-card img{
-
-    height:220px;
-}
-
 .service-content{
 
     padding:22px;
-}
-
-.service-content h3{
-
-    font-size:24px;
 }
 
     .services-grid{
@@ -381,53 +363,6 @@ nav{
 
     .service-card img{
         height:220px;
-    }
-
-    /* ===== Галерея на мобільному ===== */
-
-    .gallery{
-        display:none;
-    }
-
-    .gallery-slider{
-    display:flex;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    scroll-behavior:smooth;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-}
-
-    .gallery-slider::-webkit-scrollbar{
-    display:none;
-}
-    .gallery-slider img{
-        flex:0 0 100%;
-        width:100%;
-        aspect-ratio:4/3;
-        object-fit:cover;
-        border-radius:18px;
-        scroll-snap-align:start;
-    }
-
-    .gallery-dots{
-        display:flex;
-        justify-content:center;
-        gap:10px;
-        margin-top:18px;
-    }
-
-    .gallery-dot{
-        width:10px;
-        height:10px;
-        border-radius:50%;
-        background:#cfd4df;
-    }
-
-    .gallery-dot.active{
-        width:28px;
-        border-radius:20px;
-        background:#0d9b74;
     }
 
 }
@@ -715,6 +650,22 @@ nav a:hover {
     justify-content:center;
 
     min-height:210px;
+}
+
+@media (max-width:380px){
+
+.hero h1{
+    font-size:30px;
+}
+
+.hero p{
+    font-size:15px;
+}
+
+.btn{
+    width:100%;
+}
+
 }
 
 @media (max-width:768px){
