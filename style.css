@@ -247,6 +247,8 @@ nav{
     height:100%;
     display:flex;
     flex-direction:column;
+    width:100%;
+    height:100%;
 }
 
 .service-card:hover{
@@ -265,7 +267,9 @@ nav{
 }
 
 .service-content{
-
+    display:flex;
+    flex-direction:column;
+    flex:1;
     padding:30px;
 }
 
@@ -294,7 +298,7 @@ nav{
 .service-content ul{
 
     list-style:none;
-
+    margin-top:auto;
     padding:0;
 }
 
