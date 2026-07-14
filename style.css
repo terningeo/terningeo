@@ -119,13 +119,11 @@ nav{
 }
 
 .about{
-
     display:grid;
-    grid-template-columns:34% 32% 34%;
-    gap:40px;
-    margin-top:60px;
-    align-items:stretch;
-
+    grid-template-columns:0.9fr 1.2fr 0.9fr;
+    gap:28px;
+    margin-top:45px;
+    align-items:center;
 }
 
 .about-image{
@@ -137,7 +135,9 @@ nav{
     border-radius:22px;
 
     background:#fff;
-
+    
+    max-height:470px;
+    
     box-shadow:0 15px 40px rgba(0,0,0,.08);
 
     transition:.35s;
@@ -177,7 +177,7 @@ nav{
 
     background:#fff;
 
-    padding:42px;
+    padding:32px;
 
     border-radius:22px;
 
@@ -202,11 +202,11 @@ nav{
 
 .about-text h3{
 
-    font-size:34px;
+    font-size:30px;
 
     color:#1d2b4f;
 
-    margin-bottom:25px;
+    margin-bottom:18px;
 
 }
 
@@ -230,9 +230,9 @@ nav{
 
     grid-template-columns:repeat(2,minmax(180px,1fr));
 
-    gap:15px;
+    gap:12px;
 
-    margin-top:30px;
+    margin-top:22px;
 
 }
 
@@ -240,7 +240,7 @@ nav{
 
     background:#f2faf6;
 
-    padding:16px;
+    padding:14px;
 
     border-radius:12px;
 
