@@ -296,7 +296,7 @@ if (servicesSlider && window.innerWidth <= 768) {
 
     const dots = document.querySelectorAll(".services-dots .dot");
 
-    let timer;
+    let timeout;
 
     servicesSlider.addEventListener("scroll", () => {
 
@@ -304,20 +304,20 @@ if (servicesSlider && window.innerWidth <= 768) {
             servicesSlider.scrollLeft / servicesSlider.clientWidth
         );
 
-        dots.forEach((dot, i) => {
-            dot.classList.toggle("active", i === index);
-        });
+        dots.forEach((dot, i) =>
+            dot.classList.toggle("active", i === index)
+        );
 
-        clearTimeout(timer);
+        clearTimeout(timeout);
 
-        timer = setTimeout(() => {
+        timeout = setTimeout(() => {
 
-            window.scrollTo({
-                top: servicesSlider.offsetTop - 90,
-                behavior: "smooth"
+            document.querySelector("#services").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
             });
 
-        }, 180);
+        }, 300);
 
     });
 
