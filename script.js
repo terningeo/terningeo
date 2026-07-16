@@ -296,28 +296,15 @@ if (servicesSlider && window.innerWidth <= 768) {
 
     const dots = document.querySelectorAll(".services-dots .dot");
 
-    let timeout;
-
     servicesSlider.addEventListener("scroll", () => {
 
         const index = Math.round(
             servicesSlider.scrollLeft / servicesSlider.clientWidth
         );
 
-        dots.forEach((dot, i) =>
-            dot.classList.toggle("active", i === index)
-        );
-
-        clearTimeout(timeout);
-
-        timeout = setTimeout(() => {
-
-            document.querySelector("#services").scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        }, 300);
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
 
     });
 
