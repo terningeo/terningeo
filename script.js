@@ -287,3 +287,31 @@ mapModal?.addEventListener("click",(e)=>{
     }
 
 });
+
+// ===== Services slider =====
+
+const servicesSlider = document.querySelector(".services-grid");
+
+if (servicesSlider && window.innerWidth <= 768) {
+
+    const dots = document.querySelectorAll(".services-dots .dot");
+
+    servicesSlider.addEventListener("scroll", () => {
+
+        const index = Math.round(
+            servicesSlider.scrollLeft / servicesSlider.clientWidth
+        );
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+
+        // Повернути сторінку на початок картки
+        window.scrollTo({
+            top: servicesSlider.offsetTop - 90,
+            behavior: "smooth"
+        });
+
+    });
+
+}
