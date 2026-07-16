@@ -1018,6 +1018,56 @@ nav a:hover {
     margin-bottom:20px;
 }
 
+.contact-actions{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:20px;
+}
+
+.contact-actions .contact-icon{
+    width:64px;
+    height:64px;
+    margin-bottom:0;
+    transition:.25s;
+}
+
+/* Постійні кольори */
+
+.phone-icon{
+    color:#e91e63;
+}
+
+.telegram-icon{
+    color:#229ED9;
+}
+
+.whatsapp-icon{
+    color:#25D366;
+}
+
+/* Hover */
+
+.phone-icon:hover{
+    background:#0d9b74;
+    color:#fff;
+}
+
+.telegram-icon:hover{
+    background:#229ED9;
+    color:#fff;
+}
+
+.whatsapp-icon:hover{
+    background:#25D366;
+    color:#fff;
+}
+
+.telegram-icon i,
+.whatsapp-icon i{
+    font-size:32px;
+}
+
 .contact-card h3{
 
     font-size:22px;
