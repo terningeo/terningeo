@@ -657,32 +657,35 @@ nav a:hover {
     min-height:210px;
 }
 
-.contact-links{
+.contact-actions{
     display:flex;
+    justify-content:center;
     gap:16px;
     margin-bottom:22px;
 }
 
-.contact-links .contact-icon{
+.contact-actions .contact-icon{
     width:64px;
     height:64px;
-    border-radius:50%;
-    background:#eaf8f3;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
+    border-radius:50%;
+    background:#eaf8f3;
+
     font-size:30px;
+    color:#1d2b4f;
     text-decoration:none;
 
     transition:.25s;
 }
 
-.contact-links .contact-icon:hover{
-    transform:translateY(-3px);
+.contact-actions .contact-icon:hover{
     background:#0d9b74;
     color:#fff;
+    transform:translateY(-3px);
 }
 
 @media (max-width:380px){
