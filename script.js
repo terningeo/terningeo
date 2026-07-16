@@ -296,6 +296,8 @@ if (servicesSlider && window.innerWidth <= 768) {
 
     const dots = document.querySelectorAll(".services-dots .dot");
 
+    let timer;
+
     servicesSlider.addEventListener("scroll", () => {
 
         const index = Math.round(
@@ -306,11 +308,16 @@ if (servicesSlider && window.innerWidth <= 768) {
             dot.classList.toggle("active", i === index);
         });
 
-        // Повернути сторінку на початок картки
-        window.scrollTo({
-            top: servicesSlider.offsetTop - 90,
-            behavior: "smooth"
-        });
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+
+            window.scrollTo({
+                top: servicesSlider.offsetTop - 90,
+                behavior: "smooth"
+            });
+
+        }, 180);
 
     });
 
