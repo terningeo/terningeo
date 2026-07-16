@@ -1454,3 +1454,43 @@ button:focus-visible{
     }
 
 }
+
+.services-dots{
+    display:none;
+}
+
+@media(max-width:768px){
+
+.services-dots{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-top:18px;
+}
+
+.services-dots .dot{
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    background:#cfd4df;
+
+    transition:.3s;
+}
+
+.services-dots .dot.active{
+
+    width:28px;
+
+    border-radius:20px;
+
+    background:#0d9b74;
+}
+
+}
