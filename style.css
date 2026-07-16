@@ -388,6 +388,8 @@ nav{
     padding:22px;
 }
 
+}
+
 .gallery-slider,
 .gallery-dots{
     display:none;
@@ -971,38 +973,6 @@ nav a:hover {
 
     width:100%;
     max-width:340px;
-}
-
-.services-grid{
-
-    grid-template-columns:1fr;
-
-    gap:25px;
-
-}
-
-.service-card img{
-
-    height:220px;
-
-}
-
-.service-content{
-
-    padding:22px;
-
-}
-
-.service-content h3{
-
-    font-size:24px;
-
-}
-
-.service-content p{
-
-    font-size:15px;
-
 }
 
 }
