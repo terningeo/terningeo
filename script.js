@@ -309,3 +309,43 @@ if (servicesSlider && window.innerWidth <= 768) {
     });
 
 }
+
+// ===== FAQ =====
+
+document.querySelectorAll(".faq-question").forEach(question => {
+
+    question.addEventListener("click", () => {
+
+        const item = question.parentElement;
+
+        const answer = item.querySelector(".faq-answer");
+
+        document.querySelectorAll(".faq-item").forEach(faq => {
+
+            if(faq !== item){
+
+                faq.classList.remove("active");
+
+                faq.querySelector(".faq-answer").style.maxHeight = null;
+
+            }
+
+        });
+
+        if(item.classList.contains("active")){
+
+            item.classList.remove("active");
+
+            answer.style.maxHeight = null;
+
+        }else{
+
+            item.classList.add("active");
+
+            answer.style.maxHeight = answer.scrollHeight + "px";
+
+        }
+
+    });
+
+});
