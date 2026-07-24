@@ -220,25 +220,26 @@ fetch("https://bot.terningeo.workers.dev", {
 
 // ===== Sliders =====
 
-const servicesSlider = document.getElementById("servicesSlider");
+document.querySelectorAll(".services-grid").forEach(slider => {
 
-if (servicesSlider) {
+    const dots = slider.parentElement.querySelectorAll(".services-dots .dot");
 
-    const dots = document.querySelectorAll(".services-dots .dot");
+    if (!dots.length) return;
 
-    const card = servicesSlider.querySelector(".service-card");
+    slider.addEventListener("scroll", () => {
 
-    const gap = parseInt(getComputedStyle(servicesSlider).columnGap)
-             || parseInt(getComputedStyle(servicesSlider).gap)
-             || 0;
+        let step;
 
-    servicesSlider.addEventListener("scroll", () => {
+        const firstCard = slider.firstElementChild;
 
-        const cardWidth = card.offsetWidth + gap;
+        if (firstCard.tagName === "IMG") {
+            step = slider.clientWidth;
+        } else {
+            const gap = parseInt(getComputedStyle(slider).gap) || 0;
+            step = firstCard.offsetWidth + gap;
+        }
 
-        const index = Math.round(
-            servicesSlider.scrollLeft / cardWidth
-        );
+        const index = Math.round(slider.scrollLeft / step);
 
         dots.forEach((dot, i) => {
             dot.classList.toggle("active", i === index);
@@ -246,7 +247,7 @@ if (servicesSlider) {
 
     });
 
-}
+});
 
 // ===== Gallery slider =====
 
