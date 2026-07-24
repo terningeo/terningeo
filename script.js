@@ -220,28 +220,17 @@ fetch("https://bot.terningeo.workers.dev", {
 
 // ===== Sliders =====
 
-[
-    {
-        slider: "aboutSlider",
-        dots: ".slider-dots .dot"
-    },
-    {
-        slider: "servicesSlider",
-        dots: ".services-dots .dot"
-    }
-].forEach(item => {
+document.querySelectorAll("[id$='Slider']").forEach(slider => {
 
-    const slider = document.getElementById(item.slider);
+    const dotsContainer = slider.nextElementSibling;
 
-    if (!slider) return;
+    if (!dotsContainer) return;
 
-    const dots = document.querySelectorAll(item.dots);
+    const dots = dotsContainer.querySelectorAll(".dot");
 
     slider.addEventListener("scroll", () => {
 
-        const index = Math.round(
-            slider.scrollLeft / slider.clientWidth
-        );
+        const index = Math.round(slider.scrollLeft / slider.clientWidth);
 
         dots.forEach((dot, i) => {
             dot.classList.toggle("active", i === index);
