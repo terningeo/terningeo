@@ -220,9 +220,9 @@ fetch("https://bot.terningeo.workers.dev", {
 
 // ===== Gallery slider =====
 
-document.querySelectorAll(".services-grid, .about-slider").forEach(slider => {
+document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
 
-    const dotsContainer = slider.parentElement.querySelector(".slider-dots, .services-dots");
+    const dots = slider.parentElement.querySelectorAll(".dot");
 
     if (!dotsContainer) return;
 
