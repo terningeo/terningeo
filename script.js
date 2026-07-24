@@ -290,11 +290,14 @@ mapModal?.addEventListener("click",(e)=>{
 
 // ===== Services slider =====
 
-const servicesSlider = document.querySelector(".services-grid");
+const servicesSliders = document.querySelectorAll(".services-grid");
 
-if (servicesSlider && window.innerWidth <= 768) {
+servicesSliders.forEach(servicesSlider => {
 
-    const dots = document.querySelectorAll(".services-dots .dot");
+    const dots =
+        servicesSlider.nextElementSibling?.querySelectorAll(".dot");
+
+    if (!dots) return;
 
     servicesSlider.addEventListener("scroll", () => {
 
@@ -308,7 +311,7 @@ if (servicesSlider && window.innerWidth <= 768) {
 
     });
 
-}
+});
 
 // ===== FAQ =====
 
