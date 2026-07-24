@@ -218,37 +218,6 @@ fetch("https://bot.terningeo.workers.dev", {
 
 }); 
 
-// ===== Sliders =====
-
-document.querySelectorAll(".services-grid").forEach(slider => {
-
-    const dots = slider.parentElement.querySelectorAll(".services-dots .dot");
-
-    if (!dots.length) return;
-
-    slider.addEventListener("scroll", () => {
-
-        let step;
-
-        const firstCard = slider.firstElementChild;
-
-        if (firstCard.tagName === "IMG") {
-            step = slider.clientWidth;
-        } else {
-            const gap = parseInt(getComputedStyle(slider).gap) || 0;
-            step = firstCard.offsetWidth + gap;
-        }
-
-        const index = Math.round(slider.scrollLeft / step);
-
-        dots.forEach((dot, i) => {
-            dot.classList.toggle("active", i === index);
-        });
-
-    });
-
-});
-
 // ===== Gallery slider =====
 
 const gallerySlider = document.getElementById("gallerySlider");
@@ -299,22 +268,36 @@ mapModal?.addEventListener("click",(e)=>{
 
 });
 
-// ===== Services slider =====
+// ===== Universal sliders =====
 
-const servicesSliders = document.querySelectorAll(".services-grid");
+document.querySelectorAll(".services-grid").forEach(slider => {
 
-servicesSliders.forEach(servicesSlider => {
+    const dotsContainer = slider.parentElement.nextElementSibling;
 
-    const dots =
-        servicesSlider.nextElementSibling?.querySelectorAll(".dot");
+    if (!dotsContainer) return;
 
-    if (!dots) return;
+    const dots = dotsContainer.querySelectorAll(".dot");
 
-    servicesSlider.addEventListener("scroll", () => {
+    if (!dots.length) return;
 
-        const index = Math.round(
-            servicesSlider.scrollLeft / servicesSlider.clientWidth
-        );
+    slider.addEventListener("scroll", () => {
+
+        const first = slider.firstElementChild;
+
+        let step;
+
+        if (first.tagName === "IMG") {
+
+            step = slider.clientWidth;
+
+        } else {
+
+            const gap = parseInt(getComputedStyle(slider).gap) || 0;
+            step = first.offsetWidth + gap;
+
+        }
+
+        const index = Math.round(slider.scrollLeft / step);
 
         dots.forEach((dot, i) => {
             dot.classList.toggle("active", i === index);
