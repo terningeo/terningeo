@@ -32,7 +32,8 @@ nav{
 
 .hero,
 .topoplan,
-.vynos{
+.vynos,
+.suprovid{
     min-height:100dvh;
     position:relative;
     display:flex;
@@ -44,7 +45,8 @@ nav{
 
 .hero-content,
 .topoplan-content,
-.vynos-content{
+.vynos-content,
+.suprovid-content{
     position:relative;
     z-index:2;
     width:90%;
@@ -60,7 +62,8 @@ nav{
 
 .hero h1,
 .topoplan h1,
-.vynos h1{
+.vynos h1,
+.suprovid .h1{
     font-size:clamp(34px,5vw,48px);
     font-weight:700;
     margin-bottom:20px;
@@ -68,7 +71,8 @@ nav{
 
 .hero p,
 .topoplan p,
-.vynos p{
+.vynos p,
+.suprovid .p{
     max-width:650px;
     font-size:clamp(16px,2vw,24px);
     line-height:1.6;
@@ -77,7 +81,8 @@ nav{
 
 .hero .btn,
 .topoplan .btn,
-.vynos .btn{
+.vynos .btn,
+.suprovid .btn{
     margin-top:15px;
     min-width:190px;
     min-height:56px;
@@ -86,7 +91,8 @@ nav{
 
 .hero .overlay,
 .topoplan .overlay,
-.vynos .overlay{
+.vynos .overlay{,
+.suprovid .overlay
     position:absolute;
     inset:0;
     background:rgba(0,0,0,.25);
@@ -105,6 +111,11 @@ nav{
 .vynos{
     background:url("images/vynos.jpg") center center / cover no-repeat;
 }
+
+.suprovid{
+    background:url("images/suprovid.jpg") center center / cover no-repeat;
+}
+
 .logo img{
     width:70px;
     height:auto;
