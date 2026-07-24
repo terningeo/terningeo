@@ -218,25 +218,38 @@ fetch("https://bot.terningeo.workers.dev", {
 
 }); 
 
-const slider = document.getElementById("aboutSlider");
+// ===== Sliders =====
 
-if(slider){
+[
+    {
+        slider: "aboutSlider",
+        dots: ".slider-dots .dot"
+    },
+    {
+        slider: "servicesSlider",
+        dots: ".services-dots .dot"
+    }
+].forEach(item => {
 
-    const dots = document.querySelectorAll(".slider-dots .dot");
+    const slider = document.getElementById(item.slider);
 
-    slider.addEventListener("scroll",()=>{
+    if (!slider) return;
 
-        const index = Math.round(slider.scrollLeft / slider.clientWidth);
+    const dots = document.querySelectorAll(item.dots);
 
-        dots.forEach((dot,i)=>{
+    slider.addEventListener("scroll", () => {
 
-            dot.classList.toggle("active",i===index);
+        const index = Math.round(
+            slider.scrollLeft / slider.clientWidth
+        );
 
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
         });
 
     });
 
-}
+});
 
 // ===== Gallery slider =====
 
