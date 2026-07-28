@@ -267,16 +267,11 @@ document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
         let step;
 
         if (slider.classList.contains("about-slider")) {
-
             step = slider.clientWidth;
-
         } else {
-
             const style = getComputedStyle(slider);
             const gap = parseInt(style.gap || style.columnGap) || 0;
-
             step = first.offsetWidth + gap;
-
         }
 
         const index = Math.min(
