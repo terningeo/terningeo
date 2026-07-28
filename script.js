@@ -118,31 +118,33 @@ document.querySelectorAll(".gallery img").forEach(img => {
 // ===== Modal =====
 
 const modal = document.getElementById("orderModal");
+const closeModalBtn = document.querySelector(".close-modal");
 
-document
-.querySelectorAll("#openOrderModal, .open-modal")
-.forEach(btn => {
+// Відкрити модалку
+document.querySelectorAll(".open-modal").forEach(btn => {
 
     btn.addEventListener("click", e => {
 
         e.preventDefault();
 
-        modal.classList.add("show");
+        if (modal) {
+            modal.classList.add("show");
+        }
 
     });
 
 });
 
-document.querySelector(".close-modal")?.addEventListener("click", () => {
+// Закрити по кнопці
+closeModalBtn?.addEventListener("click", () => {
     modal?.classList.remove("show");
 });
 
-modal?.addEventListener("click",e=>{
+// Закрити по кліку на фон
+modal?.addEventListener("click", e => {
 
-    if(e.target===modal){
-
+    if (e.target === modal) {
         modal.classList.remove("show");
-
     }
 
 });
