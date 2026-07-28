@@ -285,13 +285,13 @@ mapModal?.addEventListener("click",(e)=>{
 
 // ===== Universal sliders =====
 
-document.querySelectorAll(".services-grid").forEach(slider => {
+document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
 
-    const dotsContainer = slider.parentElement.nextElementSibling;
+    const wrapper = slider.closest(".container");
 
-    if (!dotsContainer) return;
+    if (!wrapper) return;
 
-    const dots = dotsContainer.querySelectorAll(".dot");
+    const dots = wrapper.querySelectorAll(".slider-dots .dot, .services-dots .dot");
 
     if (!dots.length) return;
 
@@ -299,20 +299,27 @@ document.querySelectorAll(".services-grid").forEach(slider => {
 
         const first = slider.firstElementChild;
 
+        if (!first) return;
+
         let step;
 
-        if (first.tagName === "IMG") {
+        if (slider.classList.contains("about-slider")) {
 
             step = slider.clientWidth;
 
         } else {
 
-            const gap = parseInt(getComputedStyle(slider).gap) || 0;
+            const style = getComputedStyle(slider);
+            const gap = parseInt(style.gap || style.columnGap) || 0;
+
             step = first.offsetWidth + gap;
 
         }
 
-        const index = Math.round(slider.scrollLeft / step);
+        const index = Math.min(
+            dots.length - 1,
+            Math.round(slider.scrollLeft / step)
+        );
 
         dots.forEach((dot, i) => {
             dot.classList.toggle("active", i === index);
