@@ -256,23 +256,47 @@ document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
     const dots = wrapper.querySelectorAll(".slider-dots .dot, .services-dots .dot");
     if (!dots.length) return;
 
-    function updateDots() {
+    // About: працює по scrollLeft
+    if (slider.classList.contains("about-slider")) {
 
-        const step = slider.clientWidth;
+        slider.addEventListener("scroll", () => {
 
-        const index = Math.min(
-            dots.length - 1,
-            Math.round(slider.scrollLeft / step)
-        );
+            const index = Math.round(slider.scrollLeft / slider.clientWidth);
 
-        dots.forEach((dot, i) => {
-            dot.classList.toggle("active", i === index);
-        });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle("active", i === index);
+            });
+
+        }, { passive: true });
+
+        return;
     }
 
-    slider.addEventListener("scroll", updateDots, { passive: true });
+    // Services: Safari-safe через IntersectionObserver
+    const cards = slider.querySelectorAll(".service-card");
 
-    updateDots();
+    const observer = new IntersectionObserver(entries => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                const index = Array.from(cards).indexOf(entry.target);
+
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle("active", i === index);
+                });
+
+            }
+
+        });
+
+    }, {
+        root: slider,
+        threshold: 0.6
+    });
+
+    cards.forEach(card => observer.observe(card));
 
 });
 
