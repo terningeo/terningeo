@@ -220,43 +220,6 @@ fetch("https://bot.terningeo.workers.dev", {
 
 }); 
 
-// ===== Gallery slider =====
-
-document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
-
-    const dots = slider.parentElement.querySelectorAll(".dot");
-
-    if (!dotsContainer) return;
-
-    const dots = dotsContainer.querySelectorAll(".dot");
-
-    slider.addEventListener("scroll", () => {
-
-        const first = slider.firstElementChild;
-
-        let step;
-
-        if (slider.classList.contains("about-slider")) {
-
-            step = slider.clientWidth;
-
-        } else {
-
-            const gap = parseInt(getComputedStyle(slider).gap) || 0;
-            step = first.offsetWidth + gap;
-
-        }
-
-        const index = Math.round(slider.scrollLeft / step);
-
-        dots.forEach((dot, i) => {
-            dot.classList.toggle("active", i === index);
-        });
-
-    });
-
-});
-
 // ===== Work area map =====
 
 const mapModal = document.getElementById("mapModal");
