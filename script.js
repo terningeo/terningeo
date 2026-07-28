@@ -29,6 +29,57 @@ document.querySelectorAll('nav a').forEach(link => {
 
 });
 
+// ===== About slider =====
+
+const aboutSlider = document.getElementById("aboutSlider");
+
+if (aboutSlider) {
+
+    const aboutDots = document.querySelectorAll(".slider-dots .dot");
+
+    aboutSlider.addEventListener("scroll", () => {
+
+        const index = Math.round(aboutSlider.scrollLeft / aboutSlider.clientWidth);
+
+        aboutDots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+
+    }, { passive: true });
+}
+
+// ===== Services slider =====
+
+const servicesSlider = document.getElementById("servicesSlider");
+
+if (servicesSlider) {
+
+    const serviceDots = document.querySelectorAll(".services-dots .dot");
+
+    const cards = servicesSlider.querySelectorAll(".service-card");
+
+    const observer = new IntersectionObserver(entries => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                const index = Array.from(cards).indexOf(entry.target);
+
+                serviceDots.forEach((dot, i) => {
+                    dot.classList.toggle("active", i === index);
+                });
+            }
+        });
+
+    }, {
+        root: servicesSlider,
+        threshold: 0.6
+    });
+
+    cards.forEach(card => observer.observe(card));
+}
+
 // ===== Floating buttons =====
 
 const topBtn = document.getElementById("topBtn");
@@ -243,60 +294,6 @@ mapModal?.addEventListener("click",(e)=>{
         mapModal.classList.remove("show");
 
     }
-
-});
-
-// ===== Universal sliders =====
-
-document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
-
-    const wrapper = slider.closest(".container");
-    if (!wrapper) return;
-
-    const dots = wrapper.querySelectorAll(".slider-dots .dot, .services-dots .dot");
-    if (!dots.length) return;
-
-    // About: працює по scrollLeft
-    if (slider.classList.contains("about-slider")) {
-
-        slider.addEventListener("scroll", () => {
-
-            const index = Math.round(slider.scrollLeft / slider.clientWidth);
-
-            dots.forEach((dot, i) => {
-                dot.classList.toggle("active", i === index);
-            });
-
-        }, { passive: true });
-
-        return;
-    }
-
-    // Services: Safari-safe через IntersectionObserver
-    const cards = slider.querySelectorAll(".service-card");
-
-    const observer = new IntersectionObserver(entries => {
-
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) {
-
-                const index = Array.from(cards).indexOf(entry.target);
-
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle("active", i === index);
-                });
-
-            }
-
-        });
-
-    }, {
-        root: slider,
-        threshold: 0.6
-    });
-
-    cards.forEach(card => observer.observe(card));
 
 });
 
