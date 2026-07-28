@@ -251,28 +251,14 @@ mapModal?.addEventListener("click",(e)=>{
 document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
 
     const wrapper = slider.closest(".container");
-
     if (!wrapper) return;
 
     const dots = wrapper.querySelectorAll(".slider-dots .dot, .services-dots .dot");
-
     if (!dots.length) return;
 
-    slider.addEventListener("scroll", () => {
+    function updateDots() {
 
-        const first = slider.firstElementChild;
-
-        if (!first) return;
-
-        let step;
-
-        if (slider.classList.contains("about-slider")) {
-            step = slider.clientWidth;
-        } else {
-            const style = getComputedStyle(slider);
-            const gap = parseInt(style.gap || style.columnGap) || 0;
-            step = first.offsetWidth + gap;
-        }
+        const step = slider.clientWidth;
 
         const index = Math.min(
             dots.length - 1,
@@ -282,8 +268,11 @@ document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
         dots.forEach((dot, i) => {
             dot.classList.toggle("active", i === index);
         });
+    }
 
-    });
+    slider.addEventListener("scroll", updateDots, { passive: true });
+
+    updateDots();
 
 });
 
