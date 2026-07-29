@@ -79,6 +79,12 @@ nav{
     margin-bottom:35px;
 }
 
+.hero-content .btn{
+    align-self:flex-start;
+    width:auto;
+    max-width:100%;
+}
+
 .hero .btn,
 .topoplan .btn,
 .vynos .btn,
@@ -1386,6 +1392,18 @@ nav a:hover {
 .map-footer p{
     max-width:650px;
     margin:0 auto;
+}
+
+@media (max-width:768px){
+
+.hero-content .btn{
+    align-self:flex-start;
+    width:auto;
+    max-width:100%;
+    padding:14px 22px;
+    font-size:16px;
+}
+
 }
 
 @media (max-width:768px){
