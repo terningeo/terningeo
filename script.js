@@ -48,37 +48,42 @@ if (aboutSlider) {
     }, { passive: true });
 }
 
-// ===== Services slider =====
+// ===== Universal sliders =====
 
-const servicesSlider = document.getElementById("servicesSlider");
+document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
 
-if (servicesSlider) {
+    const wrapper = slider.closest(".container");
+    if (!wrapper) return;
 
-    const serviceDots = document.querySelectorAll(".services-dots .dot");
+    const dots = wrapper.querySelectorAll(".slider-dots .dot, .services-dots .dot");
+    if (!dots.length) return;
 
-    const cards = servicesSlider.querySelectorAll(".service-card");
+    slider.addEventListener("scroll", () => {
 
-    const observer = new IntersectionObserver(entries => {
+        const first = slider.firstElementChild;
+        if (!first) return;
 
-        entries.forEach(entry => {
+        let step;
 
-            if (entry.isIntersecting) {
+        if (slider.classList.contains("about-slider")) {
+            step = slider.clientWidth;
+        } else {
+            const style = getComputedStyle(slider);
+            const gap = parseInt(style.gap || style.columnGap) || 0;
+            step = first.offsetWidth + gap;
+        }
 
-                const index = Array.from(cards).indexOf(entry.target);
+        const index = Math.min(
+            dots.length - 1,
+            Math.round(slider.scrollLeft / step)
+        );
 
-                serviceDots.forEach((dot, i) => {
-                    dot.classList.toggle("active", i === index);
-                });
-            }
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
         });
 
-    }, {
-        root: servicesSlider,
-        threshold: 0.6
-    });
-
-    cards.forEach(card => observer.observe(card));
-}
+    }, { passive: true });
+});
 
 // ===== Floating buttons =====
 
