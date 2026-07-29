@@ -91,7 +91,7 @@ nav{
 
 .hero .overlay,
 .topoplan .overlay,
-.vynos .overlay{,
+.vynos .overlay{
 .suprovid .overlay
     position:absolute;
     inset:0;
@@ -403,10 +403,17 @@ nav{
     display:flex;
     overflow-x:auto;
     overflow-y:hidden;
+
+    /* головне */
     scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    scroll-padding-inline:0;
+
     -webkit-overflow-scrolling:touch;
     touch-action:pan-x;
-    gap:0; /* щоб не було видно сусідньої картки */
+
+    gap:0;
+    width:100%;
 }
 
 .services-grid::-webkit-scrollbar{
@@ -414,10 +421,14 @@ nav{
 }
 
 .service-card{
-
     flex:0 0 100%;
+    width:100%;
     min-width:100%;
+    max-width:100%;
+
+    /* авто-зупинка */
     scroll-snap-align:start;
+    scroll-snap-stop:always;
 }
 
 .service-card img{
@@ -426,6 +437,14 @@ nav{
 
 .service-content{
     padding:22px;
+}
+
+.container{
+    padding:0 18px;
+}
+
+.section .container{
+    overflow:hidden;
 }
 
 }
