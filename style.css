@@ -406,6 +406,8 @@ nav{
     scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;
     touch-action:pan-x;
+    gap: 20px;
+    padding-bottom: 10px;
 }
 
 .services-grid::-webkit-scrollbar{
@@ -414,8 +416,8 @@ nav{
 
 .service-card{
 
-    flex:0 0 100%;
-    min-width:100%;
+    flex:0 0 85%;
+    min-width:85%
     scroll-snap-align:start;
 }
 
