@@ -416,8 +416,8 @@ nav{
 
 .service-card{
 
-    flex:0 0 85%;
-    min-width:85%
+    flex:0 0 100%;
+    min-width:100%
     scroll-snap-align:start;
 }
 
