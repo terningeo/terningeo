@@ -406,6 +406,7 @@ nav{
     scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;
     touch-action:pan-x;
+    gap:0; /* щоб не було видно сусідньої картки */
 }
 
 .services-grid::-webkit-scrollbar{
@@ -415,7 +416,7 @@ nav{
 .service-card{
 
     flex:0 0 100%;
-    min-width:100%
+    min-width:100%;
     scroll-snap-align:start;
 }
 
