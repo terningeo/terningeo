@@ -406,8 +406,6 @@ nav{
     scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;
     touch-action:pan-x;
-    gap: 20px;
-    padding-bottom: 10px;
 }
 
 .services-grid::-webkit-scrollbar{
