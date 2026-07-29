@@ -84,9 +84,20 @@ nav{
 .vynos .btn,
 .suprovid .btn{
     margin-top:15px;
+
+    display:inline-flex;
+    align-self:flex-start;
+
+    width:auto;
+    max-width:100%;
+
     min-width:190px;
     min-height:56px;
+
+    padding:14px 28px;
+
     font-size:18px;
+    text-align:center;
 }
 
 .hero .overlay,
@@ -1375,6 +1386,23 @@ nav a:hover {
 .map-footer p{
     max-width:650px;
     margin:0 auto;
+}
+
+@media (max-width:768px){
+
+.hero .btn,
+.topoplan .btn,
+.vynos .btn,
+.suprovid .btn{
+    min-width:auto;
+    width:auto;
+    max-width:100%;
+
+    padding:14px 22px;
+
+    font-size:16px;
+}
+
 }
 
 @media (max-width:768px){
