@@ -52,26 +52,21 @@ if (aboutSlider) {
 
 document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
 
-    const wrapper = slider.closest(".container");
-    if (!wrapper) return;
+    // шукаємо блок крапок, який іде одразу після слайдера
+    const dotsBlock = slider.parentElement.querySelector(".services-dots, .slider-dots");
+    if (!dotsBlock) return;
 
-    const dots = wrapper.querySelectorAll(".slider-dots .dot, .services-dots .dot");
+    const dots = dotsBlock.querySelectorAll(".dot");
     if (!dots.length) return;
 
     slider.addEventListener("scroll", () => {
 
-        const first = slider.firstElementChild;
+        const first = slider.querySelector(".service-card, .about-slide");
         if (!first) return;
 
-        let step;
-
-        if (slider.classList.contains("about-slider")) {
-            step = slider.clientWidth;
-        } else {
-            const style = getComputedStyle(slider);
-            const gap = parseInt(style.gap || style.columnGap) || 0;
-            step = first.offsetWidth + gap;
-        }
+        const style = getComputedStyle(slider);
+        const gap = parseInt(style.gap || style.columnGap) || 0;
+        const step = first.offsetWidth + gap;
 
         const index = Math.min(
             dots.length - 1,
@@ -83,6 +78,7 @@ document.querySelectorAll(".about-slider, .services-grid").forEach(slider => {
         });
 
     }, { passive: true });
+
 });
 
 // ===== Floating buttons =====
