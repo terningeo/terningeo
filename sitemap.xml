@@ -3,22 +3,37 @@
 
   <url>
     <loc>https://terningeo.pp.ua/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://terningeo.pp.ua/topo.html</loc>
+    <loc>https://terningeo.pp.ua/topo/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://terningeo.pp.ua/vynos.html</loc>
+    <loc>https://terningeo.pp.ua/vynos/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://terningeo.pp.ua/suprovid.html</loc>
+    <loc>https://terningeo.pp.ua/suprovid/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://terningeo.pp.ua/kgz.html</loc>
+    <loc>https://terningeo.pp.ua/kgz/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
 </urlset>
