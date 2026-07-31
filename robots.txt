@@ -2,4 +2,4 @@ User-agent: *
 
 Allow: /
 
-Sitemap: https://terningeo.pp.ua/sitemap.xml
+Sitemap: https://terningeo.pp.ua/sitemap.xml/
