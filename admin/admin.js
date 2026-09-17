@@ -1,5 +1,5 @@
 // ============================================================
-// TERNINGEO CMS
+// TERNINGEO — UNIVERSAL ADMIN CMS
 // admin/admin.js
 // ============================================================
 
@@ -8,6 +8,8 @@ const SUPABASE_URL = "https://lohoxjwfhjudzmpwhcyv.supabase.co";
 const SUPABASE_KEY =
     "sb_publishable_LeBJ_X9VLHu05ImQlaTe8g_uH9y19cA";
 
+const STORAGE_BUCKET = "site-media";
+
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
@@ -15,28 +17,7 @@ const supabaseClient = window.supabase.createClient(
 
 
 // ============================================================
-// DOM
-// ============================================================
-
-const loginSection = document.getElementById("login-section");
-const adminSection = document.getElementById("admin-section");
-
-const loginForm = document.getElementById("login-form");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const loginMessage = document.getElementById("login-message");
-
-const logoutButton = document.getElementById("logout-button");
-
-const contentEditor = document.getElementById("content-editor");
-const pageTitle = document.getElementById("page-title");
-
-const saveAllButton = document.getElementById("save-all-button");
-const globalMessage = document.getElementById("global-message");
-
-
-// ============================================================
-// PAGE NAMES
+// PAGE CONFIG
 // ============================================================
 
 const PAGE_NAMES = {
@@ -49,153 +30,164 @@ const PAGE_NAMES = {
 
 
 // ============================================================
-// SECTION NAMES
+// DEFAULT SECTION TITLES
 // ============================================================
 
 const SECTION_NAMES = {
-
     seo: "SEO",
-
     header: "Шапка сайту",
-
+    navigation: "Навігація",
     hero: "Головний екран",
-
     about: "Про нас",
-
     services: "Послуги",
-
-    service_1: "Послуга 1 — Винос меж",
-
-    service_2: "Послуга 2 — Топографія",
-
-    service_3: "Послуга 3 — Геодезичний супровід",
-
-    service_4: "Послуга 4 — Контрольні геодезичні роботи",
-
+    service: "Послуга",
+    gallery: "Фотогалерея",
+    process: "Етапи роботи",
+    documents: "Документи",
     faq: "Часті запитання",
-
     contact: "Контакти",
-
     map: "Карта та зона роботи",
-
     footer: "Футер",
-
     general: "Загальні налаштування"
 };
 
 
 // ============================================================
-// FIELD NAMES
+// FIELD TITLES
 // ============================================================
 
 const FIELD_NAMES = {
 
     title: "Заголовок",
-
     subtitle: "Підзаголовок",
-
-    description: "Опис",
 
     heading: "Заголовок блоку",
 
+    description: "Опис",
+
     text: "Текст",
-
     text_1: "Текст 1",
-
     text_2: "Текст 2",
-
     text_3: "Текст 3",
-
     text_4: "Текст 4",
+    text_5: "Текст 5",
 
     button_text: "Текст кнопки",
-
     button_url: "Посилання кнопки",
 
     phone: "Телефон",
-
     phone_display: "Телефон для відображення",
 
     email: "Email",
 
     telegram: "Telegram",
-
     whatsapp: "WhatsApp",
 
     work_area: "Зона роботи",
-
     areas: "Області / населені пункти",
 
     image: "Фото",
-
     image_1: "Фото 1",
-
     image_2: "Фото 2",
-
     image_3: "Фото 3",
-
     image_4: "Фото 4",
+    image_5: "Фото 5",
 
     logo: "Логотип",
 
     background: "Фонове фото",
-
     background_image: "Фонове фото",
 
-    faq_question: "Питання",
-
-    faq_answer: "Відповідь",
-
     question: "Питання",
-
     answer: "Відповідь",
 
+    faq_question: "Питання",
+    faq_answer: "Відповідь",
+
     item_1: "Пункт 1",
-
     item_2: "Пункт 2",
-
     item_3: "Пункт 3",
-
     item_4: "Пункт 4",
+    item_5: "Пункт 5",
 
     meta_title: "SEO Title",
-
     meta_description: "SEO Description",
-
     keywords: "SEO Keywords",
+    canonical: "Canonical URL",
 
-    canonical: "Canonical URL"
+    url: "Посилання"
 };
 
 
 // ============================================================
-// CURRENT STATE
+// DOM
+// ============================================================
+
+const loginSection =
+    document.getElementById("login-section");
+
+const adminSection =
+    document.getElementById("admin-section");
+
+const loginForm =
+    document.getElementById("login-form");
+
+const emailInput =
+    document.getElementById("email");
+
+const passwordInput =
+    document.getElementById("password");
+
+const loginMessage =
+    document.getElementById("login-message");
+
+const logoutButton =
+    document.getElementById("logout-button");
+
+const contentEditor =
+    document.getElementById("content-editor");
+
+const pageTitle =
+    document.getElementById("page-title");
+
+const saveAllButton =
+    document.getElementById("save-all-button");
+
+const globalMessage =
+    document.getElementById("global-message");
+
+
+// ============================================================
+// STATE
 // ============================================================
 
 let currentPage = "home";
 
 let currentContent = [];
 
-let selectedImages = {};
+let isSaving = false;
 
 
 // ============================================================
 // INIT
 // ============================================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    setupPageButtons();
+        setupPageButtons();
 
-    setupLogin();
+        setupLogin();
 
-    setupLogout();
+        setupLogout();
 
-    setupSaveAll();
+        setupSaveAll();
 
-    await checkSession();
+        await checkSession();
 
-});
+    }
+);
 
 
 // ============================================================
@@ -205,10 +197,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function checkSession() {
 
     const {
-        data: {
-            session
-        }
+        data,
+        error
     } = await supabaseClient.auth.getSession();
+
+
+    if (error) {
+
+        console.error(error);
+
+        showLogin();
+
+        return;
+    }
+
+
+    const session =
+        data?.session;
 
 
     if (!session) {
@@ -219,7 +224,10 @@ async function checkSession() {
     }
 
 
-    const isAdmin = await checkAdmin(session.user.id);
+    const isAdmin =
+        await checkAdmin(
+            session.user.id
+        );
 
 
     if (!isAdmin) {
@@ -228,10 +236,10 @@ async function checkSession() {
 
         showLogin();
 
-        loginMessage.textContent =
-            "У вас немає прав адміністратора.";
-
-        loginMessage.style.color = "#dc3545";
+        setLoginMessage(
+            "У вас немає прав адміністратора.",
+            "error"
+        );
 
         return;
     }
@@ -240,6 +248,7 @@ async function checkSession() {
     showAdmin();
 
     await loadPage(currentPage);
+
 }
 
 
@@ -261,13 +270,17 @@ async function checkAdmin(userId) {
 
     if (error) {
 
-        console.error("Admin check error:", error);
+        console.error(
+            "Admin check:",
+            error
+        );
 
         return false;
     }
 
 
-    return !!data;
+    return Boolean(data);
+
 }
 
 
@@ -280,69 +293,87 @@ function setupLogin() {
     if (!loginForm) return;
 
 
-    loginForm.addEventListener("submit", async (event) => {
+    loginForm.addEventListener(
+        "submit",
+        async event => {
 
-        event.preventDefault();
-
-
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
+            event.preventDefault();
 
 
-        loginMessage.textContent =
-            "Виконується вхід...";
+            const email =
+                emailInput.value.trim();
 
-        loginMessage.style.color = "#6b7280";
-
-
-        const {
-            data,
-            error
-        } = await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
+            const password =
+                passwordInput.value;
 
 
-        if (error) {
+            if (!email || !password) {
 
-            console.error(error);
+                setLoginMessage(
+                    "Введіть email і пароль.",
+                    "error"
+                );
 
-            loginMessage.textContent =
-                error.message;
+                return;
+            }
 
-            loginMessage.style.color =
-                "#dc3545";
 
-            return;
+            setLoginMessage(
+                "Виконується вхід...",
+                "normal"
+            );
+
+
+            const {
+                data,
+                error
+            } = await supabaseClient.auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
+
+
+            if (error) {
+
+                console.error(error);
+
+                setLoginMessage(
+                    getAuthErrorMessage(error),
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const isAdmin =
+                await checkAdmin(
+                    data.user.id
+                );
+
+
+            if (!isAdmin) {
+
+                await supabaseClient.auth.signOut();
+
+                setLoginMessage(
+                    "Цей користувач не є адміністратором.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            setLoginMessage("", "normal");
+
+            showAdmin();
+
+            await loadPage(currentPage);
+
         }
-
-
-        const isAdmin =
-            await checkAdmin(data.user.id);
-
-
-        if (!isAdmin) {
-
-            await supabaseClient.auth.signOut();
-
-            loginMessage.textContent =
-                "Цей користувач не є адміністратором.";
-
-            loginMessage.style.color =
-                "#dc3545";
-
-            return;
-        }
-
-
-        loginMessage.textContent = "";
-
-        showAdmin();
-
-        await loadPage(currentPage);
-
-    });
+    );
 
 }
 
@@ -356,16 +387,18 @@ function setupLogout() {
     if (!logoutButton) return;
 
 
-    logoutButton.addEventListener("click", async () => {
+    logoutButton.addEventListener(
+        "click",
+        async () => {
 
-        await supabaseClient.auth.signOut();
+            await supabaseClient.auth.signOut();
 
-        currentContent = [];
-        selectedImages = {};
+            currentContent = [];
 
-        showLogin();
+            showLogin();
 
-    });
+        }
+    );
 
 }
 
@@ -421,36 +454,56 @@ function showAdmin() {
 function setupPageButtons() {
 
     const buttons =
-        document.querySelectorAll(".page-button");
+        document.querySelectorAll(
+            ".page-button"
+        );
 
 
     buttons.forEach(button => {
 
-        button.addEventListener("click", async () => {
+        button.addEventListener(
+            "click",
+            async () => {
 
-            const page =
-                button.dataset.page;
-
-
-            if (!page) return;
-
-
-            buttons.forEach(item => {
-
-                item.classList.remove("active");
-
-            });
+                const page =
+                    button.dataset.page;
 
 
-            button.classList.add("active");
+                if (!page) return;
 
 
-            currentPage = page;
+                if (isSaving) {
+
+                    showMessage(
+                        "Зачекайте завершення збереження."
+                    );
+
+                    return;
+                }
 
 
-            await loadPage(page);
+                buttons.forEach(item => {
 
-        });
+                    item.classList.remove(
+                        "active"
+                    );
+
+                });
+
+
+                button.classList.add(
+                    "active"
+                );
+
+
+                currentPage =
+                    page;
+
+
+                await loadPage(page);
+
+            }
+        );
 
     });
 
@@ -463,25 +516,19 @@ function setupPageButtons() {
 
 async function loadPage(page) {
 
-    pageTitle.textContent =
-        PAGE_NAMES[page] || page;
+    if (!contentEditor) return;
 
 
-    contentEditor.innerHTML = `
-        <div style="
-            background:#fff;
-            border-radius:22px;
-            padding:40px;
-            text-align:center;
-            color:#6b7280;
-            box-shadow:0 12px 35px rgba(0,0,0,.08);
-        ">
-            Завантаження...
-        </div>
-    `;
+    if (pageTitle) {
+
+        pageTitle.textContent =
+            PAGE_NAMES[page] ||
+            prettify(page);
+
+    }
 
 
-    selectedImages = {};
+    contentEditor.innerHTML = loadingHTML();
 
 
     const {
@@ -492,41 +539,46 @@ async function loadPage(page) {
         .select("*")
         .eq("page", page)
         .order("sort_order", {
+            ascending: true,
+            nullsFirst: false
+        })
+        .order("id", {
             ascending: true
         });
 
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            "Load content:",
+            error
+        );
 
-        contentEditor.innerHTML = `
-            <div style="
-                background:#fff;
-                border-radius:22px;
-                padding:30px;
-                color:#dc3545;
-            ">
-                Помилка завантаження даних.
-                <br><br>
-                ${escapeHtml(error.message)}
-            </div>
-        `;
+
+        contentEditor.innerHTML =
+            errorHTML(
+                error.message
+            );
 
         return;
     }
 
 
-    currentContent = data || [];
+    currentContent =
+        Array.isArray(data)
+            ? data
+            : [];
 
 
-    renderContent(currentContent);
+    renderContent(
+        currentContent
+    );
 
 }
 
 
 // ============================================================
-// RENDER CONTENT
+// RENDER UNIVERSAL CONTENT
 // ============================================================
 
 function renderContent(items) {
@@ -537,7 +589,7 @@ function renderContent(items) {
     if (!items.length) {
 
         contentEditor.innerHTML = `
-            <div class="cms-section">
+            <section class="cms-section">
 
                 <div class="cms-section-body">
 
@@ -545,59 +597,84 @@ function renderContent(items) {
                         Для цієї сторінки ще немає контенту.
                     </strong>
 
+                    <p style="
+                        color:#6b7280;
+                        margin-bottom:0;
+                    ">
+                        Додайте записи до таблиці
+                        <code>site_content</code>.
+                    </p>
+
                 </div>
 
-            </div>
+            </section>
         `;
 
         return;
     }
 
 
-    const sections = {};
+    const sections =
+        groupBySection(items);
+
+
+    let number = 1;
+
+
+    Object.entries(sections)
+        .forEach(
+            ([section, fields]) => {
+
+                const element =
+                    createSection(
+                        section,
+                        fields,
+                        number
+                    );
+
+
+                contentEditor.appendChild(
+                    element
+                );
+
+
+                number++;
+
+            }
+        );
+
+}
+
+
+// ============================================================
+// GROUP BY SECTION
+// ============================================================
+
+function groupBySection(items) {
+
+    const result = {};
 
 
     items.forEach(item => {
 
         const section =
-            item.section || "general";
+            item.section ||
+            "general";
 
 
-        if (!sections[section]) {
+        if (!result[section]) {
 
-            sections[section] = [];
+            result[section] = [];
 
         }
 
 
-        sections[section].push(item);
+        result[section].push(item);
 
     });
 
 
-    let sectionNumber = 1;
-
-
-    Object.entries(sections).forEach(
-        ([section, fields]) => {
-
-            const sectionElement =
-                createSection(
-                    section,
-                    fields,
-                    sectionNumber
-                );
-
-
-            contentEditor.appendChild(
-                sectionElement
-            );
-
-
-            sectionNumber++;
-
-        }
-    );
+    return result;
 
 }
 
@@ -621,8 +698,9 @@ function createSection(
 
 
     const title =
-        SECTION_NAMES[section] ||
-        prettify(section);
+        getSectionTitle(
+            section
+        );
 
 
     wrapper.innerHTML = `
@@ -648,16 +726,16 @@ function createSection(
 
 
     const grid =
-        wrapper.querySelector(".fields-grid");
+        wrapper.querySelector(
+            ".fields-grid"
+        );
 
 
     fields.forEach(item => {
 
-        const field =
-            createField(item);
-
-
-        grid.appendChild(field);
+        grid.appendChild(
+            createField(item)
+        );
 
     });
 
@@ -681,141 +759,90 @@ function createField(item) {
         "cms-field";
 
 
+    const type =
+        normalizeType(
+            item.content_type
+        );
+
+
+    const key =
+        item.content_key ||
+        "";
+
+
+    const label =
+        getFieldTitle(
+            key
+        );
+
+
+    if (type === "image") {
+
+        wrapper.classList.add("full");
+
+        renderImageField(
+            wrapper,
+            item,
+            label
+        );
+
+        return wrapper;
+
+    }
+
+
     if (
-        item.content_type === "textarea" ||
-        item.content_type === "image"
+        type === "textarea" ||
+        shouldUseTextarea(key)
     ) {
 
         wrapper.classList.add("full");
 
-    }
-
-
-    const label =
-        FIELD_NAMES[item.content_key] ||
-        prettify(item.content_key);
-
-
-    // IMAGE
-    if (item.content_type === "image") {
 
         wrapper.innerHTML = `
-            <label>
-                ${escapeHtml(label)}
-            </label>
 
-            <div class="image-editor">
-
-                <div
-                    class="image-preview"
-                    id="image-preview-${item.id}"
-                >
-                    ${
-                        item.content_value
-                        ?
-                        `<img
-                            src="${escapeAttribute(item.content_value)}"
-                            alt="${escapeAttribute(label)}"
-                        >`
-                        :
-                        `<div class="image-empty">
-                            Фото не завантажене
-                        </div>`
-                    }
-                </div>
-
-                <div class="image-actions">
-
-                    <label
-                        class="image-button"
-                        style="display:inline-block;"
-                    >
-                        Вибрати фото
-
-                        <input
-                            type="file"
-                            class="image-file"
-                            data-id="${item.id}"
-                            data-key="${escapeAttribute(item.content_key)}"
-                            accept="image/jpeg,image/png,image/webp,image/avif"
-                        >
-                    </label>
-
-                    <button
-                        type="button"
-                        class="image-button secondary preview-image-button"
-                        data-url="${escapeAttribute(item.content_value || "")}"
-                    >
-                        Відкрити
-                    </button>
-
-                    <button
-                        type="button"
-                        class="image-button danger delete-image-button"
-                        data-id="${item.id}"
-                    >
-                        Видалити
-                    </button>
-
-                </div>
-
-                <div
-                    class="image-status"
-                    style="
-                        margin-top:10px;
-                        font-size:12px;
-                        color:#6b7280;
-                    "
-                ></div>
-
-            </div>
-        `;
-
-
-        setupImageField(wrapper, item);
-
-        return wrapper;
-    }
-
-
-    // TEXTAREA
-    if (
-        item.content_type === "textarea" ||
-        item.content_key.includes("description") ||
-        item.content_key.includes("answer") ||
-        item.content_key.includes("text")
-    ) {
-
-        wrapper.innerHTML = `
             <label>
                 ${escapeHtml(label)}
             </label>
 
             <textarea
+                data-cms-field="true"
                 data-id="${item.id}"
-                data-type="${escapeAttribute(item.content_type)}"
-                data-key="${escapeAttribute(item.content_key)}"
-            >${escapeHtml(item.content_value || "")}</textarea>
+                data-type="${escapeAttribute(type)}"
+                data-key="${escapeAttribute(key)}"
+            >${escapeHtml(
+                item.content_value || ""
+            )}</textarea>
+
+            ${defaultButtonHTML(item)}
+
         `;
+
 
         return wrapper;
 
     }
 
 
-    // INPUT
     wrapper.innerHTML = `
+
         <label>
             ${escapeHtml(label)}
         </label>
 
         <input
-            type="${getInputType(item.content_type)}"
-            value="${escapeAttribute(item.content_value || "")}"
+            type="${getInputType(type)}"
+            value="${escapeAttribute(
+                item.content_value || ""
+            )}"
+            data-cms-field="true"
             data-id="${item.id}"
-            data-type="${escapeAttribute(item.content_type)}"
-            data-key="${escapeAttribute(item.content_key)}"
+            data-type="${escapeAttribute(type)}"
+            data-key="${escapeAttribute(key)}"
         >
+
+        ${defaultButtonHTML(item)}
+
     `;
 
 
@@ -828,22 +855,153 @@ function createField(item) {
 // IMAGE FIELD
 // ============================================================
 
-function setupImageField(wrapper, item) {
+function renderImageField(
+    wrapper,
+    item,
+    label
+) {
+
+    const value =
+        item.content_value ||
+        "";
+
+
+    wrapper.innerHTML = `
+
+        <label>
+            ${escapeHtml(label)}
+        </label>
+
+        <div class="image-editor">
+
+            <div
+                class="image-preview"
+                id="image-preview-${item.id}"
+            >
+
+                ${
+                    value
+                    ?
+                    `
+                    <img
+                        src="${escapeAttribute(value)}"
+                        alt="${escapeAttribute(label)}"
+                    >
+                    `
+                    :
+                    `
+                    <div class="image-empty">
+                        Фото не завантажене
+                    </div>
+                    `
+                }
+
+            </div>
+
+
+            <div class="image-actions">
+
+                <label
+                    class="image-button"
+                >
+
+                    📁 Вибрати фото
+
+                    <input
+                        type="file"
+                        class="image-file"
+                        data-id="${item.id}"
+                        accept="
+                            image/jpeg,
+                            image/png,
+                            image/webp,
+                            image/avif
+                        "
+                    >
+
+                </label>
+
+
+                <button
+                    type="button"
+                    class="image-button secondary"
+                    data-action="open-image"
+                    data-url="${escapeAttribute(value)}"
+                >
+                    🔍 Переглянути
+                </button>
+
+
+                <button
+                    type="button"
+                    class="image-button danger"
+                    data-action="delete-image"
+                    data-id="${item.id}"
+                >
+                    🗑 Видалити
+                </button>
+
+
+                ${
+                    item.default_value
+                    ?
+                    `
+                    <button
+                        type="button"
+                        class="image-button secondary"
+                        data-action="reset-image"
+                        data-id="${item.id}"
+                    >
+                        ↩ Відновити
+                    </button>
+                    `
+                    :
+                    ""
+                }
+
+            </div>
+
+
+            <div
+                class="image-status"
+                style="
+                    margin-top:10px;
+                    font-size:12px;
+                    color:#6b7280;
+                "
+            ></div>
+
+        </div>
+
+    `;
+
 
     const fileInput =
-        wrapper.querySelector(".image-file");
+        wrapper.querySelector(
+            ".image-file"
+        );
 
 
-    const previewButton =
-        wrapper.querySelector(".preview-image-button");
+    const openButton =
+        wrapper.querySelector(
+            '[data-action="open-image"]'
+        );
 
 
     const deleteButton =
-        wrapper.querySelector(".delete-image-button");
+        wrapper.querySelector(
+            '[data-action="delete-image"]'
+        );
+
+
+    const resetButton =
+        wrapper.querySelector(
+            '[data-action="reset-image"]'
+        );
 
 
     // ----------------------------------------
-    // SELECT FILE
+    // SELECT / UPLOAD
     // ----------------------------------------
 
     fileInput.addEventListener(
@@ -857,97 +1015,11 @@ function setupImageField(wrapper, item) {
             if (!file) return;
 
 
-            const status =
-                wrapper.querySelector(".image-status");
-
-
-            status.textContent =
-                "Завантаження фото...";
-
-
-            status.style.color =
-                "#6b7280";
-
-
-            try {
-
-                const publicUrl =
-                    await uploadImage(
-                        file,
-                        item
-                    );
-
-
-                // Save URL in DB
-                const {
-                    error
-                } = await supabaseClient
-                    .from("site_content")
-                    .update({
-                        content_value: publicUrl
-                    })
-                    .eq("id", item.id);
-
-
-                if (error) {
-
-                    throw error;
-
-                }
-
-
-                item.content_value =
-                    publicUrl;
-
-
-                const preview =
-                    wrapper.querySelector(
-                        ".image-preview"
-                    );
-
-
-                preview.innerHTML = `
-                    <img
-                        src="${escapeAttribute(publicUrl)}"
-                        alt="${escapeAttribute(item.content_key)}"
-                    >
-                `;
-
-
-                previewButton.dataset.url =
-                    publicUrl;
-
-
-                status.textContent =
-                    "Фото успішно завантажене.";
-
-
-                status.style.color =
-                    "#0d9b74";
-
-
-                showMessage(
-                    "Фото успішно оновлено."
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "Image upload error:",
-                    error
-                );
-
-
-                status.textContent =
-                    "Помилка: " +
-                    error.message;
-
-
-                status.style.color =
-                    "#dc3545";
-
-            }
+            await replaceImage(
+                item,
+                file,
+                wrapper
+            );
 
 
             fileInput.value = "";
@@ -960,18 +1032,18 @@ function setupImageField(wrapper, item) {
     // OPEN
     // ----------------------------------------
 
-    previewButton.addEventListener(
+    openButton.addEventListener(
         "click",
         () => {
 
             const url =
-                previewButton.dataset.url;
+                openButton.dataset.url;
 
 
             if (!url) {
 
                 showMessage(
-                    "Фото ще не завантажене."
+                    "Фото відсутнє."
                 );
 
                 return;
@@ -996,90 +1068,166 @@ function setupImageField(wrapper, item) {
         "click",
         async () => {
 
-            if (!item.content_value) {
+            await deleteImage(
+                item,
+                wrapper
+            );
 
-                showMessage(
-                    "Фото вже відсутнє."
+        }
+    );
+
+
+    // ----------------------------------------
+    // RESET
+    // ----------------------------------------
+
+    if (resetButton) {
+
+        resetButton.addEventListener(
+            "click",
+            async () => {
+
+                await resetImage(
+                    item,
+                    wrapper
                 );
 
-                return;
             }
+        );
+
+    }
+
+}
 
 
-            const confirmed =
-                confirm(
-                    "Видалити це фото?"
+// ============================================================
+// REPLACE IMAGE
+// ============================================================
+
+async function replaceImage(
+    item,
+    file,
+    wrapper
+) {
+
+    const status =
+        wrapper.querySelector(
+            ".image-status"
+        );
+
+
+    try {
+
+        validateImage(file);
+
+
+        status.textContent =
+            "Завантаження фото...";
+
+        status.style.color =
+            "#6b7280";
+
+
+        const oldUrl =
+            item.content_value || "";
+
+
+        const newUrl =
+            await uploadImage(
+                file,
+                item
+            );
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("site_content")
+            .update({
+                content_value: newUrl
+            })
+            .eq("id", item.id);
+
+
+        if (error) {
+
+            // If database update failed,
+            // remove newly uploaded file.
+            try {
+
+                await deleteStorageImage(
+                    newUrl
                 );
 
+            } catch (_) {}
 
-            if (!confirmed) return;
+            throw error;
+        }
 
+
+        // Delete old image only AFTER
+        // database has accepted the new URL.
+        if (
+            oldUrl &&
+            oldUrl !== newUrl
+        ) {
 
             try {
 
                 await deleteStorageImage(
-                    item.content_value
+                    oldUrl
                 );
-
-
-                const {
-                    error
-                } = await supabaseClient
-                    .from("site_content")
-                    .update({
-                        content_value: ""
-                    })
-                    .eq("id", item.id);
-
-
-                if (error) {
-
-                    throw error;
-
-                }
-
-
-                item.content_value = "";
-
-
-                const preview =
-                    wrapper.querySelector(
-                        ".image-preview"
-                    );
-
-
-                preview.innerHTML = `
-                    <div class="image-empty">
-                        Фото не завантажене
-                    </div>
-                `;
-
-
-                previewButton.dataset.url =
-                    "";
-
-
-                showMessage(
-                    "Фото видалено."
-                );
-
 
             } catch (error) {
 
-                console.error(
-                    "Delete image error:",
+                console.warn(
+                    "Old image delete:",
                     error
-                );
-
-
-                showMessage(
-                    "Не вдалося видалити фото."
                 );
 
             }
 
         }
-    );
+
+
+        item.content_value =
+            newUrl;
+
+
+        updateImagePreview(
+            wrapper,
+            newUrl
+        );
+
+
+        status.textContent =
+            "Фото успішно оновлено.";
+
+        status.style.color =
+            "#0d9b74";
+
+
+        showMessage(
+            "Фото успішно оновлено."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Image replacement:",
+            error
+        );
+
+
+        status.textContent =
+            "Помилка: " +
+            error.message;
+
+        status.style.color =
+            "#dc3545";
+
+    }
 
 }
 
@@ -1088,98 +1236,46 @@ function setupImageField(wrapper, item) {
 // UPLOAD IMAGE
 // ============================================================
 
-async function uploadImage(file, item) {
+async function uploadImage(
+    file,
+    item
+) {
 
-    if (!file) {
+    validateImage(file);
 
-        throw new Error(
-            "Файл не вибраний."
-        );
-
-    }
-
-
-    const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/avif"
-    ];
-
-
-    if (!allowedTypes.includes(file.type)) {
-
-        throw new Error(
-            "Дозволені JPG, PNG, WEBP або AVIF."
-        );
-
-    }
-
-
-    // 10 MB
-    if (file.size > 10 * 1024 * 1024) {
-
-        throw new Error(
-            "Максимальний розмір фото — 10 MB."
-        );
-
-    }
-
-
-    // ----------------------------------------
-    // DELETE OLD FILE
-    // ----------------------------------------
-
-    if (item.content_value) {
-
-        try {
-
-            await deleteStorageImage(
-                item.content_value
-            );
-
-        } catch (error) {
-
-            console.warn(
-                "Old image delete warning:",
-                error
-            );
-
-        }
-
-    }
-
-
-    // ----------------------------------------
-    // CREATE FILE NAME
-    // ----------------------------------------
 
     const extension =
-        getExtension(file.name);
+        getExtension(
+            file.name
+        );
 
 
     const safeKey =
-        (item.content_key || "image")
-        .replace(/[^a-zA-Z0-9_-]/g, "_");
+        sanitizeFileName(
+            item.content_key ||
+            "image"
+        );
 
 
     const fileName =
-        `${safeKey}_${Date.now()}.${extension}`;
+        `${safeKey}_${Date.now()}_${randomString(6)}.${extension}`;
+
+
+    const pageFolder =
+        sanitizeFileName(
+            currentPage
+        );
 
 
     const filePath =
-        `${currentPage}/${fileName}`;
+        `${pageFolder}/${fileName}`;
 
-
-    // ----------------------------------------
-    // UPLOAD
-    // ----------------------------------------
 
     const {
         error
     } = await supabaseClient
         .storage
-        .from("site-media")
+        .from(STORAGE_BUCKET)
         .upload(
             filePath,
             file,
@@ -1198,16 +1294,14 @@ async function uploadImage(file, item) {
     }
 
 
-    // ----------------------------------------
-    // PUBLIC URL
-    // ----------------------------------------
-
     const {
         data
     } = supabaseClient
         .storage
-        .from("site-media")
-        .getPublicUrl(filePath);
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(
+            filePath
+        );
 
 
     if (!data?.publicUrl) {
@@ -1225,58 +1319,60 @@ async function uploadImage(file, item) {
 
 
 // ============================================================
-// DELETE STORAGE IMAGE
+// DELETE IMAGE
 // ============================================================
 
-async function deleteStorageImage(url) {
+async function deleteImage(
+    item,
+    wrapper
+) {
 
-    if (!url) return;
+    if (!item.content_value) {
+
+        showMessage(
+            "Фото вже відсутнє."
+        );
+
+        return;
+    }
+
+
+    const confirmed =
+        window.confirm(
+            "Видалити це фото?\n\n" +
+            "Файл буде видалений із Storage, " +
+            "а поле сторінки стане порожнім."
+        );
+
+
+    if (!confirmed) return;
+
+
+    const status =
+        wrapper.querySelector(
+            ".image-status"
+        );
 
 
     try {
 
-        const parsed =
-            new URL(url);
+        status.textContent =
+            "Видалення...";
 
 
-        const marker =
-            "/storage/v1/object/public/site-media/";
-
-
-        const index =
-            parsed.pathname.indexOf(marker);
-
-
-        if (index === -1) {
-
-            console.warn(
-                "Storage path not found:",
-                url
-            );
-
-            return;
-        }
-
-
-        const filePath =
-            decodeURIComponent(
-                parsed.pathname.substring(
-                    index + marker.length
-                )
-            );
-
-
-        if (!filePath) return;
+        await deleteStorageImage(
+            item.content_value
+        );
 
 
         const {
             error
         } = await supabaseClient
-            .storage
-            .from("site-media")
-            .remove([
-                filePath
-            ]);
+            .from("site_content")
+            .update({
+                content_value: ""
+            })
+            .eq("id", item.id);
 
 
         if (error) {
@@ -1285,12 +1381,251 @@ async function deleteStorageImage(url) {
 
         }
 
+
+        item.content_value = "";
+
+
+        updateImagePreview(
+            wrapper,
+            ""
+        );
+
+
+        status.textContent =
+            "Фото видалено.";
+
+        status.style.color =
+            "#0d9b74";
+
+
+        showMessage(
+            "Фото видалено."
+        );
+
+
     } catch (error) {
 
         console.error(
-            "Storage delete error:",
+            "Delete image:",
             error
         );
+
+
+        status.textContent =
+            "Помилка видалення.";
+
+        status.style.color =
+            "#dc3545";
+
+
+        showMessage(
+            "Не вдалося видалити фото."
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// RESET IMAGE
+// ============================================================
+
+async function resetImage(
+    item,
+    wrapper
+) {
+
+    const defaultUrl =
+        item.default_value ||
+        "";
+
+
+    if (!defaultUrl) {
+
+        showMessage(
+            "Для цього фото немає резервного значення."
+        );
+
+        return;
+    }
+
+
+    const confirmed =
+        window.confirm(
+            "Відновити початкове фото?"
+        );
+
+
+    if (!confirmed) return;
+
+
+    try {
+
+        const oldUrl =
+            item.content_value || "";
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("site_content")
+            .update({
+                content_value: defaultUrl
+            })
+            .eq("id", item.id);
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        item.content_value =
+            defaultUrl;
+
+
+        updateImagePreview(
+            wrapper,
+            defaultUrl
+        );
+
+
+        if (
+            oldUrl &&
+            oldUrl !== defaultUrl
+        ) {
+
+            try {
+
+                await deleteStorageImage(
+                    oldUrl
+                );
+
+            } catch (error) {
+
+                console.warn(
+                    "Old image cleanup:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        showMessage(
+            "Початкове фото відновлено."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Reset image:",
+            error
+        );
+
+
+        showMessage(
+            "Не вдалося відновити фото."
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// UPDATE IMAGE PREVIEW
+// ============================================================
+
+function updateImagePreview(
+    wrapper,
+    url
+) {
+
+    const preview =
+        wrapper.querySelector(
+            ".image-preview"
+        );
+
+
+    const openButton =
+        wrapper.querySelector(
+            '[data-action="open-image"]'
+        );
+
+
+    if (url) {
+
+        preview.innerHTML = `
+            <img
+                src="${escapeAttribute(url)}"
+                alt="Фото"
+            >
+        `;
+
+    } else {
+
+        preview.innerHTML = `
+            <div class="image-empty">
+                Фото не завантажене
+            </div>
+        `;
+
+    }
+
+
+    if (openButton) {
+
+        openButton.dataset.url =
+            url || "";
+
+    }
+
+}
+
+
+// ============================================================
+// DELETE STORAGE FILE
+// ============================================================
+
+async function deleteStorageImage(url) {
+
+    if (!url) return;
+
+
+    const filePath =
+        getStoragePath(
+            url
+        );
+
+
+    if (!filePath) {
+
+        console.warn(
+            "Storage path not found:",
+            url
+        );
+
+        return;
+    }
+
+
+    const {
+        error
+    } = await supabaseClient
+        .storage
+        .from(STORAGE_BUCKET)
+        .remove([
+            filePath
+        ]);
+
+
+    if (error) {
 
         throw error;
 
@@ -1300,7 +1635,53 @@ async function deleteStorageImage(url) {
 
 
 // ============================================================
-// SAVE ALL
+// GET STORAGE PATH FROM PUBLIC URL
+// ============================================================
+
+function getStoragePath(url) {
+
+    try {
+
+        const parsed =
+            new URL(url);
+
+
+        const marker =
+            `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+
+
+        const index =
+            parsed.pathname.indexOf(
+                marker
+            );
+
+
+        if (index === -1) {
+
+            return null;
+
+        }
+
+
+        return decodeURIComponent(
+            parsed.pathname.substring(
+                index + marker.length
+            )
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        return null;
+
+    }
+
+}
+
+
+// ============================================================
+// SAVE ALL TEXT / INPUT FIELDS
 // ============================================================
 
 function setupSaveAll() {
@@ -1317,10 +1698,16 @@ function setupSaveAll() {
 
 
 // ============================================================
-// SAVE ALL CONTENT
+// SAVE ALL
 // ============================================================
 
 async function saveAllContent() {
+
+    if (isSaving) return;
+
+
+    isSaving = true;
+
 
     saveAllButton.disabled = true;
 
@@ -1332,14 +1719,16 @@ async function saveAllContent() {
 
         const fields =
             contentEditor.querySelectorAll(
-                "input[data-id], textarea[data-id]"
+                "[data-cms-field='true']"
             );
 
 
         for (const field of fields) {
 
             const id =
-                Number(field.dataset.id);
+                Number(
+                    field.dataset.id
+                );
 
 
             const value =
@@ -1365,19 +1754,21 @@ async function saveAllContent() {
         }
 
 
-        // Reload current data
-        await loadPage(currentPage);
+        // Refresh data from database.
+        await loadPage(
+            currentPage
+        );
 
 
         showMessage(
-            "Усі зміни успішно збережено."
+            "Усі зміни збережено."
         );
 
 
     } catch (error) {
 
         console.error(
-            "Save error:",
+            "Save all:",
             error
         );
 
@@ -1389,12 +1780,217 @@ async function saveAllContent() {
 
     } finally {
 
+        isSaving = false;
+
         saveAllButton.disabled = false;
 
         saveAllButton.textContent =
             "Зберегти зміни";
 
     }
+
+}
+
+
+// ============================================================
+// DEFAULT VALUE BUTTON
+// ============================================================
+
+function defaultButtonHTML(item) {
+
+    if (!item.default_value) {
+
+        return "";
+
+    }
+
+
+    return `
+
+        <button
+            type="button"
+            class="image-button secondary"
+            style="
+                margin-top:8px;
+                font-size:11px;
+            "
+            data-action="reset-field"
+            data-id="${item.id}"
+        >
+            ↩ Відновити початкове
+        </button>
+
+    `;
+
+}
+
+
+// ============================================================
+// RESET TEXT FIELD
+// ============================================================
+
+document.addEventListener(
+    "click",
+    async event => {
+
+        const button =
+            event.target.closest(
+                '[data-action="reset-field"]'
+            );
+
+
+        if (!button) return;
+
+
+        const id =
+            Number(
+                button.dataset.id
+            );
+
+
+        const item =
+            currentContent.find(
+                record =>
+                    Number(record.id) === id
+            );
+
+
+        if (!item) return;
+
+
+        const confirmed =
+            window.confirm(
+                "Відновити початкове значення?"
+            );
+
+
+        if (!confirmed) return;
+
+
+        try {
+
+            const {
+                error
+            } = await supabaseClient
+                .from("site_content")
+                .update({
+                    content_value:
+                        item.default_value
+                })
+                .eq("id", id);
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            await loadPage(
+                currentPage
+            );
+
+
+            showMessage(
+                "Початкове значення відновлено."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Reset field:",
+                error
+            );
+
+
+            showMessage(
+                "Не вдалося відновити значення."
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// VALIDATE IMAGE
+// ============================================================
+
+function validateImage(file) {
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/avif"
+    ];
+
+
+    if (
+        !allowedTypes.includes(
+            file.type
+        )
+    ) {
+
+        throw new Error(
+            "Дозволені формати: JPG, PNG, WEBP, AVIF."
+        );
+
+    }
+
+
+    const maxSize =
+        10 * 1024 * 1024;
+
+
+    if (file.size > maxSize) {
+
+        throw new Error(
+            "Максимальний розмір фото — 10 MB."
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// FIELD TYPE
+// ============================================================
+
+function normalizeType(type) {
+
+    const value =
+        String(
+            type || "text"
+        )
+        .toLowerCase()
+        .trim();
+
+
+    const allowed = [
+        "text",
+        "textarea",
+        "image",
+        "url",
+        "email",
+        "phone"
+    ];
+
+
+    if (
+        allowed.includes(value)
+    ) {
+
+        return value;
+
+    }
+
+
+    return "text";
 
 }
 
@@ -1425,32 +2021,169 @@ function getInputType(type) {
 
 
 // ============================================================
-// EXTENSION
+// TEXTAREA DETECTION
 // ============================================================
 
-function getExtension(filename) {
+function shouldUseTextarea(key) {
 
-    const parts =
-        filename.split(".");
-
-
-    if (parts.length < 2) {
-
-        return "jpg";
-
-    }
+    const lower =
+        String(key)
+        .toLowerCase();
 
 
-    return parts
-        .pop()
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "") || "jpg";
+    const words = [
+        "description",
+        "answer",
+        "text",
+        "content",
+        "about",
+        "message",
+        "keywords"
+    ];
+
+
+    return words.some(
+        word =>
+            lower.includes(word)
+    );
 
 }
 
 
 // ============================================================
-// MESSAGE
+// SECTION TITLE
+// ============================================================
+
+function getSectionTitle(section) {
+
+    if (
+        SECTION_NAMES[section]
+    ) {
+
+        return SECTION_NAMES[section];
+
+    }
+
+
+    return prettify(section);
+
+}
+
+
+// ============================================================
+// FIELD TITLE
+// ============================================================
+
+function getFieldTitle(key) {
+
+    if (
+        FIELD_NAMES[key]
+    ) {
+
+        return FIELD_NAMES[key];
+
+    }
+
+
+    // faq_1_question
+    const faqMatch =
+        key.match(
+            /^faq_(\d+)_(question|answer)$/i
+        );
+
+
+    if (faqMatch) {
+
+        const number =
+            faqMatch[1];
+
+
+        const type =
+            faqMatch[2]
+                .toLowerCase();
+
+
+        return type === "question"
+            ? `Питання ${number}`
+            : `Відповідь ${number}`;
+
+    }
+
+
+    return prettify(key);
+
+}
+
+
+// ============================================================
+// AUTH ERROR
+// ============================================================
+
+function getAuthErrorMessage(error) {
+
+    if (!error) {
+
+        return "Помилка авторизації.";
+
+    }
+
+
+    const message =
+        String(
+            error.message || ""
+        );
+
+
+    if (
+        message
+            .toLowerCase()
+            .includes("invalid login credentials")
+    ) {
+
+        return "Неправильний email або пароль.";
+
+    }
+
+
+    return message ||
+        "Помилка авторизації.";
+
+}
+
+
+// ============================================================
+// LOGIN MESSAGE
+// ============================================================
+
+function setLoginMessage(
+    message,
+    type
+) {
+
+    if (!loginMessage) return;
+
+
+    loginMessage.textContent =
+        message;
+
+
+    if (type === "error") {
+
+        loginMessage.style.color =
+            "#dc3545";
+
+    } else {
+
+        loginMessage.style.color =
+            "#6b7280";
+
+    }
+
+}
+
+
+// ============================================================
+// GLOBAL MESSAGE
 // ============================================================
 
 function showMessage(text) {
@@ -1472,12 +2205,73 @@ function showMessage(text) {
 
 
     showMessage.timer =
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            globalMessage.style.display =
-                "none";
+                globalMessage.style.display =
+                    "none";
 
-        }, 3500);
+            },
+            3500
+        );
+
+}
+
+
+// ============================================================
+// LOADING HTML
+// ============================================================
+
+function loadingHTML() {
+
+    return `
+        <section class="cms-section">
+
+            <div
+                class="cms-section-body"
+                style="
+                    text-align:center;
+                    padding:50px;
+                    color:#6b7280;
+                "
+            >
+                Завантаження...
+            </div>
+
+        </section>
+    `;
+
+}
+
+
+// ============================================================
+// ERROR HTML
+// ============================================================
+
+function errorHTML(message) {
+
+    return `
+        <section class="cms-section">
+
+            <div
+                class="cms-section-body"
+                style="
+                    color:#dc3545;
+                "
+            >
+
+                <strong>
+                    Помилка завантаження.
+                </strong>
+
+                <p>
+                    ${escapeHtml(message)}
+                </p>
+
+            </div>
+
+        </section>
+    `;
 
 }
 
@@ -1495,7 +2289,7 @@ function prettify(value) {
     }
 
 
-    return value
+    return String(value)
         .replace(/_/g, " ")
         .replace(/-/g, " ")
         .replace(/\b\w/g, letter =>
@@ -1506,17 +2300,130 @@ function prettify(value) {
 
 
 // ============================================================
+// FILE EXTENSION
+// ============================================================
+
+function getExtension(filename) {
+
+    const parts =
+        String(filename)
+            .split(".");
+
+
+    if (parts.length < 2) {
+
+        return "jpg";
+
+    }
+
+
+    const extension =
+        parts.pop()
+            .toLowerCase()
+            .replace(
+                /[^a-z0-9]/g,
+                ""
+            );
+
+
+    return extension || "jpg";
+
+}
+
+
+// ============================================================
+// SAFE FILE NAME
+// ============================================================
+
+function sanitizeFileName(value) {
+
+    return String(value || "file")
+        .normalize("NFKD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .replace(
+            /[^a-zA-Z0-9_-]/g,
+            "_"
+        )
+        .replace(
+            /_+/g,
+            "_"
+        )
+        .replace(
+            /^_+|_+$/g,
+            ""
+        )
+        || "file";
+
+}
+
+
+// ============================================================
+// RANDOM STRING
+// ============================================================
+
+function randomString(length) {
+
+    const chars =
+        "abcdefghijklmnopqrstuvwxyz0123456789";
+
+
+    let result = "";
+
+
+    for (
+        let i = 0;
+        i < length;
+        i++
+    ) {
+
+        result +=
+            chars[
+                Math.floor(
+                    Math.random() *
+                    chars.length
+                )
+            ];
+
+    }
+
+
+    return result;
+
+}
+
+
+// ============================================================
 // ESCAPE HTML
 // ============================================================
 
 function escapeHtml(value) {
 
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
