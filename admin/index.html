@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>TERNINGEO — Адмін-панель</title>
+    <title>TERNINGEO — Налаштування</title>
 
     <link rel="stylesheet" href="admin.css">
 </head>
@@ -13,10 +14,12 @@
 
 <div class="admin-container">
 
+    <!-- ================= LOGIN ================= -->
+
     <div id="login-section">
 
         <h1>TERNINGEO</h1>
-        <p>Адмін-панель</p>
+        <p>Налаштування</p>
 
         <form id="login-form">
 
@@ -45,11 +48,16 @@
     </div>
 
 
+    <!-- ================= ADMIN ================= -->
+
     <div id="admin-section" style="display:none;">
 
         <div class="admin-header">
 
-            <h1>Адмін-панель</h1>
+            <div>
+                <h1>TERNINGEO</h1>
+                <p>Керування сайтом</p>
+            </div>
 
             <button id="logout-button">
                 Вийти
@@ -58,52 +66,70 @@
         </div>
 
 
+        <!-- PAGE SELECTOR -->
+
         <section class="editor">
 
-            <h2>Головна сторінка</h2>
-
-            <label>
-                Заголовок
+            <label for="page-select">
+                Сторінка
             </label>
 
-            <input
-                type="text"
-                id="home-title"
-            >
+            <select id="page-select">
 
+                <option value="home">
+                    Головна
+                </option>
 
-            <label>
-                Підзаголовок
-            </label>
+                <option value="vynos">
+                    Винос в натуру
+                </option>
 
-            <input
-                type="text"
-                id="home-subtitle"
-            >
+                <option value="topo">
+                    Топографічна зйомка
+                </option>
 
+                <option value="suprovid">
+                    Геодезичний супровід
+                </option>
 
-            <label>
-                Опис
-            </label>
+                <option value="kgz">
+                    КГЗ
+                </option>
 
-            <textarea
-                id="home-description"
-                rows="6"
-            ></textarea>
-
-
-            <button id="save-home">
-                Зберегти зміни
-            </button>
-
-            <div id="save-message"></div>
+            </select>
 
         </section>
+
+
+        <!-- CONTENT -->
+
+        <section class="editor">
+
+            <h2 id="page-title">
+                Головна сторінка
+            </h2>
+
+            <div id="content-editor">
+
+                <p>
+                    Завантаження...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- STATUS -->
+
+        <div id="global-message"></div>
 
     </div>
 
 </div>
 
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -111,3 +137,4 @@
 
 </body>
 </html>
+```
