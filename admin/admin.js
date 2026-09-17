@@ -1,4 +1,3 @@
-```javascript
 const SUPABASE_URL = "https://lohoxjwfhjudzmpwhcyv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_LeBJ_X9VLHu05ImQlaTe8g_uH9y19cA";
 
@@ -24,8 +23,6 @@ const pageSelect = document.getElementById("page-select");
 const pageTitle = document.getElementById("page-title");
 const contentEditor = document.getElementById("content-editor");
 
-const globalMessage = document.getElementById("global-message");
-
 
 // ============================================================
 // PAGE NAMES
@@ -41,43 +38,28 @@ const pageNames = {
 
 
 // ============================================================
-// AUTH
+// SHOW LOGIN
 // ============================================================
 
-async function checkAuth() {
+function showLogin(message = "") {
 
-    const {
-        data: {
-            session
-        }
-    } = await supabaseClient.auth.getSession();
+    loginSection.style.display = "block";
+    adminSection.style.display = "none";
+
+    loginMessage.textContent = message;
+}
 
 
-    if (session) {
+// ============================================================
+// SHOW ADMIN
+// ============================================================
 
-        const isAdmin = await checkAdmin();
+function showAdmin() {
 
-        if (!isAdmin) {
+    loginSection.style.display = "none";
+    adminSection.style.display = "block";
 
-            await supabaseClient.auth.signOut();
-
-            showLogin();
-
-            loginMessage.textContent =
-                "У цього користувача немає прав адміністратора.";
-
-            return;
-        }
-
-        showAdmin();
-
-        await loadContent();
-
-    } else {
-
-        showLogin();
-
-    }
+    loginMessage.textContent = "";
 }
 
 
@@ -90,11 +72,15 @@ async function checkAdmin() {
     const {
         data: {
             user
-        }
+        },
+        error: userError
     } = await supabaseClient.auth.getUser();
 
 
-    if (!user) {
+    if (userError || !user) {
+
+        console.error("User error:", userError);
+
         return false;
     }
 
@@ -122,26 +108,55 @@ async function checkAdmin() {
 
 
 // ============================================================
-// SHOW LOGIN
+// CHECK AUTH
 // ============================================================
 
-function showLogin() {
+async function checkAuth() {
 
-    loginSection.style.display = "block";
-    adminSection.style.display = "none";
+    try {
 
-}
+        const {
+            data: {
+                session
+            }
+        } = await supabaseClient.auth.getSession();
 
 
-// ============================================================
-// SHOW ADMIN
-// ============================================================
+        if (!session) {
 
-function showAdmin() {
+            showLogin();
 
-    loginSection.style.display = "none";
-    adminSection.style.display = "block";
+            return;
+        }
 
+
+        const isAdmin = await checkAdmin();
+
+
+        if (!isAdmin) {
+
+            await supabaseClient.auth.signOut();
+
+            showLogin(
+                "Цей користувач не має прав адміністратора."
+            );
+
+            return;
+        }
+
+
+        showAdmin();
+
+        await loadContent();
+
+    } catch (error) {
+
+        console.error("Auth error:", error);
+
+        showLogin(
+            "Помилка перевірки авторизації."
+        );
+    }
 }
 
 
@@ -149,71 +164,89 @@ function showAdmin() {
 // LOGIN
 // ============================================================
 
-loginForm.addEventListener("submit", async function(event) {
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
 
-    event.preventDefault();
+        event.preventDefault();
 
-    loginMessage.textContent = "Вхід...";
-
-
-    const email =
-        document.getElementById("email").value.trim();
-
-    const password =
-        document.getElementById("password").value;
-
-
-    const {
-        error
-    } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
-
-
-    if (error) {
 
         loginMessage.textContent =
-            "Помилка входу: " + error.message;
+            "Вхід...";
 
-        return;
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const password =
+            document.getElementById("password").value;
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+
+        if (error) {
+
+            console.error("Login error:", error);
+
+            loginMessage.textContent =
+                "Помилка входу: " + error.message;
+
+            return;
+        }
+
+
+        if (!data.session) {
+
+            loginMessage.textContent =
+                "Авторизація не створила сесію.";
+
+            return;
+        }
+
+
+        const isAdmin = await checkAdmin();
+
+
+        if (!isAdmin) {
+
+            await supabaseClient.auth.signOut();
+
+            loginMessage.textContent =
+                "Вхід виконано, але користувач не має прав адміністратора.";
+
+            return;
+        }
+
+
+        showAdmin();
+
+        await loadContent();
+
     }
-
-
-    const isAdmin = await checkAdmin();
-
-
-    if (!isAdmin) {
-
-        await supabaseClient.auth.signOut();
-
-        loginMessage.textContent =
-            "Вхід виконано, але цей користувач не має прав адміністратора.";
-
-        return;
-    }
-
-
-    loginMessage.textContent = "";
-
-    showAdmin();
-
-    await loadContent();
-
-});
+);
 
 
 // ============================================================
 // LOGOUT
 // ============================================================
 
-logoutButton.addEventListener("click", async function() {
+logoutButton.addEventListener(
+    "click",
+    async function() {
 
-    await supabaseClient.auth.signOut();
+        await supabaseClient.auth.signOut();
 
-    showLogin();
+        showLogin();
 
-});
+    }
+);
 
 
 // ============================================================
@@ -223,6 +256,7 @@ logoutButton.addEventListener("click", async function() {
 async function loadContent() {
 
     const page = pageSelect.value;
+
 
     pageTitle.textContent =
         pageNames[page] || "Редагування";
@@ -246,7 +280,7 @@ async function loadContent() {
 
     if (error) {
 
-        console.error("Load content error:", error);
+        console.error("Content error:", error);
 
         contentEditor.innerHTML =
             "<p>Помилка завантаження контенту.</p>";
@@ -257,18 +291,14 @@ async function loadContent() {
 
     if (!data || data.length === 0) {
 
-        contentEditor.innerHTML = `
-            <div class="empty-content">
-                <p>Для цієї сторінки контент ще не створено.</p>
-            </div>
-        `;
+        contentEditor.innerHTML =
+            "<p>Контент для цієї сторінки ще не створено.</p>";
 
         return;
     }
 
 
     renderEditor(data);
-
 }
 
 
@@ -281,7 +311,7 @@ function renderEditor(items) {
     contentEditor.innerHTML = "";
 
 
-    items.forEach(item => {
+    items.forEach(function(item) {
 
         const wrapper =
             document.createElement("div");
@@ -303,100 +333,19 @@ function renderEditor(items) {
         let input;
 
 
-        // =========================
-        // TEXTAREA
-        // =========================
-
-        if (
-            item.content_type === "textarea"
-        ) {
+        if (item.content_type === "textarea") {
 
             input =
                 document.createElement("textarea");
 
-            input.rows = 5;
+            input.rows = 6;
 
-        }
-
-
-        // =========================
-        // IMAGE
-        // =========================
-
-        else if (
-            item.content_type === "image"
-        ) {
+        } else {
 
             input =
                 document.createElement("input");
 
             input.type = "text";
-
-            input.placeholder =
-                "URL зображення";
-
-        }
-
-
-        // =========================
-        // URL
-        // =========================
-
-        else if (
-            item.content_type === "url"
-        ) {
-
-            input =
-                document.createElement("input");
-
-            input.type = "url";
-
-        }
-
-
-        // =========================
-        // EMAIL
-        // =========================
-
-        else if (
-            item.content_type === "email"
-        ) {
-
-            input =
-                document.createElement("input");
-
-            input.type = "email";
-
-        }
-
-
-        // =========================
-        // PHONE
-        // =========================
-
-        else if (
-            item.content_type === "phone"
-        ) {
-
-            input =
-                document.createElement("input");
-
-            input.type = "tel";
-
-        }
-
-
-        // =========================
-        // DEFAULT TEXT
-        // =========================
-
-        else {
-
-            input =
-                document.createElement("input");
-
-            input.type = "text";
-
         }
 
 
@@ -404,60 +353,37 @@ function renderEditor(items) {
             item.content_value || "";
 
 
-        input.dataset.id =
-            item.id;
-
-
-        input.dataset.key =
-            item.content_key;
-
-
-        input.dataset.page =
-            item.page;
-
-
         wrapper.appendChild(input);
 
 
-        // =========================
-        // SAVE BUTTON
-        // =========================
-
-        const saveButton =
+        const button =
             document.createElement("button");
 
-        saveButton.type =
-            "button";
+        button.type = "button";
 
-        saveButton.textContent =
+        button.textContent =
             "Зберегти";
 
 
-        saveButton.className =
-            "save-field-button";
-
-
-        saveButton.addEventListener(
+        button.addEventListener(
             "click",
-            function() {
+            async function() {
 
-                saveField(
+                await saveField(
                     item.id,
                     input.value,
-                    saveButton
+                    button
                 );
 
             }
         );
 
 
-        wrapper.appendChild(saveButton);
-
+        wrapper.appendChild(button);
 
         contentEditor.appendChild(wrapper);
 
     });
-
 }
 
 
@@ -470,32 +396,16 @@ function getFieldLabel(item) {
     const labels = {
 
         title: "Заголовок",
-
         subtitle: "Підзаголовок",
-
         description: "Опис",
-
         heading: "Заголовок",
-
-        text: "Текст",
-
-        image: "Зображення",
-
-        phone: "Телефон",
-
-        email: "Email",
-
-        button: "Кнопка",
-
+        text_1: "Текст 1",
+        text_2: "Текст 2",
         button_text: "Текст кнопки",
-
+        phone: "Телефон",
+        email: "Email",
         faq_question: "Питання FAQ",
-
-        faq_answer: "Відповідь FAQ",
-
-        seo_title: "SEO Title",
-
-        seo_description: "SEO Description"
+        faq_answer: "Відповідь FAQ"
 
     };
 
@@ -533,15 +443,10 @@ async function saveField(
 
     if (error) {
 
-        console.error(
-            "Save error:",
-            error
-        );
-
+        console.error("Save error:", error);
 
         button.textContent =
             "Помилка";
-
 
         button.disabled = false;
 
@@ -561,21 +466,18 @@ async function saveField(
         button.disabled = false;
 
     }, 1500);
-
 }
 
 
 // ============================================================
-// CHANGE PAGE
+// PAGE CHANGE
 // ============================================================
 
 pageSelect.addEventListener(
     "change",
-    async function() {
+    function() {
 
-        globalMessage.textContent = "";
-
-        await loadContent();
+        loadContent();
 
     }
 );
@@ -586,4 +488,3 @@ pageSelect.addEventListener(
 // ============================================================
 
 checkAuth();
-```
