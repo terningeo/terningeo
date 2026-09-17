@@ -1,8 +1,3 @@
-=========================================================
-   TERNINGEO UNIVERSAL ADMIN
-   Supabase + site_content + site-media
-   ========================================================= */
-
 console.log("TERNINGEO ADMIN: start");
 
 const SUPABASE_URL = "https://lohoxjwfhjudzmpwhcyv.supabase.co";
