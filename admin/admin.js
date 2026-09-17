@@ -1,5 +1,4 @@
-```javascript
-/* =========================================================
+=========================================================
    TERNINGEO UNIVERSAL ADMIN
    Supabase + site_content + site-media
    ========================================================= */
@@ -1633,5 +1632,4 @@ restoreSession();
 
 console.log(
     "TERNINGEO ADMIN: ready"
-);
-```
+)
