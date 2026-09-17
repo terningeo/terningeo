@@ -1,44 +1,8 @@
 "use strict";
 
-/*
-============================================================
-TERNINGEO UNIVERSAL ADMIN CMS
-============================================================
-
-Pages:
-    home
-    vynos
-    topo
-    suprovid
-    kgz
-
-Database:
-    public.site_content
-
-Storage:
-    site-media
-
-IMPORTANT:
-    Images use FIXED storage_path.
-
-Example:
-
-    images/about.jpg
-
-becomes:
-
-    site-media/images/about.jpg
-
-No random filenames.
-No timestamp filenames.
-No page-generated image folders.
-============================================================
-*/
-
-
 /* =========================================================
-   CONFIG
-========================================================= */
+   TERNINGEO ADMIN CMS
+   ========================================================= */
 
 const SUPABASE_URL =
     "https://lohoxjwfhjudzmpwhcyv.supabase.co";
@@ -55,18 +19,41 @@ const SITE_URL =
 
 /* =========================================================
    SUPABASE
-========================================================= */
+   ========================================================= */
+
+if (!window.supabase) {
+
+    console.error(
+        "Supabase library не завантажена."
+    );
+
+} else {
+
+    window.supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+}
+
 
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+    window.supabaseClient;
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let currentPage = "home";
+let currentItems = [];
+let saving = false;
 
 
 /* =========================================================
    PAGE NAMES
-========================================================= */
+   ========================================================= */
 
 const PAGE_NAMES = {
 
@@ -84,154 +71,319 @@ const PAGE_NAMES = {
 
 
 /* =========================================================
-   GLOBAL STATE
-========================================================= */
-
-let currentPage =
-    "home";
-
-let currentItems =
-    [];
-
-let isSaving =
-    false;
-
-
-/* =========================================================
-   DOM
-========================================================= */
-
-const loginScreen =
-    document.getElementById(
-        "login-screen"
-    );
-
-const adminScreen =
-    document.getElementById(
-        "admin-screen"
-    );
-
-const loginForm =
-    document.getElementById(
-        "login-form"
-    );
-
-const loginEmail =
-    document.getElementById(
-        "login-email"
-    );
-
-const loginPassword =
-    document.getElementById(
-        "login-password"
-    );
-
-const loginError =
-    document.getElementById(
-        "login-error"
-    );
-
-const logoutButton =
-    document.getElementById(
-        "logout-button"
-    );
-
-const pageButtons =
-    document.querySelectorAll(
-        "[data-page]"
-    );
-
-const contentContainer =
-    document.getElementById(
-        "content-container"
-    );
-
-const currentPageTitle =
-    document.getElementById(
-        "current-page-title"
-    );
-
-const saveButton =
-    document.getElementById(
-        "save-all"
-    );
-
-
-/* =========================================================
    START
-========================================================= */
+   ========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    initialize
+    async () => {
+
+        console.log(
+            "TERNINGEO ADMIN: start"
+        );
+
+        if (!supabaseClient) {
+
+            showFatalError(
+                "Supabase не завантажений. Перевір підключення supabase-js у admin/index.html."
+            );
+
+            return;
+
+        }
+
+        setupLogin();
+
+        setupLogout();
+
+        setupPageButtons();
+
+        setupSaveButton();
+
+        await restoreSession();
+
+    }
 );
 
 
-async function initialize() {
+/* =========================================================
+   FIND LOGIN ELEMENTS
+   ========================================================= */
 
-    setupEvents();
+function getLoginForm() {
 
-    await checkSession();
+    return (
+        document.querySelector(
+            "#login-form"
+        ) ||
+        document.querySelector(
+            "form"
+        )
+    );
+
+}
+
+
+function getEmailInput(
+    form
+) {
+
+    return (
+        form?.querySelector(
+            "#login-email"
+        ) ||
+        form?.querySelector(
+            'input[type="email"]'
+        ) ||
+        form?.querySelector(
+            'input[name="email"]'
+        )
+    );
+
+}
+
+
+function getPasswordInput(
+    form
+) {
+
+    return (
+        form?.querySelector(
+            "#login-password"
+        ) ||
+        form?.querySelector(
+            'input[type="password"]'
+        ) ||
+        form?.querySelector(
+            'input[name="password"]'
+        )
+    );
+
+}
+
+
+function getLoginError() {
+
+    return (
+        document.querySelector(
+            "#login-error"
+        ) ||
+        document.querySelector(
+            ".login-error"
+        )
+    );
 
 }
 
 
 /* =========================================================
-   EVENTS
-========================================================= */
+   LOGIN
+   ========================================================= */
 
-function setupEvents() {
+function setupLogin() {
 
-    if (loginForm) {
+    const form =
+        getLoginForm();
 
-        loginForm.addEventListener(
-            "submit",
-            handleLogin
+
+    if (!form) {
+
+        console.error(
+            "Не знайдено форму авторизації."
         );
+
+        return;
 
     }
 
 
-    if (logoutButton) {
+    form.addEventListener(
+        "submit",
+        async event => {
 
-        logoutButton.addEventListener(
-            "click",
-            handleLogout
-        );
+            event.preventDefault();
 
-    }
-
-
-    pageButtons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const page =
-                        button.dataset.page;
-
-                    if (!page) {
-                        return;
-                    }
-
-                    selectPage(
-                        page
-                    );
-
-                }
+            await login(
+                form
             );
 
         }
     );
 
+}
 
-    if (saveButton) {
 
-        saveButton.addEventListener(
-            "click",
-            saveAllChanges
+async function login(
+    form
+) {
+
+    clearLoginError();
+
+
+    const emailInput =
+        getEmailInput(
+            form
+        );
+
+    const passwordInput =
+        getPasswordInput(
+            form
+        );
+
+
+    if (!emailInput) {
+
+        showLoginError(
+            "Не знайдено поле email."
+        );
+
+        return;
+
+    }
+
+
+    if (!passwordInput) {
+
+        showLoginError(
+            "Не знайдено поле пароля."
+        );
+
+        return;
+
+    }
+
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+
+    if (!email) {
+
+        showLoginError(
+            "Введіть email."
+        );
+
+        return;
+
+    }
+
+
+    if (!password) {
+
+        showLoginError(
+            "Введіть пароль."
+        );
+
+        return;
+
+    }
+
+
+    setLoginButton(
+        form,
+        true
+    );
+
+
+    try {
+
+        console.log(
+            "LOGIN:",
+            email
+        );
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
+
+
+        if (error) {
+
+            console.error(
+                "Supabase login error:",
+                error
+            );
+
+            throw error;
+
+        }
+
+
+        if (
+            !data ||
+            !data.user
+        ) {
+
+            throw new Error(
+                "Supabase не повернув користувача."
+            );
+
+        }
+
+
+        console.log(
+            "USER:",
+            data.user.id
+        );
+
+
+        const isAdmin =
+            await checkAdmin(
+                data.user.id
+            );
+
+
+        if (!isAdmin) {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            throw new Error(
+                "Користувач авторизований, але його немає в public.admin_users."
+            );
+
+        }
+
+
+        showAdminPanel();
+
+        await loadPage(
+            currentPage
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
+
+
+        showLoginError(
+            translateAuthError(
+                error
+            )
+        );
+
+
+    } finally {
+
+        setLoginButton(
+            form,
+            false
         );
 
     }
@@ -240,10 +392,10 @@ function setupEvents() {
 
 
 /* =========================================================
-   SESSION
-========================================================= */
+   RESTORE SESSION
+   ========================================================= */
 
-async function checkSession() {
+async function restoreSession() {
 
     try {
 
@@ -264,34 +416,40 @@ async function checkSession() {
 
 
         const session =
-            data.session;
+            data?.session;
 
 
         if (!session) {
 
-            showLogin();
+            showLoginPanel();
 
             return;
 
         }
 
 
-        const admin =
+        console.log(
+            "Existing session:",
+            session.user.email
+        );
+
+
+        const isAdmin =
             await checkAdmin(
                 session.user.id
             );
 
 
-        if (!admin) {
+        if (!isAdmin) {
 
             await supabaseClient
                 .auth
                 .signOut();
 
-            showLogin();
+            showLoginPanel();
 
             showLoginError(
-                "У вас немає доступу до адміністративної панелі."
+                "Цей користувач не має прав адміністратора."
             );
 
             return;
@@ -299,7 +457,7 @@ async function checkSession() {
         }
 
 
-        showAdmin();
+        showAdminPanel();
 
         await loadPage(
             currentPage
@@ -309,11 +467,15 @@ async function checkSession() {
     } catch (error) {
 
         console.error(
-            "Session error:",
+            "SESSION ERROR:",
             error
         );
 
-        showLogin();
+        showLoginPanel();
+
+        showLoginError(
+            "Не вдалося перевірити сесію."
+        );
 
     }
 
@@ -322,19 +484,29 @@ async function checkSession() {
 
 /* =========================================================
    ADMIN CHECK
-========================================================= */
+   ========================================================= */
 
 async function checkAdmin(
     userId
 ) {
+
+    console.log(
+        "Checking admin:",
+        userId
+    );
+
 
     const {
         data,
         error
     } =
         await supabaseClient
-            .from("admin_users")
-            .select("user_id")
+            .from(
+                "admin_users"
+            )
+            .select(
+                "user_id"
+            )
             .eq(
                 "user_id",
                 userId
@@ -345,11 +517,11 @@ async function checkAdmin(
     if (error) {
 
         console.error(
-            "Admin check:",
+            "ADMIN CHECK ERROR:",
             error
         );
 
-        return false;
+        throw error;
 
     }
 
@@ -360,169 +532,177 @@ async function checkAdmin(
 
 
 /* =========================================================
-   LOGIN
-========================================================= */
-
-async function handleLogin(
-    event
-) {
-
-    event.preventDefault();
-
-
-    clearLoginError();
-
-
-    const email =
-        loginEmail
-            ? loginEmail.value.trim()
-            : "";
-
-    const password =
-        loginPassword
-            ? loginPassword.value
-            : "";
-
-
-    if (!email || !password) {
-
-        showLoginError(
-            "Введіть email та пароль."
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        setLoginLoading(
-            true
-        );
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
-
-
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        if (!data.user) {
-
-            throw new Error(
-                "Не вдалося отримати користувача."
-            );
-
-        }
-
-
-        const admin =
-            await checkAdmin(
-                data.user.id
-            );
-
-
-        if (!admin) {
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-            throw new Error(
-                "Цей користувач не є адміністратором."
-            );
-
-        }
-
-
-        showAdmin();
-
-        await loadPage(
-            currentPage
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Login:",
-            error
-        );
-
-        showLoginError(
-            error.message ||
-            "Помилка авторизації."
-        );
-
-    } finally {
-
-        setLoginLoading(
-            false
-        );
-
-    }
-
-}
-
-
-/* =========================================================
    LOGOUT
-========================================================= */
+   ========================================================= */
 
-async function handleLogout() {
+function setupLogout() {
 
-    try {
-
-        await supabaseClient
-            .auth
-            .signOut();
-
-    } catch (error) {
-
-        console.error(
-            "Logout:",
-            error
+    const buttons =
+        document.querySelectorAll(
+            "#logout-button, [data-action='logout']"
         );
 
-    }
 
+    buttons.forEach(
+        button => {
 
-    showLogin();
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    await supabaseClient
+                        .auth
+                        .signOut();
+
+                    showLoginPanel();
+
+                }
+            );
+
+        }
+    );
 
 }
 
 
 /* =========================================================
-   SCREEN
-========================================================= */
+   PAGE BUTTONS
+   ========================================================= */
 
-function showLogin() {
+function setupPageButtons() {
 
-    if (loginScreen) {
+    const buttons =
+        document.querySelectorAll(
+            "[data-page]"
+        );
 
-        loginScreen.style.display =
+
+    buttons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    const page =
+                        button.dataset.page;
+
+
+                    if (
+                        !PAGE_NAMES[page]
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    currentPage =
+                        page;
+
+
+                    buttons.forEach(
+                        item => {
+
+                            item.classList.toggle(
+                                "active",
+                                item.dataset.page ===
+                                page
+                            );
+
+                        }
+                    );
+
+
+                    updatePageTitle();
+
+                    await loadPage(
+                        page
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+function updatePageTitle() {
+
+    const elements =
+        document.querySelectorAll(
+            "#current-page-title, [data-current-page]"
+        );
+
+
+    elements.forEach(
+        element => {
+
+            element.textContent =
+                PAGE_NAMES[currentPage];
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+function setupSaveButton() {
+
+    const button =
+        document.querySelector(
+            "#save-all, [data-action='save-all']"
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    button.addEventListener(
+        "click",
+        saveAll
+    );
+
+}
+
+
+/* =========================================================
+   SHOW / HIDE PANELS
+   ========================================================= */
+
+function showLoginPanel() {
+
+    const login =
+        document.querySelector(
+            "#login-screen"
+        );
+
+
+    const admin =
+        document.querySelector(
+            "#admin-screen"
+        );
+
+
+    if (login) {
+
+        login.style.display =
             "flex";
 
     }
 
 
-    if (adminScreen) {
+    if (admin) {
 
-        adminScreen.style.display =
+        admin.style.display =
             "none";
 
     }
@@ -530,19 +710,31 @@ function showLogin() {
 }
 
 
-function showAdmin() {
+function showAdminPanel() {
 
-    if (loginScreen) {
+    const login =
+        document.querySelector(
+            "#login-screen"
+        );
 
-        loginScreen.style.display =
+
+    const admin =
+        document.querySelector(
+            "#admin-screen"
+        );
+
+
+    if (login) {
+
+        login.style.display =
             "none";
 
     }
 
 
-    if (adminScreen) {
+    if (admin) {
 
-        adminScreen.style.display =
+        admin.style.display =
             "block";
 
     }
@@ -552,17 +744,17 @@ function showAdmin() {
 
 /* =========================================================
    LOGIN UI
-========================================================= */
+   ========================================================= */
 
-function setLoginLoading(
+function setLoginButton(
+    form,
     loading
 ) {
 
     const button =
-        loginForm
-            ?.querySelector(
-                'button[type="submit"]'
-            );
+        form.querySelector(
+            'button[type="submit"]'
+        );
 
 
     if (!button) {
@@ -574,10 +766,18 @@ function setLoginLoading(
         loading;
 
 
+    if (!button.dataset.originalText) {
+
+        button.dataset.originalText =
+            button.textContent;
+
+    }
+
+
     button.textContent =
         loading
             ? "Вхід..."
-            : "Увійти";
+            : button.dataset.originalText;
 
 }
 
@@ -586,15 +786,25 @@ function showLoginError(
     message
 ) {
 
-    if (!loginError) {
+    const element =
+        getLoginError();
+
+
+    if (!element) {
+
+        alert(
+            message
+        );
+
         return;
+
     }
 
 
-    loginError.textContent =
+    element.textContent =
         message;
 
-    loginError.style.display =
+    element.style.display =
         "block";
 
 }
@@ -602,79 +812,109 @@ function showLoginError(
 
 function clearLoginError() {
 
-    if (!loginError) {
+    const element =
+        getLoginError();
+
+
+    if (!element) {
         return;
     }
 
 
-    loginError.textContent =
+    element.textContent =
         "";
 
-    loginError.style.display =
+    element.style.display =
         "none";
 
 }
 
 
 /* =========================================================
-   PAGE SELECT
-========================================================= */
+   AUTH ERROR TRANSLATION
+   ========================================================= */
 
-async function selectPage(
-    page
+function translateAuthError(
+    error
 ) {
 
-    if (!PAGE_NAMES[page]) {
-        return;
-    }
+    const message =
+        String(
+            error?.message ||
+            ""
+        );
 
 
-    currentPage =
-        page;
+    if (
+        message.includes(
+            "Invalid login credentials"
+        )
+    ) {
 
-
-    pageButtons.forEach(
-        button => {
-
-            button.classList.toggle(
-                "active",
-                button.dataset.page === page
-            );
-
-        }
-    );
-
-
-    if (currentPageTitle) {
-
-        currentPageTitle.textContent =
-            PAGE_NAMES[page];
+        return "Неправильний email або пароль.";
 
     }
 
 
-    await loadPage(
-        page
+    if (
+        message.includes(
+            "Email not confirmed"
+        )
+    ) {
+
+        return "Email користувача не підтверджений у Supabase.";
+
+    }
+
+
+    if (
+        message.includes(
+            "Too many requests"
+        )
+    ) {
+
+        return "Забагато спроб входу. Спробуйте пізніше.";
+
+    }
+
+
+    return (
+        message ||
+        "Помилка авторизації."
     );
 
 }
 
 
 /* =========================================================
-   LOAD PAGE
-========================================================= */
+   LOAD CONTENT
+   ========================================================= */
 
 async function loadPage(
     page
 ) {
 
-    if (!contentContainer) {
+    const container =
+        getContentContainer();
+
+
+    if (!container) {
+
+        console.error(
+            "Не знайдено content-container."
+        );
+
         return;
+
     }
 
 
-    contentContainer.innerHTML =
-        createLoadingHTML();
+    container.innerHTML =
+        `
+        <div class="loading-state">
+            Завантаження...
+        </div>
+        `;
 
 
     try {
@@ -684,8 +924,12 @@ async function loadPage(
             error
         } =
             await supabaseClient
-                .from("site_content")
-                .select("*")
+                .from(
+                    "site_content"
+                )
+                .select(
+                    "*"
+                )
                 .eq(
                     "page",
                     page
@@ -709,7 +953,8 @@ async function loadPage(
             data || [];
 
 
-        renderContent(
+        renderPage(
+            container,
             currentItems
         );
 
@@ -717,15 +962,19 @@ async function loadPage(
     } catch (error) {
 
         console.error(
-            "Load page:",
+            "LOAD PAGE ERROR:",
             error
         );
 
 
-        contentContainer.innerHTML =
-            createErrorHTML(
-                error.message
-            );
+        container.innerHTML =
+            `
+            <div class="error-state">
+                ${escapeHtml(
+                    error.message
+                )}
+            </div>
+            `;
 
     }
 
@@ -733,20 +982,46 @@ async function loadPage(
 
 
 /* =========================================================
-   RENDER CONTENT
-========================================================= */
+   CONTENT CONTAINER
+   ========================================================= */
 
-function renderContent(
+function getContentContainer() {
+
+    return (
+        document.querySelector(
+            "#content-container"
+        ) ||
+        document.querySelector(
+            "[data-content-container]"
+        ) ||
+        document.querySelector(
+            ".content-container"
+        )
+    );
+
+}
+
+
+/* =========================================================
+   RENDER PAGE
+   ========================================================= */
+
+function renderPage(
+    container,
     items
 ) {
 
+    container.innerHTML =
+        "";
+
+
     if (!items.length) {
 
-        contentContainer.innerHTML =
+        container.innerHTML =
             `
             <div class="empty-state">
-                Для цієї сторінки поки немає
-                записів у CMS.
+                Для цієї сторінки ще немає
+                даних у CMS.
             </div>
             `;
 
@@ -756,82 +1031,60 @@ function renderContent(
 
 
     const sections =
-        groupBySection(
-            items
-        );
+        {};
 
 
-    contentContainer.innerHTML =
-        "";
-
-
-    Object.keys(sections)
-        .forEach(
-            section => {
-
-                const card =
-                    createSectionCard(
-                        section,
-                        sections[section]
-                    );
-
-
-                contentContainer.appendChild(
-                    card
-                );
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   GROUP
-========================================================= */
-
-function groupBySection(
-    items
-) {
-
-    return items.reduce(
-        (
-            result,
-            item
-        ) => {
+    items.forEach(
+        item => {
 
             const section =
                 item.section ||
                 "general";
 
 
-            if (!result[section]) {
+            if (!sections[section]) {
 
-                result[section] =
+                sections[section] =
                     [];
 
             }
 
 
-            result[section].push(
+            sections[section].push(
                 item
             );
 
+        }
+    );
 
-            return result;
 
-        },
-        {}
+    Object.keys(
+        sections
+    ).forEach(
+        section => {
+
+            const card =
+                createSection(
+                    section,
+                    sections[section]
+                );
+
+
+            container.appendChild(
+                card
+            );
+
+        }
     );
 
 }
 
 
 /* =========================================================
-   SECTION CARD
-========================================================= */
+   SECTION
+   ========================================================= */
 
-function createSectionCard(
+function createSection(
     section,
     items
 ) {
@@ -857,7 +1110,7 @@ function createSectionCard(
 
 
     title.textContent =
-        formatSectionName(
+        sectionName(
             section
         );
 
@@ -880,14 +1133,10 @@ function createSectionCard(
     items.forEach(
         item => {
 
-            const field =
+            grid.appendChild(
                 createField(
                     item
-                );
-
-
-            grid.appendChild(
-                field
+                )
             );
 
         }
@@ -906,7 +1155,7 @@ function createSectionCard(
 
 /* =========================================================
    FIELD
-========================================================= */
+   ========================================================= */
 
 function createField(
     item
@@ -933,7 +1182,7 @@ function createField(
 
 /* =========================================================
    TEXT FIELD
-========================================================= */
+   ========================================================= */
 
 function createTextField(
     item
@@ -956,7 +1205,7 @@ function createTextField(
 
 
     label.textContent =
-        formatFieldName(
+        fieldName(
             item.content_key
         );
 
@@ -990,11 +1239,15 @@ function createTextField(
             );
 
         input.type =
-            getInputType(
+            inputType(
                 item.content_type
             );
 
     }
+
+
+    input.className =
+        "admin-input";
 
 
     input.value =
@@ -1010,10 +1263,6 @@ function createTextField(
         "content_value";
 
 
-    input.className =
-        "admin-input";
-
-
     wrapper.appendChild(
         input
     );
@@ -1025,35 +1274,8 @@ function createTextField(
 
 
 /* =========================================================
-   INPUT TYPE
-========================================================= */
-
-function getInputType(
-    type
-) {
-
-    switch (type) {
-
-        case "email":
-            return "email";
-
-        case "url":
-            return "url";
-
-        case "phone":
-            return "tel";
-
-        default:
-            return "text";
-
-    }
-
-}
-
-
-/* =========================================================
    IMAGE FIELD
-========================================================= */
+   ========================================================= */
 
 function createImageField(
     item
@@ -1069,10 +1291,6 @@ function createImageField(
         "admin-field image-field";
 
 
-    wrapper.dataset.id =
-        item.id;
-
-
     const label =
         document.createElement(
             "label"
@@ -1080,7 +1298,7 @@ function createImageField(
 
 
     label.textContent =
-        formatFieldName(
+        fieldName(
             item.content_key
         );
 
@@ -1090,24 +1308,23 @@ function createImageField(
     );
 
 
-    const storageInfo =
+    const path =
         document.createElement(
             "div"
         );
 
 
-    storageInfo.className =
+    path.className =
         "image-storage-path";
 
 
-    storageInfo.textContent =
-        item.storage_path
-            ? item.storage_path
-            : "Шлях фото не заданий";
+    path.textContent =
+        item.storage_path ||
+        "storage_path не заданий";
 
 
     wrapper.appendChild(
-        storageInfo
+        path
     );
 
 
@@ -1126,15 +1343,11 @@ function createImageField(
     );
 
 
-    const currentUrl =
-        getImageUrl(
-            item
-        );
-
-
-    renderImagePreview(
+    renderImage(
         preview,
-        currentUrl
+        imageUrl(
+            item
+        )
     );
 
 
@@ -1148,64 +1361,62 @@ function createImageField(
         "image-controls";
 
 
-    const fileInput =
+    const input =
         document.createElement(
             "input"
         );
 
 
-    fileInput.type =
+    input.type =
         "file";
 
-    fileInput.accept =
+    input.accept =
         "image/*";
 
-    fileInput.style.display =
+    input.style.display =
         "none";
 
 
     controls.appendChild(
-        fileInput
+        input
     );
 
 
-    const replaceButton =
-        createButton(
-            "Замінити фото",
-            "primary"
+    const replace =
+        createActionButton(
+            "Замінити фото"
         );
 
 
-    replaceButton.addEventListener(
+    replace.addEventListener(
         "click",
         () => {
 
-            fileInput.click();
+            input.click();
 
         }
     );
 
 
     controls.appendChild(
-        replaceButton
+        replace
     );
 
 
-    const removeButton =
-        createButton(
-            "Прибрати",
-            "secondary"
+    const remove =
+        createActionButton(
+            "Прибрати"
         );
 
 
-    removeButton.addEventListener(
+    remove.addEventListener(
         "click",
         async () => {
 
             await removeImage(
                 item,
-                wrapper,
-                preview
+                preview,
+                wrapper
             );
 
         }
@@ -1213,25 +1424,24 @@ function createImageField(
 
 
     controls.appendChild(
-        removeButton
+        remove
     );
 
 
-    const resetButton =
-        createButton(
-            "Відновити",
-            "secondary"
+    const restore =
+        createActionButton(
+            "Відновити"
         );
 
 
-    resetButton.addEventListener(
+    restore.addEventListener(
         "click",
         async () => {
 
-            await resetImage(
+            await restoreImage(
                 item,
-                wrapper,
-                preview
+                preview,
+                wrapper
             );
 
         }
@@ -1239,7 +1449,7 @@ function createImageField(
 
 
     controls.appendChild(
-        resetButton
+        restore
     );
 
 
@@ -1263,7 +1473,7 @@ function createImageField(
     );
 
 
-    fileInput.addEventListener(
+    input.addEventListener(
         "change",
         async event => {
 
@@ -1276,15 +1486,15 @@ function createImageField(
             }
 
 
-            await replaceImage(
+            await uploadReplacement(
                 item,
                 file,
-                wrapper,
-                preview
+                preview,
+                wrapper
             );
 
 
-            fileInput.value =
+            input.value =
                 "";
 
         }
@@ -1298,90 +1508,34 @@ function createImageField(
 
 /* =========================================================
    IMAGE URL
-========================================================= */
+   ========================================================= */
 
-function getImageUrl(
+function imageUrl(
     item
 ) {
 
-    if (
-        item.content_value
-    ) {
+    const value =
+        item.content_value ||
+        item.default_value ||
+        item.storage_path ||
+        "";
 
-        return resolveSiteUrl(
-            item.content_value
-        );
-
-    }
-
-
-    if (
-        item.storage_path
-    ) {
-
-        return resolveSiteUrl(
-            item.storage_path
-        );
-
-    }
-
-
-    if (
-        item.default_value
-    ) {
-
-        return resolveSiteUrl(
-            item.default_value
-        );
-
-    }
-
-
-    return "";
-
-}
-
-
-/* =========================================================
-   RESOLVE URL
-========================================================= */
-
-function resolveSiteUrl(
-    value
-) {
 
     if (!value) {
         return "";
     }
 
 
-    const url =
-        String(value)
-            .trim();
-
-
     if (
-        url.startsWith(
+        value.startsWith(
             "http://"
         ) ||
-        url.startsWith(
+        value.startsWith(
             "https://"
         )
     ) {
 
-        return url;
-
-    }
-
-
-    if (
-        url.startsWith("/")
-    ) {
-
-        return (
-            SITE_URL +
-            url
-        );
+        return value;
 
     }
 
@@ -1389,7 +1543,7 @@ function resolveSiteUrl(
     return (
         SITE_URL +
         "/" +
-        url.replace(
+        value.replace(
             /^\/+/,
             ""
         )
@@ -1399,10 +1553,10 @@ function resolveSiteUrl(
 
 
 /* =========================================================
-   IMAGE PREVIEW
-========================================================= */
+   RENDER IMAGE
+   ========================================================= */
 
-function renderImagePreview(
+function renderImage(
     container,
     url
 ) {
@@ -1425,33 +1579,33 @@ function renderImagePreview(
     }
 
 
-    const image =
+    const img =
         document.createElement(
             "img"
         );
 
 
-    image.src =
-        addCacheBuster(
+    img.src =
+        cacheBust(
             url
         );
 
 
-    image.alt =
+    img.alt =
         "Фото";
 
 
-    image.loading =
+    img.loading =
         "lazy";
 
 
-    image.onerror =
+    img.onerror =
         () => {
 
             container.innerHTML =
                 `
                 <div class="image-empty">
-                    Не вдалося завантажити фото
+                    Фото не знайдено
                 </div>
                 `;
 
@@ -1459,21 +1613,21 @@ function renderImagePreview(
 
 
     container.appendChild(
-        image
+        img
     );
 
 }
 
 
 /* =========================================================
-   REPLACE IMAGE
-========================================================= */
+   UPLOAD REPLACEMENT
+   ========================================================= */
 
-async function replaceImage(
+async function uploadReplacement(
     item,
     file,
-    wrapper,
-    preview
+    preview,
+    wrapper
 ) {
 
     const status =
@@ -1504,24 +1658,22 @@ async function replaceImage(
             "Завантаження...";
 
 
-        status.style.color =
-            "#6b7280";
-
-
         /*
-        ----------------------------------------------------
-        IMPORTANT:
+        ====================================================
+        FIXED PATH
+        ====================================================
 
-        The file is uploaded to the FIXED path.
+        НЕ створюємо нове ім'я.
 
-        Example:
+        Якщо:
 
+        storage_path =
         images/about.jpg
 
-        NOT:
+        то файл завжди буде:
 
-        home/about_123456.jpg
-        ----------------------------------------------------
+        site-media/images/about.jpg
+        ====================================================
         */
 
 
@@ -1537,10 +1689,9 @@ async function replaceImage(
                     item.storage_path,
                     file,
                     {
+                        upsert: true,
                         cacheControl:
                             "3600",
-                        upsert:
-                            true,
                         contentType:
                             file.type
                     }
@@ -1555,7 +1706,7 @@ async function replaceImage(
 
 
         const {
-            data: publicData
+            data
         } =
             supabaseClient
                 .storage
@@ -1567,24 +1718,12 @@ async function replaceImage(
                 );
 
 
-        if (
-            !publicData ||
-            !publicData.publicUrl
-        ) {
-
-            throw new Error(
-                "Не вдалося отримати URL."
-            );
-
-        }
-
-
         const publicUrl =
-            publicData.publicUrl;
+            data.publicUrl;
 
 
         const {
-            error: updateError
+            error: dbError
         } =
             await supabaseClient
                 .from(
@@ -1600,9 +1739,9 @@ async function replaceImage(
                 );
 
 
-        if (updateError) {
+        if (dbError) {
 
-            throw updateError;
+            throw dbError;
 
         }
 
@@ -1611,11 +1750,9 @@ async function replaceImage(
             publicUrl;
 
 
-        renderImagePreview(
+        renderImage(
             preview,
-            addCacheBuster(
-                publicUrl
-            )
+            publicUrl
         );
 
 
@@ -1634,14 +1771,14 @@ async function replaceImage(
     } catch (error) {
 
         console.error(
-            "Replace image:",
+            "IMAGE ERROR:",
             error
         );
 
 
         status.textContent =
             error.message ||
-            "Помилка завантаження.";
+            "Помилка.";
 
         status.style.color =
             "#dc3545";
@@ -1649,7 +1786,7 @@ async function replaceImage(
 
         showMessage(
             error.message ||
-            "Не вдалося замінити фото."
+            "Помилка завантаження фото."
         );
 
     }
@@ -1659,23 +1796,22 @@ async function replaceImage(
 
 /* =========================================================
    REMOVE IMAGE
-========================================================= */
+   ========================================================= */
 
 async function removeImage(
     item,
-    wrapper,
-    preview
+    preview,
+    wrapper
 ) {
 
-    const confirmed =
-        window.confirm(
-            "Прибрати фото зі сторінки?\n\n" +
-            "Фізичний файл у Storage залишиться."
-        );
+    if (
+        !confirm(
+            "Прибрати фото зі сторінки?"
+        )
+    ) {
 
-
-    if (!confirmed) {
         return;
+
     }
 
 
@@ -1686,10 +1822,6 @@ async function removeImage(
 
 
     try {
-
-        status.textContent =
-            "Збереження...";
-
 
         const {
             error
@@ -1719,7 +1851,7 @@ async function removeImage(
             "";
 
 
-        renderImagePreview(
+        renderImage(
             preview,
             ""
         );
@@ -1727,9 +1859,6 @@ async function removeImage(
 
         status.textContent =
             "Фото прибрано.";
-
-        status.style.color =
-            "#0d9b74";
 
 
         showMessage(
@@ -1740,17 +1869,12 @@ async function removeImage(
     } catch (error) {
 
         console.error(
-            "Remove image:",
             error
         );
 
 
         status.textContent =
             "Помилка.";
-
-        status.style.color =
-            "#dc3545";
-
 
         showMessage(
             "Не вдалося прибрати фото."
@@ -1762,13 +1886,13 @@ async function removeImage(
 
 
 /* =========================================================
-   RESET IMAGE
-========================================================= */
+   RESTORE IMAGE
+   ========================================================= */
 
-async function resetImage(
+async function restoreImage(
     item,
-    wrapper,
-    preview
+    preview,
+    wrapper
 ) {
 
     if (
@@ -1776,7 +1900,7 @@ async function resetImage(
     ) {
 
         showMessage(
-            "Для цього поля немає default_value."
+            "Немає default_value для відновлення."
         );
 
         return;
@@ -1784,28 +1908,18 @@ async function resetImage(
     }
 
 
-    const confirmed =
-        window.confirm(
+    if (
+        !confirm(
             "Відновити початкове фото?"
-        );
+        )
+    ) {
 
-
-    if (!confirmed) {
         return;
+
     }
-
-
-    const status =
-        wrapper.querySelector(
-            ".image-status"
-        );
 
 
     try {
-
-        status.textContent =
-            "Відновлення...";
-
 
         const {
             error
@@ -1835,39 +1949,24 @@ async function resetImage(
             item.default_value;
 
 
-        renderImagePreview(
+        renderImage(
             preview,
-            resolveSiteUrl(
-                item.default_value
+            imageUrl(
+                item
             )
         );
 
 
-        status.textContent =
-            "Початкове фото відновлено.";
-
-        status.style.color =
-            "#0d9b74";
-
-
         showMessage(
-            "Фото відновлено."
+            "Початкове фото відновлено."
         );
 
 
     } catch (error) {
 
         console.error(
-            "Reset image:",
             error
         );
-
-
-        status.textContent =
-            "Помилка.";
-
-        status.style.color =
-            "#dc3545";
 
 
         showMessage(
@@ -1880,21 +1979,169 @@ async function resetImage(
 
 
 /* =========================================================
+   SAVE ALL
+   ========================================================= */
+
+async function saveAll() {
+
+    if (saving) {
+        return;
+    }
+
+
+    saving =
+        true;
+
+
+    const button =
+        document.querySelector(
+            "#save-all, [data-action='save-all']"
+        );
+
+
+    if (button) {
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Збереження...";
+
+    }
+
+
+    try {
+
+        const fields =
+            document.querySelectorAll(
+                "[data-id][data-field='content_value']"
+            );
+
+
+        let count =
+            0;
+
+
+        for (
+            const field
+            of fields
+        ) {
+
+            const id =
+                Number(
+                    field.dataset.id
+                );
+
+
+            const value =
+                field.value;
+
+
+            const item =
+                currentItems.find(
+                    row =>
+                        Number(row.id) ===
+                        id
+                );
+
+
+            if (!item) {
+                continue;
+            }
+
+
+            if (
+                item.content_value ===
+                value
+            ) {
+
+                continue;
+
+            }
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from(
+                        "site_content"
+                    )
+                    .update({
+                        content_value:
+                            value
+                    })
+                    .eq(
+                        "id",
+                        id
+                    );
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            item.content_value =
+                value;
+
+
+            count++;
+
+        }
+
+
+        showMessage(
+            count
+                ? `Збережено: ${count}`
+                : "Змін немає."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "SAVE ERROR:",
+            error
+        );
+
+
+        showMessage(
+            error.message ||
+            "Помилка збереження."
+        );
+
+
+    } finally {
+
+        saving =
+            false;
+
+
+        if (button) {
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                "Зберегти зміни";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
    VALIDATE IMAGE
-========================================================= */
+   ========================================================= */
 
 function validateImage(
     file
 ) {
-
-    if (!file) {
-
-        throw new Error(
-            "Файл не вибрано."
-        );
-
-    }
-
 
     if (
         !file.type.startsWith(
@@ -1909,17 +2156,13 @@ function validateImage(
     }
 
 
-    const maxSize =
-        10 * 1024 * 1024;
-
-
     if (
         file.size >
-        maxSize
+        10 * 1024 * 1024
     ) {
 
         throw new Error(
-            "Максимальний розмір фото — 10 МБ."
+            "Максимальний розмір — 10 МБ."
         );
 
     }
@@ -1928,198 +2171,11 @@ function validateImage(
 
 
 /* =========================================================
-   SAVE ALL TEXT
-========================================================= */
-
-async function saveAllChanges() {
-
-    if (isSaving) {
-        return;
-    }
-
-
-    if (!contentContainer) {
-        return;
-    }
-
-
-    isSaving =
-        true;
-
-
-    if (saveButton) {
-
-        saveButton.disabled =
-            true;
-
-        saveButton.textContent =
-            "Збереження...";
-
-    }
-
-
-    try {
-
-        const inputs =
-            contentContainer.querySelectorAll(
-                "[data-id][data-field]"
-            );
-
-
-        const updates =
-            [];
-
-
-        inputs.forEach(
-            input => {
-
-                const id =
-                    Number(
-                        input.dataset.id
-                    );
-
-
-                const field =
-                    input.dataset.field;
-
-
-                const item =
-                    currentItems.find(
-                        row =>
-                            Number(row.id) === id
-                    );
-
-
-                if (!item) {
-                    return;
-                }
-
-
-                const value =
-                    input.value;
-
-
-                if (
-                    item[field] !==
-                    value
-                ) {
-
-                    updates.push({
-                        id,
-                        [field]:
-                            value
-                    });
-
-                }
-
-            }
-        );
-
-
-        for (
-            const update
-            of updates
-        ) {
-
-            const id =
-                update.id;
-
-
-            delete update.id;
-
-
-            const {
-                error
-            } =
-                await supabaseClient
-                    .from(
-                        "site_content"
-                    )
-                    .update(
-                        update
-                    )
-                    .eq(
-                        "id",
-                        id
-                    );
-
-
-            if (error) {
-
-                throw error;
-
-            }
-
-
-            const item =
-                currentItems.find(
-                    row =>
-                        Number(row.id) ===
-                        Number(id)
-                );
-
-
-            if (item) {
-
-                Object.assign(
-                    item,
-                    update
-                );
-
-            }
-
-        }
-
-
-        showMessage(
-            updates.length
-                ? `Збережено полів: ${updates.length}`
-                : "Змін немає."
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Save all:",
-            error
-        );
-
-
-        showMessage(
-            error.message ||
-            "Помилка збереження."
-        );
-
-
-    } finally {
-
-        isSaving =
-            false;
-
-
-        if (saveButton) {
-
-            saveButton.disabled =
-                false;
-
-            saveButton.textContent =
-                "Зберегти зміни";
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   BUTTON
-========================================================= */
-
-function createButton(
-    text,
-    type
+   HELPERS
+   ========================================================= */
+
+function createActionButton(
+    text
 ) {
 
     const button =
@@ -2137,7 +2193,7 @@ function createButton(
 
 
     button.className =
-        `admin-button admin-button-${type}`;
+        "admin-button";
 
 
     return button;
@@ -2145,12 +2201,47 @@ function createButton(
 }
 
 
-/* =========================================================
-   SECTION NAME
-========================================================= */
+function inputType(
+    type
+) {
 
-function formatSectionName(
-    section
+    if (
+        type ===
+        "email"
+    ) {
+
+        return "email";
+
+    }
+
+
+    if (
+        type ===
+        "url"
+    ) {
+
+        return "url";
+
+    }
+
+
+    if (
+        type ===
+        "phone"
+    ) {
+
+        return "tel";
+
+    }
+
+
+    return "text";
+
+}
+
+
+function sectionName(
+    value
 ) {
 
     const names = {
@@ -2192,28 +2283,21 @@ function formatSectionName(
             "Карта",
 
         footer:
-            "Футер",
-
-        general:
-            "Загальне"
+            "Футер"
 
     };
 
 
     return (
-        names[section] ||
-        prettifyName(section)
+        names[value] ||
+        prettify(value)
     );
 
 }
 
 
-/* =========================================================
-   FIELD NAME
-========================================================= */
-
-function formatFieldName(
-    key
+function fieldName(
+    value
 ) {
 
     const names = {
@@ -2225,7 +2309,7 @@ function formatFieldName(
             "Опис",
 
         heading:
-            "Заголовок секції",
+            "Заголовок",
 
         text:
             "Текст",
@@ -2243,7 +2327,7 @@ function formatFieldName(
             "Телефон",
 
         phone_display:
-            "Телефон для відображення",
+            "Телефон",
 
         email:
             "Email",
@@ -2288,49 +2372,35 @@ function formatFieldName(
             "Питання",
 
         answer:
-            "Відповідь",
-
-        areas:
-            "Зони / райони"
+            "Відповідь"
 
     };
 
 
     return (
-        names[key] ||
-        prettifyName(key)
+        names[value] ||
+        prettify(value)
     );
 
 }
 
 
-/* =========================================================
-   PRETTIFY
-========================================================= */
-
-function prettifyName(
+function prettify(
     value
 ) {
 
-    return String(value || "")
+    return String(
+        value || ""
+    )
         .replace(
             /_/g,
             " "
-        )
-        .replace(
-            /\b\w/g,
-            char =>
-                char.toUpperCase()
         );
 
 }
 
 
-/* =========================================================
-   CACHE BUSTER
-========================================================= */
-
-function addCacheBuster(
+function cacheBust(
     url
 ) {
 
@@ -2339,131 +2409,19 @@ function addCacheBuster(
     }
 
 
-    const separator =
-        url.includes("?")
-            ? "&"
-            : "?";
-
-
     return (
         url +
-        separator +
+        (
+            url.includes("?")
+                ? "&"
+                : "?"
+        ) +
         "v=" +
         Date.now()
     );
 
 }
 
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-function createLoadingHTML() {
-
-    return `
-        <div class="loading-state">
-            Завантаження...
-        </div>
-    `;
-
-}
-
-
-/* =========================================================
-   ERROR
-========================================================= */
-
-function createErrorHTML(
-    message
-) {
-
-    return `
-        <div class="error-state">
-            <strong>
-                Помилка завантаження
-            </strong>
-
-            <div>
-                ${escapeHtml(
-                    message || ""
-                )}
-            </div>
-        </div>
-    `;
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-function showMessage(
-    message
-) {
-
-    let element =
-        document.getElementById(
-            "admin-message"
-        );
-
-
-    if (!element) {
-
-        element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.id =
-            "admin-message";
-
-
-        element.className =
-            "admin-message";
-
-
-        document.body.appendChild(
-            element
-        );
-
-    }
-
-
-    element.textContent =
-        message;
-
-
-    element.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        element._timer
-    );
-
-
-    element._timer =
-        setTimeout(
-            () => {
-
-                element.classList.remove(
-                    "show"
-                );
-
-            },
-            3000
-        );
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
 
 function escapeHtml(
     value
@@ -2497,5 +2455,137 @@ function escapeHtml(
 
 
 /* =========================================================
-   END
-========================================================= */
+   MESSAGE
+   ========================================================= */
+
+function showMessage(
+    message
+) {
+
+    let box =
+        document.getElementById(
+            "admin-message"
+        );
+
+
+    if (!box) {
+
+        box =
+            document.createElement(
+                "div"
+            );
+
+
+        box.id =
+            "admin-message";
+
+
+        box.style.position =
+            "fixed";
+
+        box.style.right =
+            "20px";
+
+        box.style.bottom =
+            "20px";
+
+        box.style.zIndex =
+            "99999";
+
+        box.style.padding =
+            "14px 20px";
+
+        box.style.borderRadius =
+            "10px";
+
+        box.style.background =
+            "#1d2b4f";
+
+        box.style.color =
+            "#fff";
+
+        box.style.fontFamily =
+            "Montserrat, sans-serif";
+
+        document.body.appendChild(
+            box
+        );
+
+    }
+
+
+    box.textContent =
+        message;
+
+
+    box.style.display =
+        "block";
+
+
+    clearTimeout(
+        box._timer
+    );
+
+
+    box._timer =
+        setTimeout(
+            () => {
+
+                box.style.display =
+                    "none";
+
+            },
+            3000
+        );
+
+}
+
+
+/* =========================================================
+   FATAL ERROR
+   ========================================================= */
+
+function showFatalError(
+    message
+) {
+
+    const login =
+        document.querySelector(
+            "#login-screen"
+        );
+
+
+    if (login) {
+
+        login.innerHTML =
+            `
+            <div style="
+                max-width:500px;
+                padding:30px;
+                background:#fff;
+                border-radius:16px;
+                font-family:Montserrat,sans-serif;
+                color:#1d2b4f;
+            ">
+                <h2>
+                    Помилка CMS
+                </h2>
+
+                <p>
+                    ${escapeHtml(
+                        message
+                    )}
+                </p>
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    alert(
+        message
+    );
+
+}
