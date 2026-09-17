@@ -1,160 +1,849 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>TERNINGEO — Налаштування</title>
+<title>TERNINGEO — Адмін-панель</title>
 
-    <link rel="stylesheet" href="admin.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --navy:#1d2b4f;
+    --green:#0d9b74;
+    --green-dark:#087b5d;
+    --green-light:#eaf8f3;
+    --blue:#4f9dff;
+    --blue-light:#eef6ff;
+    --white:#ffffff;
+    --bg:#f4f7f8;
+    --text:#222;
+    --muted:#6b7280;
+    --border:#e1e6eb;
+    --danger:#dc3545;
+    --shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:'Montserrat',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+button,
+input,
+textarea,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#login-section{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+    background:
+        linear-gradient(rgba(29,43,79,.92),rgba(29,43,79,.92)),
+        url("../images/hero.jpg") center/cover;
+}
+
+.login-card{
+    width:100%;
+    max-width:430px;
+    background:#fff;
+    padding:42px;
+    border-radius:22px;
+    box-shadow:0 25px 70px rgba(0,0,0,.25);
+}
+
+.login-logo{
+    text-align:center;
+    margin-bottom:32px;
+}
+
+.login-logo img{
+    width:75px;
+    height:75px;
+    object-fit:contain;
+    margin-bottom:12px;
+}
+
+.login-logo h1{
+    margin:0;
+    color:var(--navy);
+    font-size:28px;
+    font-weight:800;
+}
+
+.login-logo p{
+    margin:6px 0 0;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:7px;
+    color:var(--navy);
+    font-size:13px;
+    font-weight:700;
+}
+
+.form-group input{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    outline:none;
+    font-size:15px;
+    transition:.2s;
+}
+
+.form-group input:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 4px rgba(13,155,116,.10);
+}
+
+.primary-button{
+    width:100%;
+    border:0;
+    border-radius:40px;
+    padding:14px 25px;
+    background:var(--green);
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    transition:.25s;
+}
+
+.primary-button:hover{
+    background:var(--green-dark);
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(13,155,116,.25);
+}
+
+.message{
+    margin-top:15px;
+    text-align:center;
+    font-size:14px;
+}
+
+/* =========================
+   ADMIN
+========================= */
+
+#admin-section{
+    display:none;
+    min-height:100vh;
+}
+
+.admin-header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    background:var(--white);
+    border-bottom:1px solid var(--border);
+
+    padding:14px 30px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
+}
+
+.admin-brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.admin-brand img{
+    width:48px;
+    height:48px;
+    object-fit:contain;
+}
+
+.admin-brand h1{
+    margin:0;
+    color:var(--navy);
+    font-size:20px;
+    font-weight:800;
+}
+
+.admin-brand p{
+    margin:2px 0 0;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.logout-button{
+    border:0;
+    border-radius:30px;
+    padding:10px 18px;
+    background:var(--navy);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+}
+
+.logout-button:hover{
+    background:#111d38;
+}
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+.admin-layout{
+    max-width:1400px;
+    margin:0 auto;
+    padding:30px;
+    display:grid;
+    grid-template-columns:250px minmax(0,1fr);
+    gap:25px;
+}
+
+.sidebar{
+    position:sticky;
+    top:90px;
+    align-self:start;
+
+    background:#fff;
+    border-radius:22px;
+    padding:18px;
+
+    box-shadow:var(--shadow);
+}
+
+.sidebar-title{
+    padding:8px 12px 15px;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+}
+
+.page-button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:var(--navy);
+
+    padding:13px 14px;
+    margin-bottom:5px;
+
+    text-align:left;
+    border-radius:12px;
+
+    font-size:14px;
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.page-button:hover{
+    background:var(--green-light);
+    color:var(--green-dark);
+}
+
+.page-button.active{
+    background:var(--green);
+    color:#fff;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content-area{
+    min-width:0;
+}
+
+.content-header{
+    background:#fff;
+    border-radius:22px;
+    padding:25px 28px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.content-header h2{
+    margin:0;
+    color:var(--navy);
+    font-size:26px;
+}
+
+.content-header p{
+    margin:7px 0 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.save-all-button{
+    border:0;
+    border-radius:40px;
+    padding:13px 24px;
+    background:var(--green);
+    color:#fff;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.save-all-button:hover{
+    background:var(--green-dark);
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.cms-section{
+    background:#fff;
+    border-radius:22px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.cms-section-header{
+    padding:18px 25px;
+    background:var(--navy);
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.cms-section-header .number{
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+    background:var(--green);
+
+    font-size:13px;
+    font-weight:800;
+}
+
+.cms-section-header h3{
+    margin:0;
+    font-size:17px;
+}
+
+.cms-section-body{
+    padding:25px;
+}
+
+/* =========================
+   FIELD
+========================= */
+
+.cms-field{
+    margin-bottom:22px;
+}
+
+.cms-field:last-child{
+    margin-bottom:0;
+}
+
+.cms-field label{
+    display:block;
+    margin-bottom:8px;
+
+    color:var(--navy);
+    font-size:13px;
+    font-weight:700;
+}
+
+.cms-field input,
+.cms-field textarea,
+.cms-field select{
+    width:100%;
+
+    padding:13px 15px;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    background:#fff;
+
+    outline:none;
+
+    font-size:14px;
+    color:var(--text);
+
+    transition:.2s;
+}
+
+.cms-field textarea{
+    min-height:120px;
+    resize:vertical;
+    line-height:1.6;
+}
+
+.cms-field input:focus,
+.cms-field textarea:focus,
+.cms-field select:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 4px rgba(13,155,116,.08);
+}
+
+/* =========================
+   TWO COLUMNS
+========================= */
+
+.fields-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:20px;
+}
+
+.fields-grid .full{
+    grid-column:1/-1;
+}
+
+/* =========================
+   IMAGE EDITOR
+========================= */
+
+.image-editor{
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:15px;
+    background:#fafcfc;
+}
+
+.image-preview{
+    width:100%;
+    height:220px;
+
+    border-radius:14px;
+
+    background:#eef1f3;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    margin-bottom:14px;
+}
+
+.image-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.image-empty{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.image-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.image-button{
+    border:0;
+    border-radius:30px;
+    padding:10px 16px;
+
+    background:var(--green);
+    color:#fff;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.image-button:hover{
+    background:var(--green-dark);
+}
+
+.image-button.secondary{
+    background:var(--navy);
+}
+
+.image-button.danger{
+    background:var(--danger);
+}
+
+.image-file{
+    display:none;
+}
+
+/* =========================
+   FAQ
+========================= */
+
+.faq-item{
+    border:1px solid var(--border);
+    border-radius:16px;
+    margin-bottom:15px;
+    overflow:hidden;
+}
+
+.faq-title{
+    background:var(--green-light);
+    color:var(--navy);
+    padding:14px 16px;
+    font-size:14px;
+    font-weight:700;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+#global-message{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+
+    z-index:99999;
+
+    padding:14px 20px;
+
+    background:var(--navy);
+    color:#fff;
+
+    border-radius:14px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.2);
+
+    display:none;
+
+    font-size:13px;
+    font-weight:600;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:900px){
+
+    .admin-layout{
+        grid-template-columns:1fr;
+        padding:18px;
+    }
+
+    .sidebar{
+        position:static;
+        display:flex;
+        gap:6px;
+        overflow-x:auto;
+        padding:10px;
+    }
+
+    .sidebar-title{
+        display:none;
+    }
+
+    .page-button{
+        width:auto;
+        white-space:nowrap;
+        margin:0;
+    }
+
+    .fields-grid{
+        grid-template-columns:1fr;
+    }
+
+    .fields-grid .full{
+        grid-column:auto;
+    }
+}
+
+@media(max-width:600px){
+
+    .admin-header{
+        padding:12px 16px;
+    }
+
+    .admin-brand img{
+        width:40px;
+        height:40px;
+    }
+
+    .admin-brand h1{
+        font-size:17px;
+    }
+
+    .admin-brand p{
+        display:none;
+    }
+
+    .logout-button{
+        padding:9px 13px;
+        font-size:12px;
+    }
+
+    .content-header{
+        padding:20px;
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .content-header h2{
+        font-size:22px;
+    }
+
+    .save-all-button{
+        width:100%;
+    }
+
+    .cms-section-body{
+        padding:18px;
+    }
+
+    .cms-section-header{
+        padding:15px 18px;
+    }
+
+    .login-card{
+        padding:30px 22px;
+    }
+}
+
+</style>
 </head>
 
 <body>
 
-<div class="admin-container">
+<!-- =====================================================
+     LOGIN
+====================================================== -->
 
-    <!-- =====================================================
-         LOGIN
-    ====================================================== -->
+<section id="login-section">
 
-    <div id="login-section">
+    <div class="login-card">
 
-        <h1>TERNINGEO</h1>
+        <div class="login-logo">
 
-        <p>Налаштування</p>
+            <img src="../images/logo.png" alt="TERNINGEO">
+
+            <h1>TERNINGEO</h1>
+
+            <p>Адміністрування сайту</p>
+
+        </div>
 
         <form id="login-form">
 
-            <input
-                type="email"
-                id="email"
-                placeholder="Email"
-                autocomplete="email"
-                required
-            >
+            <div class="form-group">
 
-            <input
-                type="password"
-                id="password"
-                placeholder="Пароль"
-                autocomplete="current-password"
-                required
-            >
+                <label for="email">
+                    Email
+                </label>
 
-            <button type="submit">
+                <input
+                    id="email"
+                    type="email"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="password">
+                    Пароль
+                </label>
+
+                <input
+                    id="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
                 Увійти
             </button>
 
         </form>
 
-        <div id="login-message"></div>
+        <div
+            id="login-message"
+            class="message"
+        ></div>
 
     </div>
 
+</section>
 
-    <!-- =====================================================
-         ADMIN PANEL
-    ====================================================== -->
 
-    <div id="admin-section" style="display:none;">
+<!-- =====================================================
+     ADMIN
+====================================================== -->
 
-        <div class="admin-header">
+<section id="admin-section">
+
+    <header class="admin-header">
+
+        <div class="admin-brand">
+
+            <img
+                src="../images/logo.png"
+                alt="TERNINGEO"
+            >
 
             <div>
-                <h1>TERNINGEO</h1>
-                <p>Керування сайтом</p>
-            </div>
 
-            <button
-                type="button"
-                id="logout-button"
-            >
-                Вийти
-            </button>
+                <h1>TERNINGEO</h1>
+
+                <p>Керування сайтом</p>
+
+            </div>
 
         </div>
 
+        <button
+            type="button"
+            id="logout-button"
+            class="logout-button"
+        >
+            Вийти
+        </button>
 
-        <!-- =================================================
-             PAGE SELECTOR
-        ================================================== -->
-
-        <section class="editor">
-
-            <label for="page-select">
-                Сторінка
-            </label>
-
-            <select id="page-select">
-
-                <option value="home">
-                    Головна
-                </option>
-
-                <option value="vynos">
-                    Винос в натуру
-                </option>
-
-                <option value="topo">
-                    Топографічна зйомка
-                </option>
-
-                <option value="suprovid">
-                    Геодезичний супровід
-                </option>
-
-                <option value="kgz">
-                    КГЗ
-                </option>
-
-            </select>
-
-        </section>
+    </header>
 
 
-        <!-- =================================================
-             CONTENT EDITOR
-        ================================================== -->
+    <div class="admin-layout">
 
-        <section class="editor">
+        <!-- SIDEBAR -->
 
-            <h2 id="page-title">
-                Головна сторінка
-            </h2>
+        <aside class="sidebar">
 
-            <div id="content-editor">
+            <div class="sidebar-title">
+                Розділи сайту
+            </div>
 
-                <p>
-                    Завантаження...
-                </p>
+            <button
+                class="page-button active"
+                data-page="home"
+            >
+                🏠 Головна
+            </button>
+
+            <button
+                class="page-button"
+                data-page="vynos"
+            >
+                📐 Винос меж
+            </button>
+
+            <button
+                class="page-button"
+                data-page="topo"
+            >
+                🗺 Топографія
+            </button>
+
+            <button
+                class="page-button"
+                data-page="suprovid"
+            >
+                🏗 Геодезичний супровід
+            </button>
+
+            <button
+                class="page-button"
+                data-page="kgz"
+            >
+                📏 Контрольні геодезичні роботи
+            </button>
+
+        </aside>
+
+
+        <!-- CONTENT -->
+
+        <main class="content-area">
+
+            <div class="content-header">
+
+                <div>
+
+                    <h2 id="page-title">
+                        Головна
+                    </h2>
+
+                    <p>
+                        Редагування вмісту сторінки
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="save-all-button"
+                    class="save-all-button"
+                >
+                    Зберегти зміни
+                </button>
 
             </div>
 
-        </section>
 
+            <div id="content-editor"></div>
 
-        <!-- =================================================
-             GLOBAL MESSAGE
-        ================================================== -->
-
-        <div id="global-message"></div>
+        </main>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- =========================================================
-     SUPABASE
-========================================================== -->
+<div id="global-message"></div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-<!-- =========================================================
-     ADMIN JAVASCRIPT
-========================================================== -->
-
 <script src="admin.js"></script>
 
 </body>
