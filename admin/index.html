@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TERNINGEO — Адмін-панель</title>
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <div id="login-section">
+
+        <h1>TERNINGEO</h1>
+        <p>Адмін-панель</p>
+
+        <form id="login-form">
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Пароль"
+                required
+            >
+
+            <button type="submit">
+                Увійти
+            </button>
+
+        </form>
+
+        <div id="login-message"></div>
+
+    </div>
+
+
+    <div id="admin-section" style="display:none;">
+
+        <div class="admin-header">
+
+            <h1>Адмін-панель</h1>
+
+            <button id="logout-button">
+                Вийти
+            </button>
+
+        </div>
+
+
+        <section class="editor">
+
+            <h2>Головна сторінка</h2>
+
+            <label>
+                Заголовок
+            </label>
+
+            <input
+                type="text"
+                id="home-title"
+            >
+
+
+            <label>
+                Підзаголовок
+            </label>
+
+            <input
+                type="text"
+                id="home-subtitle"
+            >
+
+
+            <label>
+                Опис
+            </label>
+
+            <textarea
+                id="home-description"
+                rows="6"
+            ></textarea>
+
+
+            <button id="save-home">
+                Зберегти зміни
+            </button>
+
+            <div id="save-message"></div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="admin.js"></script>
+
+</body>
+</html>
