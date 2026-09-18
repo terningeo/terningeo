@@ -416,16 +416,451 @@ async function loadHomeCMS() {
 
 }
 
+// ==========================================================
+// VYNOS CMS
+// ==========================================================
+
+async function loadVynosCMS() {
+
+    const { data, error } = await cmsClient
+        .from("site_content")
+        .select("section, content_key, content_value")
+        .eq("page", "vynos")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true });
+
+    if (error) {
+        console.error(
+            "TERNINGEO VYNOS CMS error:",
+            error
+        );
+
+        return;
+    }
+
+    if (!data) {
+        return;
+    }
+
+
+    const content = {};
+
+
+    data.forEach(item => {
+
+        if (!content[item.section]) {
+            content[item.section] = {};
+        }
+
+        content[item.section][item.content_key] =
+            item.content_value || "";
+
+    });
+
+
+    // ======================================================
+    // HERO
+    // ======================================================
+
+    setText(
+        ".vynos h1",
+        content.hero?.title
+    );
+
+    setText(
+        ".vynos p",
+        content.hero?.text
+    );
+
+    setText(
+        ".vynos .open-modal",
+        content.hero?.button
+    );
+
+
+    // ======================================================
+    // КОЛИ НЕОБХІДНЕ
+    // ======================================================
+
+    const sections =
+        document.querySelectorAll(
+            "body > section.section"
+        );
+
+
+    if (sections[0]) {
+
+        setText(
+            "h2",
+            content.when?.title,
+            sections[0]
+        );
+
+        const cards =
+            sections[0].querySelectorAll(
+                ".service-card"
+            );
+
+        cards.forEach((card, index) => {
+
+            const number = index + 1;
+
+            setText(
+                "h3",
+                content.when?.[
+                    "item_" + number + "_title"
+                ],
+                card
+            );
+
+            setText(
+                "p",
+                content.when?.[
+                    "item_" + number + "_text"
+                ],
+                card
+            );
+
+        });
+
+    }
+
+
+    // ======================================================
+    // ABOUT
+    // ======================================================
+
+    if (sections[1]) {
+
+        setText(
+            "h2",
+            content.about?.title,
+            sections[1]
+        );
+
+        setText(
+            ".about-text h3",
+            content.about?.subtitle,
+            sections[1]
+        );
+
+
+        const paragraphs =
+            sections[1].querySelectorAll(
+                ".about-text p"
+            );
+
+        if (paragraphs[0]) {
+
+            paragraphs[0].textContent =
+                content.about?.text_1 || "";
+
+        }
+
+        if (paragraphs[1]) {
+
+            paragraphs[1].textContent =
+                content.about?.text_2 || "";
+
+        }
+
+
+        const features =
+            sections[1].querySelectorAll(
+                ".about-features div"
+            );
+
+        features.forEach((feature, index) => {
+
+            feature.textContent =
+                content.about?.[
+                    "feature_" + (index + 1)
+                ] || "";
+
+        });
+
+
+        const images =
+            sections[1].querySelectorAll(
+                ".about-image img"
+            );
+
+        if (
+            images[0] &&
+            content.about?.image_1
+        ) {
+
+            images[0].src =
+                content.about.image_1;
+
+        }
+
+        if (
+            images[1] &&
+            content.about?.image_2
+        ) {
+
+            images[1].src =
+                content.about.image_2;
+
+        }
+
+    }
+
+
+    // ======================================================
+    // ЯК ВИКОНУЄТЬСЯ
+    // ======================================================
+
+    if (sections[2]) {
+
+        setText(
+            "h2",
+            content.process?.title,
+            sections[2]
+        );
+
+        const cards =
+            sections[2].querySelectorAll(
+                ".service-card"
+            );
+
+        cards.forEach((card, index) => {
+
+            const number = index + 1;
+
+            setText(
+                "h3",
+                content.process?.[
+                    "item_" + number + "_title"
+                ],
+                card
+            );
+
+            setText(
+                "p",
+                content.process?.[
+                    "item_" + number + "_text"
+                ],
+                card
+            );
+
+        });
+
+    }
+
+
+    // ======================================================
+    // ДОКУМЕНТИ
+    // ======================================================
+
+    if (sections[3]) {
+
+        setText(
+            "h2",
+            content.documents?.title,
+            sections[3]
+        );
+
+        const cards =
+            sections[3].querySelectorAll(
+                ".service-card"
+            );
+
+        cards.forEach((card, index) => {
+
+            const number = index + 1;
+
+            setText(
+                "h3",
+                content.documents?.[
+                    "item_" + number + "_title"
+                ],
+                card
+            );
+
+            setText(
+                "p",
+                content.documents?.[
+                    "item_" + number + "_text"
+                ],
+                card
+            );
+
+        });
+
+    }
+
+
+    // ======================================================
+    // ЩО ВИ ОТРИМУЄТЕ
+    // ======================================================
+
+    if (sections[4]) {
+
+        setText(
+            "h2",
+            content.result?.title,
+            sections[4]
+        );
+
+        const cards =
+            sections[4].querySelectorAll(
+                ".service-card"
+            );
+
+        cards.forEach((card, index) => {
+
+            const number = index + 1;
+
+            setText(
+                "h3",
+                content.result?.[
+                    "item_" + number + "_title"
+                ],
+                card
+            );
+
+            setText(
+                "p",
+                content.result?.[
+                    "item_" + number + "_text"
+                ],
+                card
+            );
+
+        });
+
+    }
+
+
+    // ======================================================
+    // FAQ
+    // ======================================================
+
+    if (sections[5]) {
+
+        setText(
+            "h2",
+            content.faq?.title,
+            sections[5]
+        );
+
+        const faqItems =
+            sections[5].querySelectorAll(
+                ".faq-item"
+            );
+
+        faqItems.forEach((item, index) => {
+
+            const number = index + 1;
+
+            const question =
+                item.querySelector(
+                    ".faq-question span"
+                );
+
+            const answer =
+                item.querySelector(
+                    ".faq-answer p"
+                );
+
+            if (question) {
+
+                question.textContent =
+                    content.faq?.[
+                        "item_" + number + "_question"
+                    ] || "";
+
+            }
+
+            if (answer) {
+
+                answer.textContent =
+                    content.faq?.[
+                        "item_" + number + "_answer"
+                    ] || "";
+
+            }
+
+        });
+
+    }
+
+
+    // ======================================================
+    // ІНШІ ПОСЛУГИ
+    // ======================================================
+
+    if (sections[6]) {
+
+        setText(
+            "h2",
+            content.other_services?.title,
+            sections[6]
+        );
+
+        const cards =
+            sections[6].querySelectorAll(
+                ".service-card"
+            );
+
+        cards.forEach((card, index) => {
+
+            const number = index + 1;
+
+            setText(
+                "h3",
+                content.other_services?.[
+                    "item_" + number + "_title"
+                ],
+                card
+            );
+
+            setText(
+                "p",
+                content.other_services?.[
+                    "item_" + number + "_text"
+                ],
+                card
+            );
+
+        });
+
+    }
+
+
+    // ======================================================
+    // CTA
+    // ======================================================
+
+    const ctaButtons =
+        document.querySelectorAll(
+            ".open-modal"
+        );
+
+    ctaButtons.forEach(button => {
+
+        button.textContent =
+            content.cta?.button ||
+            button.textContent;
+
+    });
+
+}
 
 // ==========================================================
 // HELPERS
 // ==========================================================
 
-function setText(selector, value) {
+function setText(
+    selector,
+    value,
+    parent = document
+) {
 
     const element =
-        document.querySelector(selector);
-
+        parent.querySelector(selector);
 
     if (
         element &&
@@ -460,6 +895,20 @@ if (
     typeof supabase !== "undefined"
 ) {
 
-    loadHomeCMS();
+    const path =
+        window.location.pathname;
+
+    if (
+        path === "/vynos/" ||
+        path === "/vynos/index.html"
+    ) {
+
+        loadVynosCMS();
+
+    } else {
+
+        loadHomeCMS();
+
+    }
 
 }
