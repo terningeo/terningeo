@@ -151,32 +151,46 @@ button{
 }
 
 /* =========================================================
-   ADMIN HEADER
+   ADMIN HEADER — ФІКСОВАНА ВЕРХНЯ СТРІЧКА
    ========================================================= */
 
 .admin-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
     width: 100%;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 24px;
-    margin-bottom: 30px;
+
+    margin: 0 0 30px;
+    padding: 14px 0;
+
+    background: #f3f4f6;
 }
 
-/* ЛОГО + НАЗВА */
+/* ЛОГОТИП + НАЗВА */
 
 .admin-brand {
     display: flex;
     align-items: center;
     gap: 14px;
+
     min-width: 0;
 }
 
 .admin-brand img {
     display: block;
+
     width: 58px;
     height: 58px;
+
     object-fit: contain;
+
     flex-shrink: 0;
 }
 
@@ -186,33 +200,48 @@ button{
 
 .admin-brand h1 {
     margin: 0;
+
     color: var(--navy);
+
     font-size: 25px;
     line-height: 1.1;
     font-weight: 800;
+
     letter-spacing: 0.3px;
 }
 
 .admin-brand p {
     margin: 5px 0 0;
+
     color: #777;
+
     font-size: 14px;
     line-height: 1.2;
 }
 
-/* КНОПКИ */
+/* =========================================================
+   КНОПКИ
+   ========================================================= */
 
 .header-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
     gap: 10px;
+
     flex-shrink: 0;
 }
 
 .header-actions button {
     width: 150px;
+    min-width: 150px;
+    max-width: 150px;
+
     height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+
     margin: 0;
     padding: 0 16px;
 
@@ -223,18 +252,18 @@ button{
     align-items: center;
     justify-content: center;
 
+    box-sizing: border-box;
+
     font-family: inherit;
     font-size: 14px;
     font-weight: 700;
     line-height: 1;
 
     white-space: nowrap;
+
     cursor: pointer;
 
-    transition:
-        background 0.2s ease,
-        opacity 0.2s ease,
-        transform 0.15s ease;
+    transform: none !important;
 }
 
 /* ЗБЕРЕГТИ */
@@ -245,6 +274,10 @@ button{
 }
 
 .save-all-button:hover {
+    background: var(--green-dark);
+}
+
+.save-all-button:active {
     background: var(--green-dark);
 }
 
@@ -259,29 +292,62 @@ button{
     background: #111d38;
 }
 
-.header-actions button:active {
-    transform: translateY(1px);
+.logout-button:active {
+    background: #111d38;
 }
 
-.header-actions button:disabled {
-    cursor: wait;
+/* НІЯКОГО ЗСУВУ */
+
+.header-actions button:hover,
+.header-actions button:active,
+.header-actions button:focus {
+    transform: none !important;
 }
 
 /* =========================================================
-   MOBILE
+   РОЗДІЛЮВАЛЬНА ЛІНІЯ ПІД СТРІЧКОЮ
+   ========================================================= */
+
+.admin-header::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 1px;
+
+    background: #e5e5e5;
+}
+
+/* =========================================================
+   МОБІЛЬНИЙ
    ========================================================= */
 
 @media (max-width: 700px) {
 
     .admin-header {
-        align-items: stretch;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
         flex-direction: column;
-        gap: 18px;
-        margin-bottom: 24px;
+        align-items: stretch;
+
+        gap: 12px;
+
+        margin-bottom: 20px;
+        padding: 10px 0 12px;
+
+        background: #f3f4f6;
     }
 
     .admin-brand {
         width: 100%;
+
+        gap: 12px;
     }
 
     .admin-brand img {
@@ -299,29 +365,29 @@ button{
 
     .header-actions {
         width: 100%;
+
         display: grid;
         grid-template-columns: 1fr 1fr;
+
         gap: 10px;
     }
 
     .header-actions button {
         width: 100%;
         min-width: 0;
+        max-width: none;
+
         height: 44px;
-        padding: 0 10px;
-        font-size: 13px;
+        min-height: 44px;
+        max-height: 44px;
     }
 }
 
 /* =========================================================
-   VERY SMALL MOBILE
+   ДУЖЕ МАЛИЙ ЕКРАН
    ========================================================= */
 
 @media (max-width: 380px) {
-
-    .admin-brand {
-        gap: 10px;
-    }
 
     .admin-brand img {
         width: 46px;
@@ -337,10 +403,10 @@ button{
     }
 
     .header-actions button {
-        height: 42px;
+        width: 100%;
     }
 }
-
+    
 /* =========================
    PAGE NAVIGATION
 ========================= */
