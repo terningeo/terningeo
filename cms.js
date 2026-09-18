@@ -427,9 +427,12 @@ async function loadVynosCMS() {
         .select("section, content_key, content_value")
         .eq("page", "vynos")
         .eq("is_active", true)
-        .order("sort_order", { ascending: true });
+        .order("sort_order", {
+            ascending: true
+        });
 
     if (error) {
+
         console.error(
             "TERNINGEO VYNOS CMS error:",
             error
@@ -462,24 +465,51 @@ async function loadVynosCMS() {
     // HERO
     // ======================================================
 
-    setText(
-        ".vynos h1",
-        content.hero?.title
-    );
+    const hero =
+        document.querySelector(".vynos");
 
-    setText(
-        ".vynos p",
-        content.hero?.text
-    );
+    if (hero) {
 
-    setText(
-        ".vynos .open-modal",
-        content.hero?.button
-    );
+        const title =
+            hero.querySelector("h1");
+
+        const text =
+            hero.querySelector("p");
+
+        const button =
+            hero.querySelector(".open-modal");
+
+
+        if (title) {
+            title.textContent =
+                content.hero?.title || "";
+        }
+
+
+        if (text) {
+            text.textContent =
+                content.hero?.text || "";
+        }
+
+
+        if (button) {
+            button.textContent =
+                content.hero?.button || "";
+        }
+
+
+        if (content.hero?.image) {
+
+            hero.style.backgroundImage =
+                `url("${content.hero.image}")`;
+
+        }
+
+    }
 
 
     // ======================================================
-    // КОЛИ НЕОБХІДНЕ
+    // СЕКЦІЇ
     // ======================================================
 
     const sections =
@@ -488,67 +518,114 @@ async function loadVynosCMS() {
         );
 
 
+    // ------------------------------------------------------
+    // WHEN
+    // ------------------------------------------------------
+
     if (sections[0]) {
 
-        setText(
-            "h2",
-            content.when?.title,
-            sections[0]
-        );
+        const section =
+            sections[0];
+
+        const heading =
+            section.querySelector("h2");
+
+        if (heading) {
+
+            heading.textContent =
+                content.when?.title || "";
+
+        }
+
 
         const cards =
-            sections[0].querySelectorAll(
+            section.querySelectorAll(
                 ".service-card"
             );
 
+
         cards.forEach((card, index) => {
 
-            const number = index + 1;
+            const number =
+                index + 1;
 
-            setText(
-                "h3",
-                content.when?.[
-                    "item_" + number + "_title"
-                ],
-                card
-            );
+            const title =
+                card.querySelector("h3");
 
-            setText(
-                "p",
-                content.when?.[
-                    "item_" + number + "_text"
-                ],
-                card
-            );
+            const text =
+                card.querySelector("p");
+
+
+            if (title) {
+
+                title.textContent =
+                    content.when?.[
+                        "item_" + number + "_title"
+                    ] || "";
+
+            }
+
+
+            if (text) {
+
+                text.textContent =
+                    content.when?.[
+                        "item_" + number + "_text"
+                    ] || "";
+
+            }
 
         });
 
     }
 
 
-    // ======================================================
+    // ------------------------------------------------------
     // ABOUT
-    // ======================================================
+    // ------------------------------------------------------
 
     if (sections[1]) {
 
-        setText(
-            "h2",
-            content.about?.title,
-            sections[1]
-        );
+        const section =
+            sections[1];
 
-        setText(
-            ".about-text h3",
-            content.about?.subtitle,
-            sections[1]
-        );
+        const heading =
+            section.querySelector("h2");
 
+        const subtitle =
+            section.querySelector(".about-text h3");
 
         const paragraphs =
-            sections[1].querySelectorAll(
+            section.querySelectorAll(
                 ".about-text p"
             );
+
+        const features =
+            section.querySelectorAll(
+                ".about-features div"
+            );
+
+        const images =
+            section.querySelectorAll(
+                ".about-image img"
+            );
+
+
+        if (heading) {
+
+            heading.textContent =
+                content.about?.title || "";
+
+        }
+
+
+        if (subtitle) {
+
+            subtitle.textContent =
+                content.about?.subtitle || "";
+
+        }
+
 
         if (paragraphs[0]) {
 
@@ -556,6 +633,7 @@ async function loadVynosCMS() {
                 content.about?.text_1 || "";
 
         }
+
 
         if (paragraphs[1]) {
 
@@ -565,25 +643,21 @@ async function loadVynosCMS() {
         }
 
 
-        const features =
-            sections[1].querySelectorAll(
-                ".about-features div"
-            );
-
         features.forEach((feature, index) => {
 
+            const number =
+                index + 1;
+
             feature.textContent =
-                content.about?.[
-                    "feature_" + (index + 1)
-                ] || "";
+                "✓ " +
+                (
+                    content.about?.[
+                        "feature_" + number
+                    ] || ""
+                );
 
         });
 
-
-        const images =
-            sections[1].querySelectorAll(
-                ".about-image img"
-            );
 
         if (
             images[0] &&
@@ -594,6 +668,7 @@ async function loadVynosCMS() {
                 content.about.image_1;
 
         }
+
 
         if (
             images[1] &&
@@ -608,156 +683,226 @@ async function loadVynosCMS() {
     }
 
 
-    // ======================================================
-    // ЯК ВИКОНУЄТЬСЯ
-    // ======================================================
+    // ------------------------------------------------------
+    // PROCESS
+    // ------------------------------------------------------
 
     if (sections[2]) {
 
-        setText(
-            "h2",
-            content.process?.title,
-            sections[2]
-        );
+        const section =
+            sections[2];
+
+        const heading =
+            section.querySelector("h2");
+
+        if (heading) {
+
+            heading.textContent =
+                content.process?.title || "";
+
+        }
+
 
         const cards =
-            sections[2].querySelectorAll(
+            section.querySelectorAll(
                 ".service-card"
             );
 
+
         cards.forEach((card, index) => {
 
-            const number = index + 1;
+            const number =
+                index + 1;
 
-            setText(
-                "h3",
-                content.process?.[
-                    "item_" + number + "_title"
-                ],
-                card
-            );
+            const title =
+                card.querySelector("h3");
 
-            setText(
-                "p",
-                content.process?.[
-                    "item_" + number + "_text"
-                ],
-                card
-            );
+            const text =
+                card.querySelector("p");
+
+
+            if (title) {
+
+                title.textContent =
+                    content.process?.[
+                        "item_" + number + "_title"
+                    ] || "";
+
+            }
+
+
+            if (text) {
+
+                text.textContent =
+                    content.process?.[
+                        "item_" + number + "_text"
+                    ] || "";
+
+            }
 
         });
 
     }
 
 
-    // ======================================================
-    // ДОКУМЕНТИ
-    // ======================================================
+    // ------------------------------------------------------
+    // DOCUMENTS
+    // ------------------------------------------------------
 
     if (sections[3]) {
 
-        setText(
-            "h2",
-            content.documents?.title,
-            sections[3]
-        );
+        const section =
+            sections[3];
+
+        const heading =
+            section.querySelector("h2");
+
+        if (heading) {
+
+            heading.textContent =
+                content.documents?.title || "";
+
+        }
+
 
         const cards =
-            sections[3].querySelectorAll(
+            section.querySelectorAll(
                 ".service-card"
             );
 
+
         cards.forEach((card, index) => {
 
-            const number = index + 1;
+            const number =
+                index + 1;
 
-            setText(
-                "h3",
-                content.documents?.[
-                    "item_" + number + "_title"
-                ],
-                card
-            );
+            const title =
+                card.querySelector("h3");
 
-            setText(
-                "p",
-                content.documents?.[
-                    "item_" + number + "_text"
-                ],
-                card
-            );
+            const text =
+                card.querySelector("p");
+
+
+            if (title) {
+
+                title.textContent =
+                    content.documents?.[
+                        "item_" + number + "_title"
+                    ] || "";
+
+            }
+
+
+            if (text) {
+
+                text.textContent =
+                    content.documents?.[
+                        "item_" + number + "_text"
+                    ] || "";
+
+            }
 
         });
 
     }
 
 
-    // ======================================================
-    // ЩО ВИ ОТРИМУЄТЕ
-    // ======================================================
+    // ------------------------------------------------------
+    // RESULT
+    // ------------------------------------------------------
 
     if (sections[4]) {
 
-        setText(
-            "h2",
-            content.result?.title,
-            sections[4]
-        );
+        const section =
+            sections[4];
+
+        const heading =
+            section.querySelector("h2");
+
+        if (heading) {
+
+            heading.textContent =
+                content.result?.title || "";
+
+        }
+
 
         const cards =
-            sections[4].querySelectorAll(
+            section.querySelectorAll(
                 ".service-card"
             );
 
+
         cards.forEach((card, index) => {
 
-            const number = index + 1;
+            const number =
+                index + 1;
 
-            setText(
-                "h3",
-                content.result?.[
-                    "item_" + number + "_title"
-                ],
-                card
-            );
+            const title =
+                card.querySelector("h3");
 
-            setText(
-                "p",
-                content.result?.[
-                    "item_" + number + "_text"
-                ],
-                card
-            );
+            const text =
+                card.querySelector("p");
+
+
+            if (title) {
+
+                title.textContent =
+                    content.result?.[
+                        "item_" + number + "_title"
+                    ] || "";
+
+            }
+
+
+            if (text) {
+
+                text.textContent =
+                    content.result?.[
+                        "item_" + number + "_text"
+                    ] || "";
+
+            }
 
         });
 
     }
 
 
-    // ======================================================
+    // ------------------------------------------------------
     // FAQ
-    // ======================================================
+    // ------------------------------------------------------
 
     if (sections[5]) {
 
-        setText(
-            "h2",
-            content.faq?.title,
-            sections[5]
-        );
+        const section =
+            sections[5];
 
-        const faqItems =
-            sections[5].querySelectorAll(
+        const heading =
+            section.querySelector("h2");
+
+        if (heading) {
+
+            heading.textContent =
+                content.faq?.title || "";
+
+        }
+
+
+        const items =
+            section.querySelectorAll(
                 ".faq-item"
             );
 
-        faqItems.forEach((item, index) => {
 
-            const number = index + 1;
+        items.forEach((item, index) => {
+
+            const number =
+                index + 1;
 
             const question =
                 item.querySelector(
-                    ".faq-question span"
+                    ".faq-question span:first-child"
                 );
 
             const answer =
@@ -765,20 +910,26 @@ async function loadVynosCMS() {
                     ".faq-answer p"
                 );
 
+
             if (question) {
 
                 question.textContent =
                     content.faq?.[
-                        "item_" + number + "_question"
+                        "item_" +
+                        number +
+                        "_question"
                     ] || "";
 
             }
+
 
             if (answer) {
 
                 answer.textContent =
                     content.faq?.[
-                        "item_" + number + "_answer"
+                        "item_" +
+                        number +
+                        "_answer"
                     ] || "";
 
             }
@@ -788,64 +939,93 @@ async function loadVynosCMS() {
     }
 
 
-    // ======================================================
-    // ІНШІ ПОСЛУГИ
-    // ======================================================
+    // ------------------------------------------------------
+    // OTHER SERVICES
+    // ------------------------------------------------------
 
     if (sections[6]) {
 
-        setText(
-            "h2",
-            content.other_services?.title,
-            sections[6]
-        );
+        const section =
+            sections[6];
+
+        const heading =
+            section.querySelector("h2");
+
+        if (heading) {
+
+            heading.textContent =
+                content.other_services?.title || "";
+
+        }
+
 
         const cards =
-            sections[6].querySelectorAll(
+            section.querySelectorAll(
                 ".service-card"
             );
 
+
         cards.forEach((card, index) => {
 
-            const number = index + 1;
+            const number =
+                index + 1;
 
-            setText(
-                "h3",
-                content.other_services?.[
-                    "item_" + number + "_title"
-                ],
-                card
-            );
+            const title =
+                card.querySelector("h3");
 
-            setText(
-                "p",
-                content.other_services?.[
-                    "item_" + number + "_text"
-                ],
-                card
-            );
+            const text =
+                card.querySelector("p");
+
+
+            if (title) {
+
+                title.textContent =
+                    content.other_services?.[
+                        "item_" + number + "_title"
+                    ] || "";
+
+            }
+
+
+            if (text) {
+
+                text.textContent =
+                    content.other_services?.[
+                        "item_" + number + "_text"
+                    ] || "";
+
+            }
 
         });
 
     }
 
 
-    // ======================================================
+    // ------------------------------------------------------
     // CTA
-    // ======================================================
+    // ------------------------------------------------------
 
-    const ctaButtons =
+    const openButtons =
         document.querySelectorAll(
             ".open-modal"
         );
 
-    ctaButtons.forEach(button => {
 
-        button.textContent =
-            content.cta?.button ||
-            button.textContent;
+    openButtons.forEach(button => {
+
+        if (content.cta?.button) {
+
+            button.textContent =
+                content.cta.button;
+
+        }
 
     });
+
+
+    console.log(
+        "TERNINGEO VYNOS CMS: loaded"
+    );
 
 }
 
