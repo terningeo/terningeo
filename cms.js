@@ -353,25 +353,12 @@ async function loadHomeCMS() {
 
     if (workArea) {
 
-        const strong =
-            workArea.querySelector("strong");
-
-
         workArea.innerHTML =
             escapeHTML(
-                content.contact?.work_area || ""
+            content.contact?.work_area || ""
             ) +
-            "<br><br>";
-
-
-        if (strong) {
-            workArea.appendChild(strong);
-        }
-
-        workArea.insertAdjacentHTML(
-            "beforeend",
-            "<strong>Показати карту →</strong>"
-        );
+            "<br><br>" +
+            "<strong>Показати карту →</strong>";
 
     }
 
