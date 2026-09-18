@@ -64,14 +64,16 @@ const PAGE_NAMES = {
 
 const SECTION_NAMES = {
     seo: "SEO",
-    hero: "Головний екран",
-    about: "Про компанію",
+    hero: "Перший екран",
+    about: "Про нас",
     services: "Послуги",
-    service_1: "Послуга 1",
-    service_2: "Послуга 2",
-    service_3: "Послуга 3",
-    service_4: "Послуга 4",
-    faq: "Часті запитання",
+
+    service_1: "Відновлення меж ділянки",
+    service_2: "Топографічна зйомка",
+    service_3: "Супровід будівництва",
+    service_4: "Контрольне топографо-геодезичне знімання",
+
+    faq: "Поширені запитання",
     contact: "Контакти",
     map: "Карта",
     page: "Сторінка",
@@ -644,8 +646,24 @@ function renderPage(rows) {
     });
 
 
-    const sectionNames =
-        Object.keys(sections);
+    const HOME_SECTION_ORDER = [
+    "seo",
+    "hero",
+    "about",
+    "services",
+    "service_1",
+    "service_2",
+    "service_3",
+    "service_4",
+    "faq",
+    "contact",
+    "map"
+];
+
+const sectionNames =
+    currentPage === "home"
+        ? HOME_SECTION_ORDER.filter(section => sections[section])
+        : Object.keys(sections);
 
 
     let html = "";
