@@ -150,69 +150,195 @@ button{
     font-size:14px;
 }
 
-/* =========================
-   ADMIN
-========================= */
+/* =========================================================
+   ADMIN HEADER
+   ========================================================= */
 
-#admin-section{
-    display:none;
-    min-height:100vh;
+.admin-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 30px;
 }
 
-.admin-header{
-    position:sticky;
-    top:0;
-    z-index:1000;
+/* ЛОГО + НАЗВА */
 
-    background:var(--white);
-    border-bottom:1px solid var(--border);
-
-    padding:14px 30px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
 }
 
-.admin-brand{
-    display:flex;
-    align-items:center;
-    gap:13px;
+.admin-brand img {
+    display: block;
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
-.admin-brand img{
-    width:48px;
-    height:48px;
-    object-fit:contain;
+.admin-brand-text {
+    min-width: 0;
 }
 
-.admin-brand h1{
-    margin:0;
-    color:var(--navy);
-    font-size:20px;
-    font-weight:800;
+.admin-brand h1 {
+    margin: 0;
+    color: var(--navy);
+    font-size: 25px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: 0.3px;
 }
 
-.admin-brand p{
-    margin:2px 0 0;
-    color:var(--muted);
-    font-size:12px;
+.admin-brand p {
+    margin: 5px 0 0;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.2;
 }
 
-.logout-button{
-    border:0;
-    border-radius:30px;
-    padding:10px 18px;
-    background:var(--navy);
-    color:#fff;
-    font-size:13px;
-    font-weight:700;
+/* КНОПКИ */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
-.logout-button:hover{
-    background:#111d38;
+.header-actions button {
+    width: 150px;
+    height: 44px;
+    margin: 0;
+    padding: 0 16px;
+
+    border: 0;
+    border-radius: 8px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+
+    white-space: nowrap;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        opacity 0.2s ease,
+        transform 0.15s ease;
+}
+
+/* ЗБЕРЕГТИ */
+
+.save-all-button {
+    background: var(--green);
+    color: #fff;
+}
+
+.save-all-button:hover {
+    background: var(--green-dark);
+}
+
+/* ВИЙТИ */
+
+.logout-button {
+    background: var(--navy);
+    color: #fff;
+}
+
+.logout-button:hover {
+    background: #111d38;
+}
+
+.header-actions button:active {
+    transform: translateY(1px);
+}
+
+.header-actions button:disabled {
+    cursor: wait;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .admin-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .admin-brand {
+        width: 100%;
+    }
+
+    .admin-brand img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .admin-brand h1 {
+        font-size: 22px;
+    }
+
+    .admin-brand p {
+        font-size: 13px;
+    }
+
+    .header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .header-actions button {
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        padding: 0 10px;
+        font-size: 13px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .admin-brand {
+        gap: 10px;
+    }
+
+    .admin-brand img {
+        width: 46px;
+        height: 46px;
+    }
+
+    .admin-brand h1 {
+        font-size: 20px;
+    }
+
+    .header-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .header-actions button {
+        height: 42px;
+    }
 }
 
 /* =========================
@@ -724,43 +850,43 @@ button{
 
 <section id="admin-section">
 
-    <header class="admin-header">
+<header class="admin-header">
 
-        <div class="admin-brand">
+    <div class="admin-brand">
 
-            <img
-                src="../images/logo.png"
-                alt="TERNINGEO"
-            >
+        <img
+            src="../images/logo.png"
+            alt="TERNINGEO"
+        >
 
-            <div>
-                <h1>TERNINGEO</h1>
-                <p>Налаштування</p>
-            </div>
-
+        <div class="admin-brand-text">
+            <h1>TERNINGEO</h1>
+            <p>Налаштування</p>
         </div>
 
-        <div class="header-actions">
+    </div>
 
-    <button
-        type="button"
-        id="save-all-button"
-        class="save-all-button"
-    >
-        Зберегти зміни
-    </button>
+    <div class="header-actions">
 
-    <button
-        type="button"
-        id="logout-button"
-        class="logout-button"
-    >
-        Вийти
-    </button>
+        <button
+            type="button"
+            id="save-all-button"
+            class="save-all-button"
+        >
+            Зберегти зміни
+        </button>
 
-</div>
+        <button
+            type="button"
+            id="logout-button"
+            class="logout-button"
+        >
+            Вийти
+        </button>
 
-    </header>
+    </div>
+
+</header>
 
 
     <div class="admin-layout">
