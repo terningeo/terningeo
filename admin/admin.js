@@ -1403,110 +1403,86 @@ async function removeImage(rowId) {
    ========================================================= */
 
 async function saveAll() {
+    const saveButton = document.getElementById("save-all-button");
+    const message = document.getElementById("global-message");
 
-    if (!currentRows.length) {
-
-        showMessage(
-            "Немає даних для збереження.",
-            "error"
-        );
-
+    if (!saveButton) {
+        console.error("Не знайдено save-all-button");
         return;
     }
 
+    // Стан: збереження
+    saveButton.disabled = true;
+    saveButton.classList.add("is-saving");
+    saveButton.innerHTML = '<span class="save-spinner"></span> Збереження...';
 
-    if (saveAllButton) {
-
-        saveAllButton.disabled = true;
-
-        saveAllButton.textContent =
-            "Збереження...";
-
+    if (message) {
+        message.textContent = "Зберігаємо зміни...";
+        message.className = "global-message";
     }
 
-
     try {
-
+        // Зберігаємо всі змінені поля
         for (const row of currentRows) {
+            const field = document.querySelector(
+                `[data-content-id="${row.id}"]`
+            );
 
-            /*
-               Актуальне значення беремо
-               безпосередньо з DOM.
-            */
-
-            const input =
-                document.querySelector(
-                    `[data-row-id="${row.id}"][data-field-type="content"]`
-                );
-
-
-            let value =
-                row.content_value || "";
-
-
-            if (input) {
-                value = input.value;
+            if (!field) {
+                continue;
             }
 
+            const value = field.value;
 
-            const {
-                error
-            } = await supabaseClient
+            if (value === row.content_value) {
+                continue;
+            }
+
+            const { error } = await supabase
                 .from("site_content")
                 .update({
                     content_value: value
                 })
                 .eq("id", row.id);
 
-
             if (error) {
-
-                throw new Error(
-                    `Помилка "${row.content_key}": ${error.message}`
-                );
-
+                throw error;
             }
 
-
-            row.content_value =
-                value;
-
+            row.content_value = value;
         }
 
+        // Успішно
+        saveButton.classList.remove("is-saving");
+        saveButton.classList.add("is-saved");
+        saveButton.innerHTML = "✓ Збережено";
 
-        showMessage(
-            "Усі зміни збережено."
-        );
+        if (message) {
+            message.textContent = "Зміни успішно збережено";
+            message.className = "global-message success";
+        }
 
+        setTimeout(() => {
+            saveButton.classList.remove("is-saved");
+            saveButton.disabled = false;
+            saveButton.textContent = "Зберегти зміни";
+        }, 1800);
 
     } catch (error) {
+        console.error("Помилка збереження:", error);
 
-        console.error(
-            "SAVE ALL ERROR:",
-            error
-        );
+        saveButton.classList.remove("is-saving");
+        saveButton.disabled = false;
+        saveButton.textContent = "Зберегти зміни";
 
-        showMessage(
-            error.message ||
-            "Помилка збереження.",
-            "error"
-        );
-
-    } finally {
-
-        if (saveAllButton) {
-
-            saveAllButton.disabled = false;
-
-            saveAllButton.textContent =
-                "Зберегти зміни";
-
+        if (message) {
+            message.textContent = "Помилка збереження: " + (
+                error.message || "невідома помилка"
+            );
+            message.className = "global-message error";
         }
-
     }
-
 }
-
 
 /* =========================================================
    PAGE BUTTONS
